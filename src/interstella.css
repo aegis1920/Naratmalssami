@@ -1,0 +1,12 @@
+div > * {
+    animation-duration: 600s;
+    animation-name: bingle;
+}
+
+@keyframes bingle {
+    from {
+    }
+    to {
+        transform : rotate(108000deg);
+    }
+}
