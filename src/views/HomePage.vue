@@ -132,7 +132,7 @@ export default {
       setTimeout(function() {
         var intro = document.getElementById('intro');
         intro.style.display = 'none';
-      }, 7000);
+      }, 1900);
     }
   },
   mounted() {
