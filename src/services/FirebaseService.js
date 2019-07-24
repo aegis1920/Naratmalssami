@@ -6,24 +6,25 @@ const POSTS = 'posts'
 const BOARDS = 'boards'
 const IMGBANNER = 'imgbanner'
 
-// Setup Firebase
 // const config = {
-// 	projectId: 'elice-ssafy',
-// 	authDomain: 'elice-ssafy.firebaseapp.com',
-// 	apiKey: 'AIzaSyCax1KLYHHlLEoxNkRIW8efgUBWooyEB2Q',
-// 	databaseURL: 'https://elice-ssafy.firebaseio.com',
-// 	storageBucket: 'gs://elice-ssafy.appspot.com'
+//   apiKey: "AIzaSyC8aq7GouxjIjJGA7WGccNNCn1HhL8uCys",
+//   authDomain: "webmobile-sub2-730c1.firebaseapp.com",
+//   databaseURL: "https://webmobile-sub2-730c1.firebaseio.com",
+//   projectId: "webmobile-sub2-730c1",
+//   storageBucket: "gs://webmobile-sub2-730c1.appspot.com",
+//   messagingSenderId: "872601909524",
+//   appId: "1:872601909524:web:c157dfaa2515b947"
 // }
 
 const config = {
-  apiKey: "AIzaSyC8aq7GouxjIjJGA7WGccNNCn1HhL8uCys",
-  authDomain: "webmobile-sub2-730c1.firebaseapp.com",
-  databaseURL: "https://webmobile-sub2-730c1.firebaseio.com",
-  projectId: "webmobile-sub2-730c1",
-  storageBucket: "gs://webmobile-sub2-730c1.appspot.com",
-  messagingSenderId: "872601909524",
-  appId: "1:872601909524:web:c157dfaa2515b947"
-}
+  apiKey: "AIzaSyAZsR8WdjeUiFFwOLE2yVHosx9fxJfDwCc",
+  authDomain: "naratmalssami-93474.firebaseapp.com",
+  databaseURL: "https://naratmalssami-93474.firebaseio.com",
+  projectId: "naratmalssami-93474",
+  storageBucket: "naratmalssami-93474.appspot.com",
+  messagingSenderId: "725896696284",
+  appId: "1:725896696284:web:236449358c0edc3d"
+};
 
 firebase.initializeApp(config);
 const firestore = firebase.firestore();
