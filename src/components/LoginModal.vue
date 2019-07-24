@@ -185,7 +185,17 @@
         components: {},
         methods: {
             async emailLogin() {
-                await firebase.auth().signInWithEmailAndPassword(this.email, this.password).catch(function(error) {
+                let email_id = this.email
+                await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+                // .then(()=>{
+                //     let notifybool = confirm('알림을 설정하시겠습니까?');
+                //     console.log(notifybool);
+                //     var userRef = firestore.collection('users').doc(email_id);
+                //     var setUser = userRef.update({
+                //         notify:notifybool 
+                //     });
+                // })
+                .catch(function(error) {
                     var errorCode = error.code;
                     var errorMessage = error.message;
                     Swal.fire({
