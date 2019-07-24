@@ -28,6 +28,7 @@ const config = {
 
 firebase.initializeApp(config);
 const firestore = firebase.firestore();
+const messaging = firebase.messaging();
 
 export default {
   getBoards() {
@@ -110,5 +111,19 @@ export default {
 		}).catch(function(error) {
 			console.error('[Google Login Error]', error)
 		})
-	}
+  },
+  notificationService(){
+    messaging
+   .requestPermission()
+   .then(function () {
+     console.log("Notification permission granted.");
+     return messaging.getToken()
+   })
+   .then(function(token) {
+     console.log("token is : " + token);
+   })
+   .catch(function (err) {
+   console.log("Unable to get permission to notify.", err);
+ });
+  }
 }

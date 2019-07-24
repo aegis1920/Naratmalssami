@@ -10,9 +10,11 @@
   <!-- container -->
   <v-container>
     <!-- About Me -->
-    <About
-    ></About>
+    <About></About>
 
+    <!-- notificationTest -->
+
+    <v-btn @click="notificationStart">Notification</v-btn>
 
     <!-- Board -->
     <v-layout my-5>
@@ -46,7 +48,6 @@
   </v-container>
 </div>
 </template>
-
 <script>
 import Header from '../components/Header'
 import ImgBanner from '../components/ImgBanner'
@@ -55,12 +56,9 @@ import RepositoryList from '../components/RepositoryList'
 import Footer from '../components/Footer'
 import FirebaseService from '@/services/FirebaseService'
 
-
-
 import Person from'../components/Person'
 import About from '../components/About'
 import welcome from '../components/welcome.vue'
-
 
 export default {
   name: 'HomePage',
@@ -133,6 +131,9 @@ export default {
         var intro = document.getElementById('intro');
         intro.style.display = 'none';
       }, 1900);
+    },
+    notificationStart(){
+      FirebaseService.notificationService();
     }
   },
   mounted() {
