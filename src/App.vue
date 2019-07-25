@@ -18,6 +18,7 @@
 
       <!-- scroll -->
     </v-content>
+    <chat v-if="isLogin()"/>
     <scroll />
     <Footer />
   </v-app>
@@ -29,7 +30,8 @@ import Footer from './components/Footer.vue'
 import store from './store'
 import scroll from './components/Scroll.vue'
 import Translate from './components/Translate.vue'
-
+import chat from './components/Chat.vue'
+import {mapGetters} from 'vuex'
 export default {
   name: 'App',
   store,
@@ -37,14 +39,17 @@ export default {
     Header,
     Footer,
     scroll,
-    Translate
+    chat,
+    Translate,
   },
-
   data() {
     return {
       offsetTop: 0,
       videoUrl: require('@/assets/Temple - 20773.mp4')
     }
+  },
+  computed:{
+    ...mapGetters(['getUser'])
   },
   methods: {
     onScroll(e) {
@@ -52,6 +57,9 @@ export default {
     },
     show(){
 
+    },
+    isLogin(){
+      return (this.getUser['userEmail']!='');
     }
   },
   watch:{

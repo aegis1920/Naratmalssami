@@ -192,7 +192,7 @@
                 //     console.log(notifybool);
                 //     var userRef = firestore.collection('users').doc(email_id);
                 //     var setUser = userRef.update({
-                //         notify:notifybool 
+                //         notify:notifybool
                 //     });
                 // })
                 .catch(function(error) {
@@ -230,9 +230,21 @@
                             portfolio: 0,
                             post: 0,
                             repository: 0,
-                            login: 0
+                            login: 0,
+                            messageList: [{
+                                type: 'text',
+                                author: `user1`,
+                                data: {
+                                  text: `반갑습니다. '나랏말싸미'에 오신 것을 환영합니다.`
+                                }
+                            }]
                         });
+                        var user = firebase.auth().currentUser;
                         let username = email_id.split("@",1)[0]
+                        user.updateProfile({
+                          displayName: username
+                        })
+                        console.log(user);
                         Swal.fire({
                             type: 'success',
                             position: 'center',
