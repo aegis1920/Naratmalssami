@@ -38,11 +38,16 @@ new Vue({
 	created() {
 		firebase.auth().onAuthStateChanged((user) => {
 			if (user) {
-				this.$store.state.user = user;
-				// alert(user.displayName)
-				// console.log(user)
-				this.$store.state.accessToken = user.accessToken;
+				// console.log(user);
+				this.$store.commit('setUser', {
+					user: user
+				})
+				// console.log(this.$store.getters.getUser, "login!!!");
 			} else {
+				this.$store.commit('setUser', {
+					user: null
+				})
+				// console.log(this.$store.state.user, "logout!!!");
 			}
 		})
 	},
