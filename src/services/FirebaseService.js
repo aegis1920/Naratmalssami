@@ -44,6 +44,22 @@ export default {
         })
       })
   },
+  getBoard(doc_id){
+    const postsCollection = firestore.collection(BOARDS)
+    let result = {};
+    postsCollection
+        .get()
+        .then((docSnapshots) => {
+          return docSnapshots.docs.map((doc) => {
+            let data = doc.data();
+            console.log(data);
+            data.created_at = new Date(data.created_at.toDate());
+            if(data.doc_id === doc_id) {
+              result = data;
+            }
+          })
+        });
+  },
   postBoard(title, body, img) {
     let user = firebase.auth().currentUser;
     if(user !== null){

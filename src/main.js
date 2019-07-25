@@ -10,11 +10,15 @@ import router from './router'
 import store from './store'
 import BrowserAlert from './components/BrowserAlert.vue'
 import firebase from "firebase"
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import './registerServiceWorker'
+
+Vue.use(ElementUI);
 
 AOS.init();
 
