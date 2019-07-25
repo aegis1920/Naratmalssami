@@ -147,8 +147,15 @@
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Confirm'
                 }).then((result) => {
+                    let email_id = this.email;
                     if (result.value) {
                         firebase.auth().signOut().then(function() {
+                            let userToken = firebase.firestore().collection('userTokenList').where("token_id","==", firebase.messaging().getToken());
+                            userToken.get().then(function(querySnapshot){
+                                querySnapshot.forEach(function(doc){
+                                    doc.ref.delete();
+                                });
+                            });
                             Swal.fire(
                                 {
                                     type: 'success',

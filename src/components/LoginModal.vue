@@ -154,7 +154,8 @@
     import Swal from 'sweetalert2'
 
     const firestore = firebase.firestore();
-
+    const messaging = firebase.messaging();
+    
     export default {
         name: "LoginModal",
         data() {
@@ -185,16 +186,33 @@
         components: {},
         methods: {
             async emailLogin() {
-                let email_id = this.email
+                var email_id = this.email
+                var userToken = '';
+                messaging
+                .requestPermission()
+                .then(function () {
+                    console.log("Notification permission granted.");
+                    return messaging.getToken()
+                })
+                .then(function (token) {
+                    userToken = token;
+                })
                 await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-                // .then(()=>{
-                //     let notifybool = confirm('알림을 설정하시겠습니까?');
-                //     console.log(notifybool);
-                //     var userRef = firestore.collection('users').doc(email_id);
-                //     var setUser = userRef.update({
-                //         notify:notifybool 
-                //     });
-                // })
+                .then(()=>{
+                    var userRef = firestore.collection('userTokenList').doc(email_id);
+                    console.log(email_id);
+                    console.log(userRef);
+                    console.log(userToken);
+                    userRef.set({
+                        token_id: userToken
+                    })
+                    .then(function() {
+                        console.log("it is work!!"); 
+                    })
+                    .catch(function(err) {
+                        console.log("error : ", err); 
+                    });
+                })
                 .catch(function(error) {
                     var errorCode = error.code;
                     var errorMessage = error.message;
@@ -227,8 +245,7 @@
                             id: email_id,
                             created: firebase.firestore.FieldValue.serverTimestamp(),
                             home: 0,
-                            portfolio: 0,
-                            post: 0,
+                            board:0,
                             repository: 0,
                             login: 0
                         });

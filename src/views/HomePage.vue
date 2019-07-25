@@ -14,7 +14,8 @@
 
     <!-- notificationTest -->
 
-    <v-btn @click="notificationStart">Notification</v-btn>
+    <v-btn @click="startNotification">startNotification</v-btn>
+    <v-btn @click="requestNotification">requestNotification</v-btn>
 
     <!-- Board -->
     <v-layout my-5>
@@ -132,8 +133,11 @@ export default {
         intro.style.display = 'none';
       }, 1900);
     },
-    notificationStart(){
+    startNotification(){
       FirebaseService.notificationService();
+    },
+    requestNotification(){
+      FirebaseService.requestToFCM();
     }
   },
   mounted() {

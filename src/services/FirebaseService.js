@@ -30,6 +30,42 @@ firebase.initializeApp(config);
 const firestore = firebase.firestore();
 const messaging = firebase.messaging();
 
+// 여기서 해도 바로 토큰 입력이 된다.
+
+ messaging
+      .requestPermission()
+      .then(function () {
+        console.log("Notification permission granted.");
+        return messaging.getToken()
+      })
+      .then(function (token) {
+        console.log("token is : " + token);
+      })
+      .catch(function (err) {
+        console.log("Unable to get permission to notify.", err);
+      });
+    // foreground일 때도 알림이 뜨게 해주기 위해서
+    messaging.onMessage(function (payload) {
+      // alert('Message received. ', payload);
+      // console.log('Message received. ', payload);
+
+      const notificationTitle = payload.notification.title;
+      const notificationOptions = {
+        body: payload.notification.body,
+        // icon: payload.notification.icon,
+      };
+
+      if (!("Notification" in window)) {
+        console.log("This browser does not support system notifications");
+      }
+      // Let's check whether notification permissions have already been granted
+      else if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        var notification = new Notification(notificationTitle, notificationOptions);
+
+      }
+    });
+
 export default {
   getBoards() {
     const postsCollection = firestore.collection(BOARDS)
@@ -46,47 +82,47 @@ export default {
   },
   postBoard(title, body, img) {
     let user = firebase.auth().currentUser;
-    if(user !== null){
-      let userEmail = user.email.split('@');
-      let userId = userEmail[0];
+    if (user !== null) {
+      let userEmail = user.email;
+      let userId = userEmail.split('@')[0];
       return firestore.collection(BOARDS).add({
-        doc_id:firestore.collection(BOARDS).doc().id,
-        boardViewCount:0,
+        doc_id: firestore.collection(BOARDS).doc().id,
+        boardViewCount: 0,
         title,
         body,
         img,
-        author:userId,
+        author: userId,
         created_at: firebase.firestore.FieldValue.serverTimestamp()
       })
-    }else{
+    } else {
       alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
     }
   },
-  updateBoardViewCount(doc_id){
-    firestore.collection(BOARDS).where('doc_id','==',doc_id)
-    .get()
-    .then(function(querySnapshot){
-      querySnapshot.forEach(function(doc){
-        firestore.collection(BOARDS).doc(doc.id).update({
-          boardViewCount:firebase.firestore.FieldValue.increment(1)
+  updateBoardViewCount(doc_id) {
+    firestore.collection(BOARDS).where('doc_id', '==', doc_id)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          firestore.collection(BOARDS).doc(doc.id).update({
+            boardViewCount: firebase.firestore.FieldValue.increment(1)
+          });
         });
-      });
-    })
+      })
   },
-  updateViewPageCount(pagename){
-		let user = firebase.auth().currentUser;
-		if(user !== null){
-			let userEmail = user.email;
-			let currentUserRef = firestore.collection('users').doc(userEmail);
-			currentUserRef.update({
-				[pagename]: firebase.firestore.FieldValue.increment(1)
-			})
-		}
+  updateViewPageCount(pagename) {
+    let user = firebase.auth().currentUser;
+    if (user !== null) {
+      let userEmail = user.email;
+      let currentUserRef = firestore.collection('users').doc(userEmail);
+      currentUserRef.update({
+        [pagename]: firebase.firestore.FieldValue.increment(1)
+      })
+    }
   },
   getImgUrl(pagename) {
     const imgCollection = firestore.collection(IMGBANNER)
     return imgCollection.doc(pagename).get()
-      .then(function(doc){
+      .then(function (doc) {
         return doc.data()
       })
   },
@@ -95,35 +131,80 @@ export default {
     return imgCollection.doc(pagename).set({
       imgurl: imgurl
     })
-    .then(function() {
+      .then(function () {
         console.log("Document successfully written!");
-    })
-    .catch(function(error) {
+      })
+      .catch(function (error) {
         console.error("Error writing document: ", error);
-    });
+      });
   },
   loginWithGoogle() {
-		let provider = new firebase.auth.GoogleAuthProvider()
-		return firebase.auth().signInWithPopup(provider).then(function(result) {
-			let accessToken = result.credential.accessToken
-			let user = result.user
-			return result
-		}).catch(function(error) {
-			console.error('[Google Login Error]', error)
-		})
+    let provider = new firebase.auth.GoogleAuthProvider()
+    return firebase.auth().signInWithPopup(provider).then(function (result) {
+      let accessToken = result.credential.accessToken
+      let user = result.user
+      return result
+    }).catch(function (error) {
+      console.error('[Google Login Error]', error)
+    })
   },
-  notificationService(){
-    messaging
-   .requestPermission()
-   .then(function () {
-     console.log("Notification permission granted.");
-     return messaging.getToken()
-   })
-   .then(function(token) {
-     console.log("token is : " + token);
-   })
-   .catch(function (err) {
-   console.log("Unable to get permission to notify.", err);
- });
+  notificationService() {
+    // messaging
+    //   .requestPermission()
+    //   .then(function () {
+    //     console.log("Notification permission granted.");
+    //     return messaging.getToken()
+    //   })
+    //   .then(function (token) {
+    //     console.log("token is : " + token);
+    //   })
+    //   .catch(function (err) {
+    //     console.log("Unable to get permission to notify.", err);
+    //   });
+    // // foreground일 때도 알림이 뜨게 해주기 위해서
+    // messaging.onMessage(function (payload) {
+    //   // alert('Message received. ', payload);
+    //   // console.log('Message received. ', payload);
+
+    //   const notificationTitle = payload.notification.title;
+    //   const notificationOptions = {
+    //     body: payload.notification.body,
+    //     // icon: payload.notification.icon,
+    //   };
+
+    //   if (!("Notification" in window)) {
+    //     console.log("This browser does not support system notifications");
+    //   }
+    //   // Let's check whether notification permissions have already been granted
+    //   else if (Notification.permission === "granted") {
+    //     // If it's okay let's create a notification
+    //     var notification = new Notification(notificationTitle, notificationOptions);
+
+    //   }
+    // });
+  },
+  userTokenList() {
+    
+  },
+  requestToFCM() {
+    var request = require("request");
+
+    request.post({
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'key=AAAAqQLQkdw:APA91bHRMyXjEVtUOTgF-Xyha_JRXQq2TGIcQQzbALVPRRjxfVy7k4juxdWFAT2C3NufkD1wEj7uxgqgW3Fgt2SdrU132ORqg09L9JDZRaXA5d0zBYWbub7kphBxyc5WLo7cCmdZZUHy'
+      },
+      uri: "https://fcm.googleapis.com/fcm/send",
+      body: JSON.stringify({
+        "to": "fMZUHBtzAIY:APA91bHvrp_6NNUtw4Ycl0fY5x8dx15sBNpb43yxzynI3EbtORbFksDycK8MTNRcghx5g-LGRK7qBrFXYei26Lj0h5lzBD-ybyCutts8lnbM_IiEBAMwqhdnPhpm66ODk_N9x1L86vNW",
+        "notification": {
+          "title": "아주 중요한 메세지입니다",
+          "body": "it is work!!!!!!!!!!!!"
+        }
+      })
+    }, function (error, response, body) {
+      console.log(body);
+    });
   }
+
 }
