@@ -12,11 +12,6 @@
     <!-- About Me -->
     <About></About>
 
-    <!-- notificationTest -->
-
-    <v-btn @click="startNotification">startNotification</v-btn>
-    <v-btn @click="requestNotification">requestNotification</v-btn>
-
     <!-- Board -->
     <v-layout my-5>
       <v-flex xs12>
@@ -133,12 +128,6 @@ export default {
         intro.style.display = 'none';
       }, 1900);
     },
-    startNotification(){
-      FirebaseService.notificationService();
-    },
-    requestNotification(){
-      FirebaseService.requestToFCM();
-    }
   },
   mounted() {
     console.log(this.$store.state.intro)

@@ -199,11 +199,9 @@
                 })
                 await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 .then(()=>{
-                    var userRef = firestore.collection('userTokenList').doc(email_id);
-                    console.log(email_id);
-                    console.log(userRef);
+                    var userTokenListRef = firestore.collection('userTokenList').doc(email_id);
                     console.log(userToken);
-                    userRef.set({
+                    userTokenListRef.set({
                         token_id: userToken
                     })
                     .then(function() {
@@ -238,6 +236,16 @@
             },
             async userSignUp() {
                 let email_id = this.email
+                var userToken = '';
+                messaging
+                .requestPermission()
+                .then(function () {
+                    console.log("Notification permission granted.");
+                    return messaging.getToken()
+                })
+                .then(function (token) {
+                    userToken = token;
+                })
                 await firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
                     .then(()=>{
                         var userRef = firestore.collection('users').doc(email_id);
@@ -249,6 +257,19 @@
                             repository: 0,
                             login: 0
                         });
+
+                        var userTokenListRef = firestore.collection('userTokenList').doc(email_id);
+                        console.log(userToken);
+                        userTokenListRef.set({
+                            token_id: userToken
+                        })
+                        .then(function() {
+                            console.log("it is work!!"); 
+                        })
+                        .catch(function(err) {
+                            console.log("error : ", err); 
+                        });
+
                         let username = email_id.split("@",1)[0]
                         Swal.fire({
                             type: 'success',
