@@ -31,6 +31,19 @@ firebase.initializeApp(config);
 const firestore = firebase.firestore();
 const messaging = firebase.messaging();
 
+firestore.enablePersistence()
+  .then(function(){
+    console.log("성공");
+    
+  })
+  .catch(function (err) {
+    if (err.code == 'failed-precondition') {
+
+    } else if (err.code == 'unimplemented') {
+
+    }
+  });
+
 // 여기서 해도 바로 토큰 입력이 된다.
 
 messaging
@@ -71,9 +84,12 @@ export default {
       .orderBy('created_at', 'desc')
       .get()
       .then((docSnapshots) => {
-        return docSnapshots.docs.map((doc) => {
-          let data = doc.data()
+        return docSnapshots.docChanges().map((change) => {
+          let data = change.doc.data()
           data.created_at = new Date(data.created_at.toDate())
+          var source = change.doc.metadata.fromCache ? "local cache" : "server";
+          console.log("this data from ", source);
+          
           return data
         })
       })
@@ -146,20 +162,20 @@ export default {
     return imgCollection.doc(pagename).set({
         imgurl: imgurl
       })
-      .then(function() {
+      .then(function () {
         console.log("Document successfully written!");
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error("Error writing document: ", error);
       });
   },
   loginWithGoogle() {
     let provider = new firebase.auth.GoogleAuthProvider()
-    return firebase.auth().signInWithPopup(provider).then(function(result) {
+    return firebase.auth().signInWithPopup(provider).then(function (result) {
       let accessToken = result.credential.accessToken
       let user = result.user
       return result
-    }).catch(function(error) {
+    }).catch(function (error) {
       console.error('[Google Login Error]', error)
     })
   },
@@ -186,34 +202,33 @@ export default {
   notificationService() {
     messaging
       .requestPermission()
-      .then(function() {
+      .then(function () {
         console.log("Notification permission granted.");
         return messaging.getToken()
       })
-      .then(function(token) {
+      .then(function (token) {
         console.log("token is : " + token);
       })
-      .catch(function(err) {
+      .catch(function (err) {
         console.log("Unable to get permission to notify.", err);
       });
   },
-  getUserMessageList(){
-		let userEmail = firebase.auth().currentUser.email;
-		if(userEmail !== null){
-			let currentUserRef = firestore.collection('users').doc(userEmail);
-      return currentUserRef.get().then(function(doc){
+  getUserMessageList() {
+    let userEmail = firebase.auth().currentUser.email;
+    if (userEmail !== null) {
+      let currentUserRef = firestore.collection('users').doc(userEmail);
+      return currentUserRef.get().then(function (doc) {
         return doc.data().messageList;
       })
     }
   },
-  setUserMessageList(messageList){
-		let userEmail = firebase.auth().currentUser.email;
-		if(userEmail !== null){
-			let currentUserRef = firestore.collection('users').doc(userEmail);
+  setUserMessageList(messageList) {
+    let userEmail = firebase.auth().currentUser.email;
+    if (userEmail !== null) {
+      let currentUserRef = firestore.collection('users').doc(userEmail);
       currentUserRef.update({
         messageList: messageList
       })
     }
   }
-
 }

@@ -26,7 +26,7 @@
       </span>
                 </v-tooltip>
             </v-toolbar-items>
-            <v-toolbar-items class="hidden-xs-only" v-for="item in items">
+            <v-toolbar-items class="hidden-xs-only" v-for="item in items" :key="item.title">
                 <v-btn flat :to="item.link" color="white">{{item.title}}</v-btn>
             </v-toolbar-items>
             <v-toolbar-items v-if="this.isLogin" class="hidden-xs-only" >

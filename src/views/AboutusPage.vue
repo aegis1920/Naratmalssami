@@ -9,7 +9,7 @@
     <v-layout my-5>
       <v-flex xs12>
         <v-layout wrap>
-          <v-flex v-for="team in teams" xs12 sm6 lg3 pa-2>
+          <v-flex v-for="team in teams" :key="team.name" xs12 sm6 lg3 pa-2>
             <v-hover>
             <v-card class="namecard"
                     slot-scope="{ hover }"
@@ -35,7 +35,7 @@
           </v-flex>
         </v-layout>
 
-        <v-flex v-for="team in teams" xs12 >
+        <v-flex v-for="team in teams" :key="team.name" xs12 >
           <v-layout xs12 :id="team.userName" style="display:none">
             <RepositoryList
                 :token="team.token"
