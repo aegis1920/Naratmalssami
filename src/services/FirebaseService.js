@@ -98,7 +98,7 @@ export default {
         result.forEach(function(element){
           FirebaseService.requestToFCM(element, userId);
         });
-      })
+      });
 
       return firestore.collection(BOARDS).add({
         doc_id: firestore.collection(BOARDS).doc().id,
@@ -144,22 +144,22 @@ export default {
   updateImgUrl(pagename, imgurl) {
     const imgCollection = firestore.collection(IMGBANNER)
     return imgCollection.doc(pagename).set({
-      imgurl: imgurl
-    })
-      .then(function () {
+        imgurl: imgurl
+      })
+      .then(function() {
         console.log("Document successfully written!");
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.error("Error writing document: ", error);
       });
   },
   loginWithGoogle() {
     let provider = new firebase.auth.GoogleAuthProvider()
-    return firebase.auth().signInWithPopup(provider).then(function (result) {
+    return firebase.auth().signInWithPopup(provider).then(function(result) {
       let accessToken = result.credential.accessToken
       let user = result.user
       return result
-    }).catch(function (error) {
+    }).catch(function(error) {
       console.error('[Google Login Error]', error)
     })
   },
@@ -182,6 +182,38 @@ export default {
     }, function (error, response, body) {
       console.log(body);
     });
+  },
+  notificationService() {
+    messaging
+      .requestPermission()
+      .then(function() {
+        console.log("Notification permission granted.");
+        return messaging.getToken()
+      })
+      .then(function(token) {
+        console.log("token is : " + token);
+      })
+      .catch(function(err) {
+        console.log("Unable to get permission to notify.", err);
+      });
+  },
+  getUserMessageList(){
+		let userEmail = firebase.auth().currentUser.email;
+		if(userEmail !== null){
+			let currentUserRef = firestore.collection('users').doc(userEmail);
+      return currentUserRef.get().then(function(doc){
+        return doc.data().messageList;
+      })
+    }
+  },
+  setUserMessageList(messageList){
+		let userEmail = firebase.auth().currentUser.email;
+		if(userEmail !== null){
+			let currentUserRef = firestore.collection('users').doc(userEmail);
+      currentUserRef.update({
+        messageList: messageList
+      })
+    }
   }
 
 }
