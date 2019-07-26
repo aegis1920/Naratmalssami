@@ -1,1 +1,5 @@
 # Naratmalssami
+
+```
+npm install
+```

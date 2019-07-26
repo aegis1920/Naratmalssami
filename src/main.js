@@ -10,8 +10,10 @@ import router from './router'
 import store from './store'
 import BrowserAlert from './components/BrowserAlert.vue'
 import firebase from "firebase"
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
+
+import FirebaseService from './services/FirebaseService'
+import Chat from 'vue-beautiful-chat'
+
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -25,32 +27,44 @@ AOS.init();
 Vue.config.productionTip = false
 
 Vue.use(Vuetify, {
-	iconfont: 'fa',
-	theme: {
-		primary: '#3f51b5',
-		secondary: '#b0bec5',
-		accent: '#8c9eff',
-		error: '#b71c1c'
-	}
+  iconfont: 'fa',
+  theme: {
+    primary: '#3f51b5',
+    secondary: '#b0bec5',
+    accent: '#8c9eff',
+    error: '#b71c1c'
+  }
 })
 
 Vue.use(VueSimplemde)
+Vue.use(Chat)
 
 new Vue({
-	router,
-	store,
-	created() {
-		firebase.auth().onAuthStateChanged((user) => {
-			if (user) {
-				this.$store.state.user = user;
-				// alert(user.displayName)
-				// console.log(user)
-				this.$store.state.accessToken = user.accessToken;
-			} else {
-			}
-		})
-	},
-	render: h => h(App)
+  router,
+  store,
+  created() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+				// console.log("login", user);
+        this.$store.commit('setUser', {
+          user: user
+        })
+        this.$store.commit('setUserChat', {
+          messageList: FirebaseService.getUserMessageList()
+        })
+				// console.log("login", this.$store.state.userChat);
+      } else {
+        this.$store.commit('setUser', {
+          user: null
+        })
+        this.$store.commit('setUserChat', {
+          messageList: []
+        })
+        // console.log(this.$store.state.user, "logout!!!");
+      }
+    })
+  },
+  render: h => h(App)
 }).$mount('#app')
 
 new Vue({
