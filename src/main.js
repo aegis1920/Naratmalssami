@@ -20,8 +20,6 @@ import 'aos/dist/aos.css';
 
 import './registerServiceWorker'
 
-Vue.use(ElementUI);
-
 AOS.init();
 
 Vue.config.productionTip = false
