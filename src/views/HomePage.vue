@@ -15,19 +15,15 @@
       <!-- About Me -->
       <About></About>
 
-      <!-- notificationTest -->
-
-      <v-btn @click="notificationStart">Notification</v-btn>
-
-      <!-- Board -->
-      <v-layout my-5>
-        <v-flex xs12>
-          <router-link to="/Board" style="text-decoration:none;">
-            <h2 class="my-5 text-xs-center page_title">Board</h2>
-          </router-link>
-          <BoardList></BoardList>
-        </v-flex>
-      </v-layout>
+    <!-- Board -->
+    <v-layout my-5>
+      <v-flex xs12>
+        <router-link to="/Board" style="text-decoration:none;">
+          <h2 class="my-5 text-xs-center page_title">Board</h2>
+        </router-link>
+        <BoardList></BoardList>
+      </v-flex>
+    </v-layout>
 
       <!-- Github -->
       <v-layout my-5>
@@ -148,9 +144,6 @@ export default {
         intro.style.display = "none";
       }, 1900);
     },
-    notificationStart() {
-      FirebaseService.notificationService();
-    }
   },
   mounted() {
     if (!this.$store.state.intro) {

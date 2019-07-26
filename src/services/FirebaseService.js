@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
+import FirebaseService from '@/services/FirebaseService'
 
 const POSTS = 'posts'
 const BOARDS = 'boards'
@@ -43,6 +44,38 @@ firestore.enablePersistence()
     }
   });
 
+// 여기서 해도 바로 토큰 입력이 된다.
+
+messaging
+  .requestPermission()
+  .then(function () {
+    console.log("Notification permission granted.");
+    return messaging.getToken()
+  })
+  .then(function (token) {
+    console.log("token is : " + token);
+  })
+  .catch(function (err) {
+    console.log("Unable to get permission to notify.", err);
+  });
+
+
+// foreground일 때도 알림이 뜨게 해주기 위해서
+messaging.onMessage(function (payload) {
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    // icon: payload.notification.icon,
+  };
+
+  if (!("Notification" in window)) {
+    console.log("This browser does not support system notifications");
+  }
+  else if (Notification.permission === "granted") {
+    var notification = new Notification(notificationTitle, notificationOptions);
+
+  }
+});
 
 export default {
   getBoards() {
@@ -61,11 +94,28 @@ export default {
         })
       })
   },
+  async userTokenListFunc() {
+    var userTokenList = [];
+    await firestore.collection('userTokenList').get().then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
+        userTokenList.push(doc.data().token_id);
+      });
+    });
+    return userTokenList;
+  },
   postBoard(title, body, img) {
     let user = firebase.auth().currentUser;
     if (user !== null) {
-      let userEmail = user.email.split('@');
-      let userId = userEmail[0];
+      let userEmail = user.email;
+      let userId = userEmail.split('@')[0];
+
+      var userTokenList = FirebaseService.userTokenListFunc();
+      userTokenList.then(function(result){
+        result.forEach(function(element){
+          FirebaseService.requestToFCM(element, userId);
+        });
+      });
+
       return firestore.collection(BOARDS).add({
         doc_id: firestore.collection(BOARDS).doc().id,
         boardViewCount: 0,
@@ -128,6 +178,26 @@ export default {
     }).catch(function (error) {
       console.error('[Google Login Error]', error)
     })
+  },
+  requestToFCM(to, userId) {
+    var request = require("request");
+
+    request.post({
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'key=AAAAqQLQkdw:APA91bHRMyXjEVtUOTgF-Xyha_JRXQq2TGIcQQzbALVPRRjxfVy7k4juxdWFAT2C3NufkD1wEj7uxgqgW3Fgt2SdrU132ORqg09L9JDZRaXA5d0zBYWbub7kphBxyc5WLo7cCmdZZUHy'
+      },
+      uri: "https://fcm.googleapis.com/fcm/send",
+      body: JSON.stringify({
+        "to": to,
+        "notification": {
+          "title": "아주 중요한 메세지입니다!!!",
+          "body": userId + "님이 글을 쓰셨습니다"
+        }
+      })
+    }, function (error, response, body) {
+      console.log(body);
+    });
   },
   notificationService() {
     messaging
