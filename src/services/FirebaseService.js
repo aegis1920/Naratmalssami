@@ -30,6 +30,16 @@ firebase.initializeApp(config);
 const firestore = firebase.firestore();
 const messaging = firebase.messaging();
 
+firestore.enablePersistence()
+  .catch(function (err) {
+    if (err.code == 'failed-precondition') {
+
+    } else if (err.code == 'unimplemented') {
+
+    }
+  });
+
+
 export default {
   getBoards() {
     const postsCollection = firestore.collection(BOARDS)
@@ -43,6 +53,17 @@ export default {
           return data
         })
       })
+      // .onSnapshot({
+      //   includeMetadataCanges: true
+      // }, function (snapshot) {
+      //   snapshot.doChanges().forEach(function (change) {
+      //     if (change.type === 'added') {
+      //       console.log("added : ", change.doc.data());
+      //     }
+      //     var source = snapshot.metadata.fromCache ? "local cache" : "server";
+      //     console.log("Data came from ", source);
+      //   })
+      // })
   },
   postBoard(title, body, img) {
     let user = firebase.auth().currentUser;
@@ -65,8 +86,8 @@ export default {
   updateBoardViewCount(doc_id) {
     firestore.collection(BOARDS).where('doc_id', '==', doc_id)
       .get()
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
           firestore.collection(BOARDS).doc(doc.id).update({
             boardViewCount: firebase.firestore.FieldValue.increment(1)
           });
@@ -86,7 +107,7 @@ export default {
   getImgUrl(pagename) {
     const imgCollection = firestore.collection(IMGBANNER)
     return imgCollection.doc(pagename).get()
-      .then(function(doc) {
+      .then(function (doc) {
         return doc.data()
       })
   },
@@ -95,50 +116,50 @@ export default {
     return imgCollection.doc(pagename).set({
         imgurl: imgurl
       })
-      .then(function() {
+      .then(function () {
         console.log("Document successfully written!");
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error("Error writing document: ", error);
       });
   },
   loginWithGoogle() {
     let provider = new firebase.auth.GoogleAuthProvider()
-    return firebase.auth().signInWithPopup(provider).then(function(result) {
+    return firebase.auth().signInWithPopup(provider).then(function (result) {
       let accessToken = result.credential.accessToken
       let user = result.user
       return result
-    }).catch(function(error) {
+    }).catch(function (error) {
       console.error('[Google Login Error]', error)
     })
   },
   notificationService() {
     messaging
       .requestPermission()
-      .then(function() {
+      .then(function () {
         console.log("Notification permission granted.");
         return messaging.getToken()
       })
-      .then(function(token) {
+      .then(function (token) {
         console.log("token is : " + token);
       })
-      .catch(function(err) {
+      .catch(function (err) {
         console.log("Unable to get permission to notify.", err);
       });
   },
-  getUserMessageList(){
-		let userEmail = firebase.auth().currentUser.email;
-		if(userEmail !== null){
-			let currentUserRef = firestore.collection('users').doc(userEmail);
-      return currentUserRef.get().then(function(doc){
+  getUserMessageList() {
+    let userEmail = firebase.auth().currentUser.email;
+    if (userEmail !== null) {
+      let currentUserRef = firestore.collection('users').doc(userEmail);
+      return currentUserRef.get().then(function (doc) {
         return doc.data().messageList;
       })
     }
   },
-  setUserMessageList(messageList){
-		let userEmail = firebase.auth().currentUser.email;
-		if(userEmail !== null){
-			let currentUserRef = firestore.collection('users').doc(userEmail);
+  setUserMessageList(messageList) {
+    let userEmail = firebase.auth().currentUser.email;
+    if (userEmail !== null) {
+      let currentUserRef = firestore.collection('users').doc(userEmail);
       currentUserRef.update({
         messageList: messageList
       })
