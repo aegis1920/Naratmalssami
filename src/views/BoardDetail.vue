@@ -4,7 +4,6 @@
             <div style="line-height:1.2em; font-size:10vw; font-family: Aladdin;" slot="text">BOARD Detail</div>
         </ImgBanner>
         <v-container>
-
             <!-- Board -->
             <v-layout>
                 <v-card xs12>
@@ -26,7 +25,13 @@
                     </v-card-text>
                 </v-card>
             </v-layout>
-
+        </v-container>
+        <v-container xs12>
+            <v-layout>
+                <v-flex xs12>
+                    <CommentList></CommentList>
+                </v-flex>
+            </v-layout>
         </v-container>
     </div>
 </template>
@@ -35,11 +40,13 @@
     import FirebaseService from "../services/FirebaseService";
     import {mapActions, mapGetters} from 'vuex'
     import ImgBanner from '../components/ImgBanner'
+    import CommentList from "../components/CommentList";
 
     export default {
         name: "BoardDetail",
         components: {
-            ImgBanner
+            ImgBanner,
+            CommentList,
         },
         data() {
             return {
@@ -52,11 +59,10 @@
             ...mapGetters(['getNowBoard']),
             async getBoards() {
                 this.boards = await FirebaseService.getBoards();
-                console.log(this.boards);
             },
             routeName(){
                 return this.$route.name
-            }
+            },
         },
         created() {
 
