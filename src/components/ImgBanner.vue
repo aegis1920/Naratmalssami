@@ -58,7 +58,7 @@ export default {
     ImageUpload
   },
   mounted() {
-    if(this.pagename === 'home') {
+    if(this.pagename === 'home' || this.pagename === 'board' || this.pagename === 'boarddetail') {
       this.imgSrc = '';
     }else{
       this.bannerSetting(this.pagename)
@@ -70,13 +70,14 @@ export default {
   methods: {
     async bannerSetting(page) {
       var data = await FirebaseService.getImgUrl(page);
+      console.log(data);
       var imgurl = String(data.imgurl);
       this.imgSrc = imgurl
     },
     updateImgUrl() {
       var imagefile = document.getElementsByClassName('imagefile');
       var path = ''
-      if (this.pagename == 'home') {
+      if (this.pagename == 'home' || this.pagename == 'board') {
         path = '/'
       } else {
         path = '/' + this.pagename

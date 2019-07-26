@@ -1,57 +1,26 @@
 <template>
 <v-layout mt-5 wrap>
 
-    <Board class="ma-3"
-    v-if="previewShow"
-    :title="board_title"
-    :body="board_body"
-    :author="board_author"
-    :doc_id="board_doc_id"
-    :created_at="board_created_at"
-    :boardViewCount="board_boardViewCount"
-    :imgSrc="board_imgSrc"
-    ></Board>
+    <table class="content-table">
+        <thead>
+            <tr>
+                <th>작성자</th>
+                <th>제목</th>
+                <th>조회수</th>
+            </tr>
+        </thead>
+        <tbody>
+            <Board v-for="board in boards"
+                  :board="board"
+                  :title="board.title"
+                  :author="board.author"
+                  :body ="board.body"
+                  :boardViewCount ="board.boardViewCount"
+            ></Board>
+        </tbody>
+    </table>
 
-  <v-card style="margin:0 auto">
 
-  <v-card-title>
-    Board Service
-    <v-spacer></v-spacer>
-    <v-text-field append-icon="search" label="Search" single-line hide-details v-model="search"></v-text-field>
-  </v-card-title>
-  <v-icon small right @click="previewShowClose">fas fa-times-circle</v-icon>
-
-    <v-layout v-resize="onResize" column style="padding-top:56px">
-      <v-data-table :headers="headers" :items="boards" :search="search" :pagination.sync="pagination" :hide-headers="isMobile" :class="{mobile: isMobile}">
-        <template slot="items" slot-scope="props">
-          <tr v-if="!isMobile" @click="showBoard(props.item.title, props.item.body, props.item.author, props.item.doc_id, props.item.created_at.toString().split('GMT')[0], props.item.boardViewCount,  props.item.img)">
-            <td class="text-xs-center">{{ props.index+1 }}</td>
-            <td class="text-xs-center">{{ props.item.title }}</td>
-            <td class="text-xs-center">{{ props.item.author }}</td>
-            <td class="text-xs-center">{{ props.item.created_at.toString().split('GMT')[0] }}</td>
-            <td class="text-xs-center">{{ props.item.boardViewCount }}</td>
-          </tr>
-          <tr v-else @click="showBoard(props.item.title, props.item.body, props.item.author, props.item.doc_id, props.item.created_at.toString().split('GMT')[0], props.item.boardViewCount,  props.item.img)">
-            <td>
-              <ul class="flex-content">
-                <li class="flex-item oneLine" data-label="index">{{ props.index+1 }}</li>
-                <li class="flex-item oneLine" data-label="title">{{ props.item.title }}</li>
-                <li class="flex-item oneLine" data-label="author">{{ props.item.author }}</li>
-                <li class="flex-item oneLine" data-label="created_at">{{ props.item.created_at.toString().split('GMT')[0] }}</li>
-                <li class="flex-item oneLine" data-label="boardViewCount">{{ props.item.boardViewCount }}</li>
-              </ul>
-            </td>
-          </tr>
-        </template>
-        <template>
-        <v-alert slot="no-results" :value="true" color="error" icon="warning">
-          Your search for "{{ search }}" found no results.
-        </v-alert>
-        </template>
-      </v-data-table>
-    </v-layout>
-
-  </v-card>
 
 </v-layout>
 </template>
@@ -126,7 +95,7 @@ export default {
   },
   methods: {
     async getBoards() {
-      this.boards = await FirebaseService.getBoards()
+      this.boards = await FirebaseService.getBoards();
     },
     loadMoreBoards() {
       this.limits += 2;
@@ -167,73 +136,51 @@ export default {
 }
 </script>
 <style>
-.mw-700 {
-  max-width: 700px;
-  margin: auto;
-}
+    .content-table{
+        border-collapse: collapse;
+        margin: auto;
+        font-size: 0.9em;
+        min-width: 400px;
+        border-radius: 5px 5px 0 0;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
 
-.mobile {
-   color: #333;
- }
+    .content-table thead tr {
+        background-color: #009879;
+        color: #ffffff;
+        text-align: left;
+        font-weight: bold;
+    }
 
- @media screen and (max-width: 768px) {
-   .mobile table.v-table tr {
-     max-width: 100%;
-     position: relative;
-     display: block;
-   }
+    .content-table th,
+    .content-table td {
+        padding: 12px 15px;
+    }
 
-   .mobile table.v-table tr:nth-child(odd) {
-     border-left: 6px solid deeppink;
-   }
+    .content-table tbody tr {
+        border-bottom: 1px solid #dddddd;
+        background-color: white;
+    }
 
-   .mobile table.v-table tr:nth-child(even) {
-     border-left: 6px solid cyan;
-   }
+    .content-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+    }
 
-   .mobile table.v-table tr td {
-     display: flex;
-     width: 100%;
-     border-bottom: 1px solid #f5f5f5;
-     height: auto;
-     padding: 10px;
-   }
+    .content-table tbody tr:last-of-type {
+        border-bottom: 2px solid #009879;
+    }
 
-   .mobile table.v-table tr td ul li:before {
-     content: attr(data-label);
-     padding-right: .5em;
-     text-align: left;
-     display: block;
-     color: #999;
+    @media screen and (min-width: 600px) and (max-width: 960px){
+        .content-table {
+            min-width: 580px;
+        }
+    }
 
-   }
-   .v-datatable__actions__select
-   {
-     width: 50%;
-     margin: 0px;
-     justify-content: flex-start;
-   }
-   .mobile .theme--light.v-table tbody tr:hover:not(.v-datatable__expand-row) {
-     background: transparent;
-   }
+    @media screen and (min-width: 960px) and (max-width: 1904px) {
+        .content-table {
+            min-width: 900px;
+        }
+    }
 
- }
- .flex-content {
-   padding: 0;
-   margin: 0;
-   list-style: none;
-   display: flex;
-   flex-wrap: wrap;
-   width: 100%;
- }
-
- .flex-item {
-   padding: 5px;
-   width: 50%;
-   height: 40px;
-   font-weight: bold;
- }
-th{
-  text-align: center;
-}
 </style>

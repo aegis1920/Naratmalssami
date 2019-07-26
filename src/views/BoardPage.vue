@@ -12,6 +12,8 @@
         </v-flex>
       </v-layout>
 
+
+
     </v-container>
     <BoardWriteBtn />
 

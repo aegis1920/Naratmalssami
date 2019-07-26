@@ -10,8 +10,10 @@ import router from './router'
 import store from './store'
 import BrowserAlert from './components/BrowserAlert.vue'
 import firebase from "firebase"
+
 import FirebaseService from './services/FirebaseService'
 import Chat from 'vue-beautiful-chat'
+
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
