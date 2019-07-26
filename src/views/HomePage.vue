@@ -153,7 +153,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$store.state.intro);
     if (!this.$store.state.intro) {
       this.$store.state.intro = true;
       this.preLoader();

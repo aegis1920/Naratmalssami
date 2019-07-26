@@ -31,6 +31,10 @@ const firestore = firebase.firestore();
 const messaging = firebase.messaging();
 
 firestore.enablePersistence()
+  .then(function(){
+    console.log("성공");
+    
+  })
   .catch(function (err) {
     if (err.code == 'failed-precondition') {
 
@@ -47,23 +51,15 @@ export default {
       .orderBy('created_at', 'desc')
       .get()
       .then((docSnapshots) => {
-        return docSnapshots.docs.map((doc) => {
-          let data = doc.data()
+        return docSnapshots.docChanges().map((change) => {
+          let data = change.doc.data()
           data.created_at = new Date(data.created_at.toDate())
+          var source = change.doc.metadata.fromCache ? "local cache" : "server";
+          console.log("this data from ", source);
+          
           return data
         })
       })
-      // .onSnapshot({
-      //   includeMetadataCanges: true
-      // }, function (snapshot) {
-      //   snapshot.doChanges().forEach(function (change) {
-      //     if (change.type === 'added') {
-      //       console.log("added : ", change.doc.data());
-      //     }
-      //     var source = snapshot.metadata.fromCache ? "local cache" : "server";
-      //     console.log("Data came from ", source);
-      //   })
-      // })
   },
   postBoard(title, body, img) {
     let user = firebase.auth().currentUser;
