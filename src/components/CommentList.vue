@@ -10,6 +10,7 @@
               :cur_user_id="cur_user_id"
               :com_id="comment.com_id"
               @delete="deleteCo"
+              @modify="modifyCo"
             ></Comment>
         </v-card-title>
         <v-divider></v-divider>
@@ -62,11 +63,12 @@
             },
             async deleteCo(com_id) {
                 await FirebaseService.deleteComment(com_id);
-                /*setTimeout(()=> {
-                    this.getComments();
-                }, 500);*/
                 await this.getComments();
-
+            },
+            async modifyCo(comment, com_id) {
+                await FirebaseService.updateComment(comment, com_id);
+                alert('수정이 완료되었습니다.');
+                await this.getComments();
             }
         },
         mounted() {

@@ -6,24 +6,26 @@
         <v-container>
             <!-- Board -->
             <v-layout>
-                <v-card xs12>
-                    <v-img :src="board.img"></v-img>
-                    <v-card-title>
-                        제목 : {{board.title}}
-                    </v-card-title>
-                    <v-card-text>
-                        작성자 : {{board.author}}
-                    </v-card-text>
-                    <v-card-text>
-                        내용 : {{board.body}}
-                    </v-card-text>
-                    <v-card-text>
-                        조회수 : {{board.boardViewCount}}
-                    </v-card-text>
-                    <v-card-text>
-                        작성 날짜 : {{board.created_at}}
-                    </v-card-text>
-                </v-card>
+                <v-flex xs12>
+                    <v-card>
+                        <v-img :src="board.img"></v-img>
+                        <v-card-title>
+                            제목 : {{board.title}}
+                        </v-card-title>
+                        <v-card-text>
+                            작성자 : {{board.author}}
+                        </v-card-text>
+                        <v-card-text>
+                            내용 : {{board.body}}
+                        </v-card-text>
+                        <v-card-text>
+                            조회수 : {{board.boardViewCount}}
+                        </v-card-text>
+                        <v-card-text>
+                            작성 날짜 : {{board.created_at}}
+                        </v-card-text>
+                    </v-card>
+                </v-flex>
             </v-layout>
         </v-container>
         <v-container xs12>
@@ -54,6 +56,9 @@
                 boards: [],
             }
         },
+        props: {
+            test_board:{},
+        },
         methods: {
             ...mapActions(['addBoard']),
             ...mapGetters(['getNowBoard']),
@@ -63,14 +68,24 @@
             routeName(){
                 return this.$route.name
             },
+            searchBoard() {
+                // 새로고침하면 vuex 갱신해야됨
+                let key = localStorage.getItem('doc_id');
+                let tmp = FirebaseService.getBoard(key);
+                tmp.then(res => {
+                    console.log(res);
+                    this.board = res;
+                })
+            }
         },
         created() {
-
+            this.searchBoard();
         },
         mounted() {
+            //this.board = this.getNowBoard();
             // 새로고침되면 localStorage에 있는 값으로 vuex갱신
-            let key = '';
-            console.log(localStorage.getItem('doc_id'));
+            /*let key = '';
+            // console.log(localStorage.getItem('doc_id'));
             if(localStorage.getItem('doc_id') === undefined) {
                 this.$router.push({name:'board'})
             }else if(localStorage.getItem('doc_id') !== undefined) {
@@ -84,14 +99,8 @@
                     });
                     this.board = this.getNowBoard();
                 }, 1000);
-
-            }
+            }*/
         },
-        watch: {
-            boards() {
-
-            }
-        }
     }
 </script>
 

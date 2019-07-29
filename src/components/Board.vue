@@ -34,8 +34,7 @@ export default {
       FirebaseService.updateBoardViewCount(this.board.doc_id);
     },
     goDetail() {
-      // vuex에 데이터 넣어놓기 + localStorage에 doc_id 넣어놓기
-      this.addBoard(this.board);
+      // localStorage에 doc_id 넣어놓기
       this.updateBoardViewCountMethod(); // 조회수 증가.
       localStorage.setItem('doc_id', this.board.doc_id);
       // router 이동

@@ -49,7 +49,6 @@ export default {
   },
   data() {
     return {
-      img: "",
       imgSrc: "",
       dialog: false
     }

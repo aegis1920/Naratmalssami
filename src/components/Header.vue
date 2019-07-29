@@ -140,7 +140,6 @@
                 }
             },
             async userSignOut() {
-                var userToken = '';
                 await Swal.fire({
                     title: 'Are you sure you want to LOG OUT?',
                     text: "You won't be able to revert this!",
@@ -150,27 +149,8 @@
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Confirm'
                 }).then((result) => {
-                    let email_id = this.email;
-                    messaging
-                    .requestPermission()
-                    .then(function () {
-                        console.log("Notification permission granted.");
-                        return messaging.getToken()
-                    })
-                    .then(function (token) {
-                        userToken = token;
-                    });
                     if (result.value) {
-                        firebase.auth().signOut().then(function() {
-                            console.log("I'm" + this);
-                            console.log("I'm" + this.userToken);
-                            let userTokenRef = firebase.firestore().collection('userTokenList').where('token_id','==', userToken);
-                            userTokenRef.get().then(function(querySnapshot){
-                                querySnapshot.forEach(function(doc){
-                                    console.log(doc.ref.get());
-                                    doc.ref.delete();
-                                });
-                            });
+                        firebase.auth().signOut().then(function () {
                             Swal.fire(
                                 {
                                     type: 'success',
@@ -181,7 +161,7 @@
                                     timer: 1500,
                                 }
                             )
-                        }).catch(function(error) {
+                        }).catch(function (error) {
                             var errorCode = error.code;
                             var errorMessage = error.message;
                             Swal.fire({
@@ -195,6 +175,8 @@
                         });
                     }
                 })
+                //window.location.href = "/"
+                this.$router.push({name:'home'})
             },
         },
         created() {
