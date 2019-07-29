@@ -4,15 +4,23 @@
             {{user_id}} :
         </v-flex>
         <v-flex xs9>
-            {{comment}}
+            <input id="commentInput" type="text" v-model:value="text"
+                   :readonly="!modiBtnOn"
+            />
         </v-flex>
-        <v-flex xs1 v-if="modiOn">
-            <v-icon class="icon" small>fas fa-pencil-alt</v-icon>
-        </v-flex>
-        <v-flex xs1 v-if="modiOn">
-            <v-icon style="cursor: pointer" class="icon" small
-            @click="deleteComment">fas fa-trash-alt</v-icon>
-        </v-flex>
+        <v-layout xs1 v-if="modiOn && !modiBtnOn">
+            <v-flex xs6>
+                <v-icon style="cursor: pointer" class="icon" small
+                @click="modifyComment">fas fa-pencil-alt</v-icon>
+            </v-flex>
+            <v-flex xs6>
+                <v-icon style="cursor: pointer" class="icon" small
+                @click="deleteComment">fas fa-trash-alt</v-icon>
+            </v-flex>
+        </v-layout>
+        <v-layout xs1 v-if="modiBtnOn">
+            <v-btn @click="modifyEx">수정하기</v-btn>
+        </v-layout>
     </v-layout>
 </template>
 
@@ -25,6 +33,8 @@
         data() {
             return {
                 modiOn: false,
+                modiBtnOn: false,
+                text: '',
             }
         },
         props: {
@@ -35,6 +45,14 @@
             com_id:{type:String},
         },
         methods: {
+          modifyComment() {
+            this.modiBtnOn = true;
+            document.getElementById('commentInput').focus();
+          },
+          modifyEx() {
+            this.$emit('modify', this.text, this.com_id);
+            this.modiBtnOn = false;
+          },
           deleteComment() {
             this.$emit('delete', this.com_id);
           }
@@ -42,7 +60,8 @@
         mounted() {
             if(this.user_id === this.cur_user_id) {
                 this.modiOn = true;
-            }
+            };
+            this.text = this.comment;
         }
     }
 </script>

@@ -89,27 +89,27 @@ export default {
           let data = change.doc.data()
           data.created_at = new Date(data.created_at.toDate())
           var source = change.doc.metadata.fromCache ? "local cache" : "server";
-          console.log("this data from ", source);
+          //console.log("this data from ", source);
           
           return data
         })
       })
   },
-  getBoard(doc_id) {
-    const postsCollection = firestore.collection(BOARDS)
+  async getBoard(doc_id) {
+    const postsCollection = firestore.collection(BOARDS);
     let result = {};
-    postsCollection
+    await postsCollection
         .get()
         .then((docSnapshots) => {
           return docSnapshots.docs.map((doc) => {
             let data = doc.data();
-            console.log(data);
-            data.created_at = new Date(data.created_at.toDate());
+            // doc 부분을 계속 반복하는듯.
             if (data.doc_id === doc_id) {
               result = data;
             }
           })
         });
+    return result;
   },
   async userTokenListFunc() {
     var userTokenList = [];
@@ -262,13 +262,13 @@ export default {
       alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
     }
   },
-  updateComment() {
-    firestore.collection(BOARDS).where('doc_id','==',doc_id)
+  async updateComment(comment, com_id) {
+    await firestore.collection(COMMENTS).where('com_id','==',com_id)
         .get()
         .then(function(querySnapshot){
           querySnapshot.forEach(function(doc){
-            firestore.collection(BOARDS).doc(doc.id).update({
-              boardViewCount:firebase.firestore.FieldValue.increment(1)
+            firestore.collection(COMMENTS).doc(doc.id).update({
+              comment: comment
             });
           });
         })
@@ -278,7 +278,6 @@ export default {
         .get()
         .then(function(querySnapshot){
           querySnapshot.forEach(function(doc){
-            console.log(doc.id);
             firestore.collection(COMMENTS).doc(doc.id).delete();
           });
         })
