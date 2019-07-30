@@ -112,8 +112,11 @@ export default {
     return result;
   },
   async userTokenListFunc() {
+    let user_id = firebase.auth().currentUser.email;
     var userTokenList = [];
-    await firestore.collection('userTokenList').get().then(function (querySnapshot) {
+    await firestore.collection('userTokenList')
+    .get()
+    .then(function (querySnapshot) {
       querySnapshot.forEach(function (doc) {
         userTokenList.push(doc.data().token_id);
       });
@@ -209,7 +212,7 @@ export default {
       body: JSON.stringify({
         "to": to,
         "notification": {
-          "title": "아주 중요한 메세지입니다!!!",
+          "title": "postBoard에 대한 글입니다",
           "body": userId + "님이 글을 쓰셨습니다"
         }
       })
@@ -217,21 +220,6 @@ export default {
       console.log(body);
     });
   },
-  notificationService() {
-    messaging
-   .requestPermission()
-   .then(function () {
-     console.log("Notification permission granted.");
-     return messaging.getToken()
-   })
-   .then(function(token) {
-     console.log("token is : " + token);
-   })
-   .catch(function (err) {
-   console.log("Unable to get permission to notify.", err);
- });
-  },
-
   // Comment methods
   getComments() { // 그 문서 doc_id랑 같은거만 보여주게 수정하기.
     const postsCollection = firestore.collection(COMMENTS);

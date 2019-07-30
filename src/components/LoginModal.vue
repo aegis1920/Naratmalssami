@@ -199,10 +199,11 @@
                 })
                 await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 .then(()=>{
-                    var userTokenListRef = firestore.collection('userTokenList').doc(email_id);
+                    var userTokenListRef = firestore.collection('userTokenList');
                     console.log(userToken);
-                    userTokenListRef.set({
-                        token_id: userToken
+                    userTokenListRef.add({
+                        token_id: userToken,
+                            user_id: email_id
                     })
                     .then(function() {
                         console.log("it is work!!"); 
@@ -265,10 +266,11 @@
                             }]
                         });
 
-                        var userTokenListRef = firestore.collection('userTokenList').doc(email_id);
+                        var userTokenListRef = firestore.collection('userTokenList');
                         console.log(userToken);
-                        userTokenListRef.set({
-                            token_id: userToken
+                        userTokenListRef.add({
+                            token_id: userToken,
+                            user_id: email_id
                         })
                         .then(function() {
                             console.log("it is work!!"); 
