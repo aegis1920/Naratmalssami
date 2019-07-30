@@ -32,6 +32,9 @@ export default new Vuex.Store({
           // console.log("로그인한 사용자가 없습니다.");
         })
       }
+    },
+    addBoard: (state, payload) => {
+      state.nowBoard = payload;
     }
   },
   getters: {
@@ -40,6 +43,14 @@ export default new Vuex.Store({
     },
     getUserChat(state) {
       return state.userChat;
+    },
+    getNowBoard(state) {
+      return state.nowBoard;
     }
-  }
+  },
+  actions: {
+    addBoard: ({ commit }, payload) => {
+      commit('addBoard', payload);
+    }
+  },
 })

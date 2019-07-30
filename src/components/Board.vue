@@ -1,72 +1,19 @@
-<style scoped>
-  .v-dialog__content >>> .v-dialog {
-    width: 50vw!important;
-    height: auto!important;
-  }
-  @media screen and ( max-width:600px  ){
-    .v-dialog__content >>> .v-dialog {
-      width: 80vw!important;
-      height: auto!important;
-    }
-  }
-  /* .v-card, .v-sheet, .v-datatable, .v-datatable__actions, .theme--light.v-sheet {
-   background-color: #ffffff87!important;
-} */
-</style>
 <template>
-<v-layout>
-  <v-dialog>
-      <!-- <v-dialog v-model="dialog"> -->
-    <template v-slot:activator="{ on }">
-      <!-- <v-btn color="primary" dark >Open Dialog</v-btn> -->
-      <v-hover>
-      <v-card v-on="on"
-      style="max-width:400px;"
-      slot-scope="{ hover }"
-      :class="`elevation-${hover ? 12 : 2}`"
-      class="card-item"
-      @click="updateBoardViewCountMethod"
-      >
-        <v-img :src="imgSrc" style="max-height:200px">
-        </v-img>
-        <v-card-title primary-title hover>
-          <div>
-            <div class="headline oneLine">{{title}}</div>
-            <span class="grey--text body-txt oneLine">{{body}}</span>
-            <span class="grey--text oneLine"><v-icon small class="mr-1">fas fa-eye</v-icon>{{boardViewCount}}</span>
-            <span class="grey--text oneLine"><v-icon small class="mr-1">fas fa-clock</v-icon>{{created_at}}</span>
-            <span class="grey--text oneLine"><v-icon small class="mr-1">fas fa-user</v-icon>{{author}}</span>
-          </div>
-        </v-card-title>
-      </v-card>
-    </v-hover>
-    </template>
-
-    <!-- <v-flex xs12 sm8 md6> -->
-    <v-card  >
-      <v-img :src="imgSrc" >
-      </v-img>
-      <v-card-title primary-title hover bottom>
-        <div>
-          <div class="headline">{{title}}</div>
-          <span class="grey--text" >{{body}}</span>
-        </div>
-      </v-card-title>
-    </v-card>
-
-  <!-- </v-flex> -->
-  </v-dialog>
-
-</v-layout>
-
+  <tr @click="goDetail" style="cursor:pointer">
+    <td>{{board.author}}</td>
+    <td>{{board.title}}</td>
+    <td>{{board.boardViewCount}}</td>
+  </tr>
 </template>
 
 <script>
 import FirebaseService from '@/services/FirebaseService'
+import {mapActions} from 'vuex'
 
 export default {
 	name: 'Board',
 	props: {
+	    board: {type: Object},
 		date: {type: String},
 		title: {type: String},
 		body: {type: String},
@@ -82,9 +29,21 @@ export default {
 		}
 	},
   methods:{
+    ...mapActions(['addBoard']),
     updateBoardViewCountMethod(){
-      FirebaseService.updateBoardViewCount(this.doc_id);
-    }
+      FirebaseService.updateBoardViewCount(this.board.doc_id);
+    },
+    goDetail() {
+      // localStorage에 doc_id 넣어놓기
+      this.updateBoardViewCountMethod(); // 조회수 증가.
+      localStorage.setItem('doc_id', this.board.doc_id);
+      // router 이동
+      this.$router.push({name:'boarddetail'});
+    },
   }
 }
 </script>
+
+<style scoped>
+
+</style>

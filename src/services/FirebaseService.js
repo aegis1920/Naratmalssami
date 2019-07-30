@@ -3,9 +3,10 @@ import 'firebase/firestore'
 import 'firebase/auth'
 import FirebaseService from '@/services/FirebaseService'
 
-const POSTS = 'posts'
-const BOARDS = 'boards'
-const IMGBANNER = 'imgbanner'
+const POSTS = 'posts';
+const BOARDS = 'boards';
+const IMGBANNER = 'imgbanner';
+const COMMENTS = 'comments';
 
 // const config = {
 //   apiKey: "AIzaSyC8aq7GouxjIjJGA7WGccNNCn1HhL8uCys",
@@ -88,11 +89,27 @@ export default {
           let data = change.doc.data()
           data.created_at = new Date(data.created_at.toDate())
           var source = change.doc.metadata.fromCache ? "local cache" : "server";
-          console.log("this data from ", source);
+          //console.log("this data from ", source);
           
           return data
         })
       })
+  },
+  async getBoard(doc_id) {
+    const postsCollection = firestore.collection(BOARDS);
+    let result = {};
+    await postsCollection
+        .get()
+        .then((docSnapshots) => {
+          return docSnapshots.docs.map((doc) => {
+            let data = doc.data();
+            // doc 부분을 계속 반복하는듯.
+            if (data.doc_id === doc_id) {
+              result = data;
+            }
+          })
+        });
+    return result;
   },
   async userTokenListFunc() {
     var userTokenList = [];
@@ -102,6 +119,7 @@ export default {
       });
     });
     return userTokenList;
+
   },
   postBoard(title, body, img) {
     let user = firebase.auth().currentUser;
@@ -201,17 +219,68 @@ export default {
   },
   notificationService() {
     messaging
-      .requestPermission()
-      .then(function () {
-        console.log("Notification permission granted.");
-        return messaging.getToken()
+   .requestPermission()
+   .then(function () {
+     console.log("Notification permission granted.");
+     return messaging.getToken()
+   })
+   .then(function(token) {
+     console.log("token is : " + token);
+   })
+   .catch(function (err) {
+   console.log("Unable to get permission to notify.", err);
+ });
+  },
+
+  // Comment methods
+  getComments() { // 그 문서 doc_id랑 같은거만 보여주게 수정하기.
+    const postsCollection = firestore.collection(COMMENTS);
+    return postsCollection
+        .orderBy('created_at', 'asc')
+        .get()
+        .then((docSnapshots) => {
+          return docSnapshots.docs.map((doc) => {
+            let data = doc.data()
+            /*data.created_at = new Date(data.created_at.toDate)*/
+            return data
+          })
+        })
+  },
+  postComment(doc_id, comment) { // 완성
+    let user = firebase.auth().currentUser;
+    if(user !== null){
+      let userEmail = user.email.split('@');
+      let userId = userEmail[0];
+      return firestore.collection(COMMENTS).add({
+        comment: comment,
+        created_at: firebase.firestore.FieldValue.serverTimestamp(),
+        doc_id: doc_id,
+        user_id:userId,
+        com_id:firestore.collection(COMMENTS).doc().id,
       })
-      .then(function (token) {
-        console.log("token is : " + token);
-      })
-      .catch(function (err) {
-        console.log("Unable to get permission to notify.", err);
-      });
+    }else{
+      alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
+    }
+  },
+  async updateComment(comment, com_id) {
+    await firestore.collection(COMMENTS).where('com_id','==',com_id)
+        .get()
+        .then(function(querySnapshot){
+          querySnapshot.forEach(function(doc){
+            firestore.collection(COMMENTS).doc(doc.id).update({
+              comment: comment
+            });
+          });
+        })
+  },
+  async deleteComment(com_id) {
+    await firestore.collection(COMMENTS).where('com_id','==',com_id)
+        .get()
+        .then(function(querySnapshot){
+          querySnapshot.forEach(function(doc){
+            firestore.collection(COMMENTS).doc(doc.id).delete();
+          });
+        })
   },
   getUserMessageList() {
     let userEmail = firebase.auth().currentUser.email;

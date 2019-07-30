@@ -27,7 +27,7 @@
             버튼을 눌러 주인장과 대화해보세요!
             <v-icon small color="#FDD835">far fa-grin-squint</v-icon>
           </span>
-        </v-tooltip> -->
+        </v-tooltip>-->
         <ChatBotBtn />
       </v-toolbar-items>
       <v-toolbar-items class="hidden-xs-only" v-for="item in items" :key="item.title">
@@ -81,7 +81,7 @@ import firebase from "firebase";
 import LoginModal from "./LoginModal.vue";
 import LoginModal2 from "./LoginModal2.vue";
 import Swal from "sweetalert2";
-import ChatBotBtn from './ChatBotBtn.vue'
+import ChatBotBtn from "./ChatBotBtn.vue";
 let timerInterval;
 
 const messaging = firebase.messaging();
@@ -150,7 +150,6 @@ export default {
       }
     },
     async userSignOut() {
-      var userToken = "";
       await Swal.fire({
         title: "Are you sure you want to LOG OUT?",
         text: "You won't be able to revert this!",
@@ -160,33 +159,11 @@ export default {
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Confirm"
       }).then(result => {
-        let email_id = this.email;
-        messaging
-          .requestPermission()
-          .then(function() {
-            console.log("Notification permission granted.");
-            return messaging.getToken();
-          })
-          .then(function(token) {
-            userToken = token;
-          });
         if (result.value) {
           firebase
             .auth()
             .signOut()
             .then(function() {
-              console.log("I'm" + this);
-              console.log("I'm" + this.userToken);
-              let userTokenRef = firebase
-                .firestore()
-                .collection("userTokenList")
-                .where("token_id", "==", userToken);
-              userTokenRef.get().then(function(querySnapshot) {
-                querySnapshot.forEach(function(doc) {
-                  console.log(doc.ref.get());
-                  doc.ref.delete();
-                });
-              });
               Swal.fire({
                 type: "success",
                 position: "center",
@@ -210,6 +187,8 @@ export default {
             });
         }
       });
+      //window.location.href = "/"
+      this.$router.push({ name: "home" });
     }
   },
   created() {

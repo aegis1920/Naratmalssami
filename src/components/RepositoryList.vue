@@ -33,7 +33,6 @@ export default {
 	},
 	mounted() {
 		this.getGitlabRepos(this.userName, this.token);
-		console.log(this.repositories);
 	},
 	methods: {
 		async getGitlabRepos(userName, token) {
