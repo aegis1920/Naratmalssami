@@ -5,13 +5,24 @@
     data-chatbot="03674280-8dd2-472f-8779-a18eca2ccb57"
     data-user="사용자ID"
     data-init-key="value"
-  ></div>
+  >
+    <div id="test"></div>
+  </div>
 </template>
 
 <script>
 import { log } from "util";
 export default {
   name: "chat",
+  data() {
+    return {
+      styleOption: {
+        top: "30px!important",
+        right: "0px!important"
+      },
+      isLoad: false
+    };
+  },
   mounted() {
     this.chatbotLoad();
   },
@@ -27,7 +38,12 @@ export default {
       js.id = "frogue-embed";
       js.src = "https://danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
 
+      console.log(js, fjs);
+
       await fjs.parentNode.insertBefore(js, fjs);
+      console.log(js, fjs);
+
+      this.isLoad = true;
     }
   }
 };
@@ -53,9 +69,16 @@ export default {
   }
 }
 .frogue-launcher {
-  top: 30px !important;
-  left: calc(100% - 350px) !important;
+  /* top: 30px !important; */
+  /* left: calc(100% - 350px) !important; */
+  width: 30px !important;
+  height: 30px !important;
   opacity: 0.00001;
+}
+#frogue-container {
+  top: 15px !important;
+  bottom:0px!important;
+  right:434.234px!important;
 }
 </style>
 
