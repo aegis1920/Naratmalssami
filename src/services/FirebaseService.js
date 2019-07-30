@@ -33,9 +33,9 @@ const firestore = firebase.firestore();
 const messaging = firebase.messaging();
 
 firestore.enablePersistence()
-  .then(function(){
+  .then(function () {
     console.log("성공");
-    
+
   })
   .catch(function (err) {
     if (err.code == 'failed-precondition') {
@@ -90,7 +90,7 @@ export default {
           data.created_at = new Date(data.created_at.toDate())
           var source = change.doc.metadata.fromCache ? "local cache" : "server";
           //console.log("this data from ", source);
-          
+
           return data
         })
       })
@@ -99,28 +99,28 @@ export default {
     const postsCollection = firestore.collection(BOARDS);
     let result = {};
     await postsCollection
-        .get()
-        .then((docSnapshots) => {
-          return docSnapshots.docs.map((doc) => {
-            let data = doc.data();
-            // doc 부분을 계속 반복하는듯.
-            if (data.doc_id === doc_id) {
-              result = data;
-            }
-          })
-        });
+      .get()
+      .then((docSnapshots) => {
+        return docSnapshots.docs.map((doc) => {
+          let data = doc.data();
+          // doc 부분을 계속 반복하는듯.
+          if (data.doc_id === doc_id) {
+            result = data;
+          }
+        })
+      });
     return result;
   },
   async userTokenListFunc() {
     let user_id = firebase.auth().currentUser.email;
     var userTokenList = [];
     await firestore.collection('userTokenList')
-    .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        userTokenList.push(doc.data().token_id);
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          userTokenList.push(doc.data().token_id);
+        });
       });
-    });
     return userTokenList;
 
   },
@@ -131,8 +131,8 @@ export default {
       let userId = userEmail.split('@')[0];
 
       var userTokenList = FirebaseService.userTokenListFunc();
-      userTokenList.then(function(result){
-        result.forEach(function(element){
+      userTokenList.then(function (result) {
+        result.forEach(function (element) {
           FirebaseService.requestToFCM(element, userId);
         });
       });
@@ -181,8 +181,8 @@ export default {
   updateImgUrl(pagename, imgurl) {
     const imgCollection = firestore.collection(IMGBANNER)
     return imgCollection.doc(pagename).set({
-        imgurl: imgurl
-      })
+      imgurl: imgurl
+    })
       .then(function () {
         console.log("Document successfully written!");
       })
@@ -224,51 +224,93 @@ export default {
   getComments() { // 그 문서 doc_id랑 같은거만 보여주게 수정하기.
     const postsCollection = firestore.collection(COMMENTS);
     return postsCollection
-        .orderBy('created_at', 'asc')
-        .get()
-        .then((docSnapshots) => {
-          return docSnapshots.docs.map((doc) => {
-            let data = doc.data()
-            /*data.created_at = new Date(data.created_at.toDate)*/
-            return data
-          })
+      .orderBy('created_at', 'asc')
+      .get()
+      .then((docSnapshots) => {
+        return docSnapshots.docs.map((doc) => {
+          let data = doc.data()
+          /*data.created_at = new Date(data.created_at.toDate)*/
+          return data
         })
+      })
   },
   postComment(doc_id, comment) { // 완성
     let user = firebase.auth().currentUser;
-    if(user !== null){
+    if (user !== null) {
       let userEmail = user.email.split('@');
       let userId = userEmail[0];
+      var adminIdList = [];
+      var adminToken = '';
       return firestore.collection(COMMENTS).add({
         comment: comment,
         created_at: firebase.firestore.FieldValue.serverTimestamp(),
         doc_id: doc_id,
-        user_id:userId,
-        com_id:firestore.collection(COMMENTS).doc().id,
+        user_id: userId,
+        com_id: firestore.collection(COMMENTS).doc().id,
       })
-    }else{
+        .then(function () {
+          console.log("post comment까지 들어왔어요");
+          firestore.collection('users')
+            .where('user_class', '==', 'administrator')
+            .get()
+            .then( function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                firestore.collection('user').doc(doc.id).get().then(function (documentSnapshot) {
+                  console.log(documentSnapshot.id);
+                  adminIdList.push(documentSnapshot.id);
+                });
+              });
+            });
+
+          console.log(adminIdList);
+          console.log(adminIdList.length);
+          console.log(adminIdList[0]);
+
+
+          adminIdList.forEach(function (element) {
+            console.log(element);
+            firestore.collection('userTokenList')
+            .where('user_id', '==', element)
+            .get()
+            .then(function (querySnapshot) {
+              console.log(querySnapshot);
+              querySnapshot.forEach(function (doc) {
+                adminToken = doc.data().token_id;
+                console.log(adminToken);
+                FirebaseService.requestToFCM(adminToken, user.email);
+              });
+            });
+          });
+
+
+
+
+
+
+        })
+    } else {
       alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
     }
   },
   async updateComment(comment, com_id) {
-    await firestore.collection(COMMENTS).where('com_id','==',com_id)
-        .get()
-        .then(function(querySnapshot){
-          querySnapshot.forEach(function(doc){
-            firestore.collection(COMMENTS).doc(doc.id).update({
-              comment: comment
-            });
+    await firestore.collection(COMMENTS).where('com_id', '==', com_id)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          firestore.collection(COMMENTS).doc(doc.id).update({
+            comment: comment
           });
-        })
+        });
+      })
   },
   async deleteComment(com_id) {
-    await firestore.collection(COMMENTS).where('com_id','==',com_id)
-        .get()
-        .then(function(querySnapshot){
-          querySnapshot.forEach(function(doc){
-            firestore.collection(COMMENTS).doc(doc.id).delete();
-          });
-        })
+    await firestore.collection(COMMENTS).where('com_id', '==', com_id)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          firestore.collection(COMMENTS).doc(doc.id).delete();
+        });
+      })
   },
   getUserMessageList() {
     let userEmail = firebase.auth().currentUser.email;
