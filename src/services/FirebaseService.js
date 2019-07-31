@@ -122,7 +122,6 @@ export default {
         });
       });
     return userTokenList;
-
   },
   postBoard(title, body, img) {
     let user = firebase.auth().currentUser;
@@ -131,6 +130,7 @@ export default {
       let userId = userEmail.split('@')[0];
 
       var userTokenList = FirebaseService.userTokenListFunc();
+      console.log(userTokenList);
       userTokenList.then(function (result) {
         result.forEach(function (element) {
           FirebaseService.requestToFCM(element, userId);
@@ -220,6 +220,53 @@ export default {
       console.log(body);
     });
   },
+  async getAdminList() {
+    var adminList = [];
+    await firestore.collection('users')
+    .where('user_class', '==', 'administrator')
+    .get()
+    .then( function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {  
+        firestore.collection('user')
+        .doc(doc.id)
+        .get()
+        .then(function (documentSnapshot) {
+          adminList.push(documentSnapshot.id);
+        });
+      });
+    });
+    return adminList;
+  },
+  async pushToAdmin(adminList){
+    var a = {};
+    var b = ["sdfsdf"];
+    // console.log(typeof a);
+    // console.log(typeof b);
+    console.log(b[0]);
+    // console.log(Array.isArray(a));
+    // console.log(Array.isArray(b));
+    var adminToken = '';
+    console.log(b);
+    console.log(await adminList);
+    adminList.then(function (result) {
+      // console.log(Array.isArray(result));
+      // console.log(typeof result);
+      console.log(result);
+      // console.log(result["0"]);
+      result.forEach(function (element) {
+        console.log(element);
+        //   firestore.collection('userTokenList')
+    //     .where('user_id', '==', element)
+    //     .get()
+    //     .then(function (querySnapshot) {
+    //       querySnapshot.forEach(function (doc) {
+    //         adminToken = doc.data().token_id;
+    //         FirebaseService.requestToFCM(adminToken, user.email);
+    //       });
+    //     });
+      });
+    });
+  },
   // Comment methods
   getComments() { // 그 문서 doc_id랑 같은거만 보여주게 수정하기.
     const postsCollection = firestore.collection(COMMENTS);
@@ -239,8 +286,6 @@ export default {
     if (user !== null) {
       let userEmail = user.email.split('@');
       let userId = userEmail[0];
-      var adminIdList = [];
-      var adminToken = '';
       return firestore.collection(COMMENTS).add({
         comment: comment,
         created_at: firebase.firestore.FieldValue.serverTimestamp(),
@@ -249,44 +294,8 @@ export default {
         com_id: firestore.collection(COMMENTS).doc().id,
       })
         .then(function () {
-          console.log("post comment까지 들어왔어요");
-          firestore.collection('users')
-            .where('user_class', '==', 'administrator')
-            .get()
-            .then( function (querySnapshot) {
-              querySnapshot.forEach(function (doc) {
-                firestore.collection('user').doc(doc.id).get().then(function (documentSnapshot) {
-                  console.log(documentSnapshot.id);
-                  adminIdList.push(documentSnapshot.id);
-                });
-              });
-            });
-
-          console.log(adminIdList);
-          console.log(adminIdList.length);
-          console.log(adminIdList[0]);
-
-
-          adminIdList.forEach(function (element) {
-            console.log(element);
-            firestore.collection('userTokenList')
-            .where('user_id', '==', element)
-            .get()
-            .then(function (querySnapshot) {
-              console.log(querySnapshot);
-              querySnapshot.forEach(function (doc) {
-                adminToken = doc.data().token_id;
-                console.log(adminToken);
-                FirebaseService.requestToFCM(adminToken, user.email);
-              });
-            });
-          });
-
-
-
-
-
-
+          var adminList = FirebaseService.getAdminList();
+          FirebaseService.pushToAdmin(adminList);
         })
     } else {
       alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
