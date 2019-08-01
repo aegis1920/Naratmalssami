@@ -93,7 +93,7 @@ export default {
         return true;
       }
     },
-    postBoard() {
+    async postBoard() {
       var imagefiles = document.getElementsByClassName('imagefile');
       this.img = imagefiles[0].src;
       if(this.title==''){
@@ -112,12 +112,13 @@ export default {
         return;
       }
 
-      FirebaseService.postBoard(this.title, this.body, this.img);
+      await FirebaseService.postBoard(this.title, this.body, this.img);
       this.dialog = false;
       // 너무 빨리 넘어가지는 문제 때문에 좀 기다려야 함
+
       setTimeout(function(){
         document.location.href = '/Board';
-      },3000);
+      },1000);
     },
     close(){
       var imagefiles = document.getElementsByClassName('imagefile');

@@ -44,12 +44,13 @@
             async getComments() {
                 let tmp = await FirebaseService.getComments();
                 let key = localStorage.getItem('doc_id');
-                this.comments = [];
+                let arr = [];
                 tmp.forEach((b)=>{
                     if(b.doc_id === key) {
-                        this.comments.push(b);
+                        arr.push(b);
                     }
-                })
+                });
+                this.comments = arr;
                 let user = firebase.auth().currentUser;
                 if(user !== null) {
                     let userEmail = user.email.split('@');
@@ -63,6 +64,7 @@
             },
             async deleteCo(com_id) {
                 await FirebaseService.deleteComment(com_id);
+                this.comments = [];
                 await this.getComments();
             },
             async modifyCo(comment, com_id) {

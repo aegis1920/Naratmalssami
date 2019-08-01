@@ -46,7 +46,6 @@ firestore.enablePersistence()
   });
 
 // 여기서 해도 바로 토큰 입력이 된다.
-
 messaging
   .requestPermission()
   .then(function () {
@@ -78,22 +77,36 @@ messaging.onMessage(function (payload) {
   }
 });
 
-export default {
+export default{
+
+  getUser() {
+    let user = firebase.auth().currentUser;
+    if(user !== null) {
+      let userEmail = user.email.split('@');
+      let userId = userEmail[0];
+      return userId;
+    }
+  },
+
+  // Board Methods ==============================================================
   getBoards() {
-    const postsCollection = firestore.collection(BOARDS)
+    const postsCollection = firestore.collection(BOARDS);
+    let arr = [];
+    let count = 1;
+    let data;
     return postsCollection
       .orderBy('created_at', 'desc')
       .get()
       .then((docSnapshots) => {
-        return docSnapshots.docChanges().map((change) => {
-          let data = change.doc.data()
+        docSnapshots.docChanges().map((change) => {
+          data = change.doc.data()
           data.created_at = new Date(data.created_at.toDate())
           var source = change.doc.metadata.fromCache ? "local cache" : "server";
-          //console.log("this data from ", source);
-          
-          return data
-        })
+          arr.push(data);
+        });
+        return arr;
       })
+
   },
   async getBoard(doc_id) {
     const postsCollection = firestore.collection(BOARDS);
@@ -147,6 +160,28 @@ export default {
       alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
     }
   },
+  updateBoard(doc_id, ntitle, nbody, nimg) {
+    firestore.collection(BOARDS).where('doc_id', '==', doc_id)
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            firestore.collection(BOARDS).doc(doc.id).update({
+              title: ntitle,
+              body: nbody,
+              img: nimg,
+            });
+          });
+        })
+  },
+  deleteBoard(doc_id) {
+    firestore.collection(BOARDS).where('doc_id', '==', doc_id)
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            firestore.collection(BOARDS).doc(doc.id).delete();
+          });
+        })
+  },
   updateBoardViewCount(doc_id) {
     firestore.collection(BOARDS).where('doc_id', '==', doc_id)
       .get()
@@ -168,6 +203,9 @@ export default {
       })
     }
   },
+
+  // ==============================================================================
+
   getImgUrl(pagename) {
     const imgCollection = firestore.collection(IMGBANNER)
     return imgCollection.doc(pagename).get()
@@ -232,9 +270,10 @@ export default {
  });
   },
 
+
   // Comment methods
-  getComments() { // 그 문서 doc_id랑 같은거만 보여주게 수정하기.
-    const postsCollection = firestore.collection(COMMENTS);
+  async getComments() { // 그 문서 doc_id랑 같은거만 보여주게 수정하기.
+    const postsCollection = await firestore.collection(COMMENTS);
     return postsCollection
         .orderBy('created_at', 'asc')
         .get()

@@ -15,6 +15,7 @@ import FirebaseService from './services/FirebaseService'
 import Chat from 'vue-beautiful-chat'
 
 
+
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -36,6 +37,9 @@ Vue.use(Vuetify, {
 
 Vue.use(VueSimplemde)
 Vue.use(Chat)
+
+let infiniteScroll = require('vue-infinite-scroll');
+Vue.use(infiniteScroll);
 
 new Vue({
   router,
