@@ -30,6 +30,9 @@
         </v-tooltip>-->
         <ChatBotBtn />
       </v-toolbar-items>
+      <v-toolbar-items v-if="this.user_class == 'administrator'" class="hidden-xs-only" >
+        <v-btn flat dark :to="adminLink"> ADMIN </v-btn>
+      </v-toolbar-items>
       <v-toolbar-items class="hidden-xs-only" v-for="item in items" :key="item.title">
         <v-btn flat :to="item.link" color="white">{{item.title}}</v-btn>
       </v-toolbar-items>
@@ -99,6 +102,8 @@ export default {
   data() {
     return {
       // isGuest: firebase.auth().currentUser,
+      user_class: "",
+      adminLink: "/admin",
       isLogin: false,
       drawer: null,
       items: [
@@ -201,6 +206,7 @@ export default {
         }
       });
       //window.location.href = "/"
+      this.user_class = ""
       this.$router.push({ name: "home" });
     }
   },
@@ -209,6 +215,13 @@ export default {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         data.isLogin = true;
+        var docRef = firestore.collection("users").doc(user.email)
+        docRef.get().then(function(doc) {
+          data.user_class = doc.data().user_class
+          // console.log(data.user_class)
+        }).catch(function(error) {
+          console.log("Error getting document:", error);
+        });
       } else {
         data.isLogin = false;
       }

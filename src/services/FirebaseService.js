@@ -7,6 +7,8 @@ const POSTS = 'posts';
 const BOARDS = 'boards';
 const IMGBANNER = 'imgbanner';
 const COMMENTS = 'comments';
+const USERS = 'users';
+const QNA = 'qna';
 
 // const config = {
 //   apiKey: "AIzaSyC8aq7GouxjIjJGA7WGccNNCn1HhL8uCys",
@@ -71,8 +73,7 @@ messaging.onMessage(function (payload) {
 
   if (!("Notification" in window)) {
     console.log("This browser does not support system notifications");
-  }
-  else if (Notification.permission === "granted") {
+  } else if (Notification.permission === "granted") {
     var notification = new Notification(notificationTitle, notificationOptions);
 
   }
@@ -129,7 +130,6 @@ export default {
       let userId = userEmail.split('@')[0];
 
       var userTokenList = FirebaseService.userTokenListFunc();
-      console.log(userTokenList);
       userTokenList.then(function (result) {
         result.forEach(function (element) {
           FirebaseService.requestToFCM(element, userId);
@@ -299,6 +299,55 @@ export default {
       currentUserRef.update({
         messageList: messageList
       })
+    }
+  },
+  postQuestion(selectedTag, title, body) {
+    let user = firebase.auth().currentUser;
+    if (user !== null) {
+      let userId = user.displayName;
+      return firestore.collection(QNA).add({
+        doc_id: firestore.collection(QNA).doc().id,
+        tag: selectedTag,
+        title,
+        body,
+        author: userId,
+        created_at: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function () {
+        return true;
+      }).catch(function () {
+        return false;
+      })
+    } else {
+      alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
+    }
+  },
+  getQuestions() {
+    console.log("dwefasd");
+    const QuestionCollection = firestore.collection(QNA);
+    return QuestionCollection.get()
+      .then((docSnapshots) => {
+        return docSnapshots.docs.map((doc) => {
+          let data = doc.data();
+          console.log(data);
+
+          return data;
+        })
+      })
+  },
+  isAdmin() {
+    let user = firebase.auth().currentUser;
+    if (user !== null) {
+      const userCollection = firestore.collection(USERS);
+      userCollection.doc(user.email).get()
+        .then(function (doc) {
+          if (doc.data().user_class === 'administrator') {
+            return true;
+          } else {
+            return false;
+          }
+        })
+    } else {
+      return false;
     }
   }
 }
