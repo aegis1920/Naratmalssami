@@ -85,7 +85,10 @@ import LoginModal from "./LoginModal.vue";
 import LoginModal2 from "./LoginModal2.vue";
 import Swal from "sweetalert2";
 import ChatBotBtn from "./ChatBotBtn.vue";
+import 'firebase/auth'
+import 'firebase/firestore'
 let timerInterval;
+
 const firestore = firebase.firestore();
 const messaging = firebase.messaging();
 
@@ -155,6 +158,7 @@ export default {
       }
     },
     async userSignOut() {
+      let user_id = firebase.auth().currentUser.email;
       await Swal.fire({
         title: "Are you sure you want to LOG OUT?",
         text: "You won't be able to revert this!",
@@ -176,6 +180,15 @@ export default {
                 text: "Please visit our website again",
                 showConfirmButton: false,
                 timer: 1500
+              });
+            })
+            .then(function(){
+              console.log(user_id);
+              let deleteDocRef = firestore.collection('userTokenList').where('userId', '==', user_id);
+              deleteDocRef.get().then(function(querySnapshot){
+                querySnapshot.forEach(function(doc) {
+                 doc.ref.delete(); 
+                });
               });
             })
             .catch(function(error) {

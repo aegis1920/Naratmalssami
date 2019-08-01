@@ -114,13 +114,14 @@ export default {
   },
   async userTokenListFunc() {
     var userTokenList = [];
-    await firestore.collection('userTokenList').get().then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        userTokenList.push(doc.data().token_id);
+    await firestore.collection('userTokenList')
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          userTokenList.push(doc.data().token_id);
+        });
       });
-    });
     return userTokenList;
-
   },
   postBoard(title, body, img) {
     let user = firebase.auth().currentUser;
@@ -179,8 +180,8 @@ export default {
   updateImgUrl(pagename, imgurl) {
     const imgCollection = firestore.collection(IMGBANNER)
     return imgCollection.doc(pagename).set({
-        imgurl: imgurl
-      })
+      imgurl: imgurl
+    })
       .then(function () {
         console.log("Document successfully written!");
       })
@@ -210,7 +211,7 @@ export default {
       body: JSON.stringify({
         "to": to,
         "notification": {
-          "title": "아주 중요한 메세지입니다!!!",
+          "title": "postBoard에 대한 글입니다",
           "body": userId + "님이 글을 쓰셨습니다"
         }
       })
@@ -218,21 +219,17 @@ export default {
       console.log(body);
     });
   },
-  notificationService() {
-    messaging
-      .requestPermission()
-      .then(function () {
-        console.log("Notification permission granted.");
-        return messaging.getToken()
-      })
-      .then(function (token) {
-        console.log("token is : " + token);
-      })
-      .catch(function (err) {
-        console.log("Unable to get permission to notify.", err);
-      });
+  // user_class가 admin인 얘들의 id를 리스트에 넣어서 token_id를 가져와야 한다.
+  pushToAdmin() {
+    firestore.collection('userTokenList')
+      .where('userClass', '==', 'administrator')
+      .get()
+      .then( function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {  
+          FirebaseService.requestToFCM(doc.data().tokenId, doc.data().userId);
+        })
+    });
   },
-
   // Comment methods
   getComments() { // 그 문서 doc_id랑 같은거만 보여주게 수정하기.
     const postsCollection = firestore.collection(COMMENTS);
@@ -259,6 +256,9 @@ export default {
         user_id: userId,
         com_id: firestore.collection(COMMENTS).doc().id,
       })
+        .then(function () {
+          FirebaseService.pushToAdmin();
+        })
     } else {
       alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
     }
