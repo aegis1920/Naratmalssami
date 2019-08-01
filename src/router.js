@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HomePage from './views/HomePage.vue'
 import BoardPage from './views/BoardPage.vue'
 import AboutusPage from './views/AboutusPage.vue'
+import AdminPage from './views/AdminPage.vue'
 import FirebaseService from './services/FirebaseService'
 import BoardDetail from "./views/BoardDetail";
 
@@ -43,6 +44,15 @@ export default new Router({
           path: '/boarddetail',
           name: 'boarddetail',
           component: BoardDetail,
+      },
+      {
+          path: '/admin',
+          name: 'admin',
+          component: AdminPage,
+          beforeEnter(to, from, next){
+              FirebaseService.updateViewPageCount(to.name);
+              next();
+          }
       },
   ]
 })
