@@ -118,7 +118,7 @@ export default {
       .get()
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-          userTokenList.push(doc.data().token_id);
+          userTokenList.push(doc.data().tokenId);
         });
       });
     return userTokenList;
