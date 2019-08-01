@@ -155,7 +155,7 @@
 
     const firestore = firebase.firestore();
     const messaging = firebase.messaging();
-    
+
     export default {
         name: "LoginModal",
         data() {
@@ -188,6 +188,7 @@
             async emailLogin() {
                 var email_id = this.email
                 var userToken = '';
+                var user_class = false;
                 messaging
                 .requestPermission()
                 .then(function () {
@@ -196,20 +197,47 @@
                 })
                 .then(function (token) {
                     userToken = token;
-                })
+                });
+
+                firestore.collection('users')
+                .where('id', '==', email_id)
+                .get()
+                .then( function (querySnapshot) {
+                    querySnapshot.forEach(function (doc) {
+                        if(doc.data().user_class ===  "administrator")
+                            user_class = true;
+                    })
+                });
+
                 await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 .then(()=>{
-                    var userTokenListRef = firestore.collection('userTokenList').doc(email_id);
+                    var userTokenListRef = firestore.collection('userTokenList');
                     console.log(userToken);
-                    userTokenListRef.set({
-                        token_id: userToken
-                    })
-                    .then(function() {
-                        console.log("it is work!!"); 
-                    })
-                    .catch(function(err) {
-                        console.log("error : ", err); 
-                    });
+                    if(user_class){
+                        userTokenListRef.add({
+                            tokenId: userToken,
+                            userId: email_id,
+                            userClass: "administrator"
+                        })
+                        .then(function() {
+                            console.log("it is work!!"); 
+                        })
+                        .catch(function(err) {
+                            console.log("error : ", err); 
+                        });
+                    }else{
+                        userTokenListRef.add({
+                            tokenId: userToken,
+                            userId: email_id,
+                            userClass: "other"
+                        })
+                        .then(function() {
+                            console.log("it is work!!"); 
+                        })
+                        .catch(function(err) {
+                            console.log("error : ", err); 
+                        });
+                    }
                 })
                 .catch(function(error) {
                     var errorCode = error.code;
@@ -256,6 +284,7 @@
                             board:0,
                             repository: 0,
                             login: 0,
+                            user_class: "guest",
                             messageList: [{
                                 type: 'text',
                                 author: `user1`,
@@ -265,16 +294,17 @@
                             }]
                         });
 
-                        var userTokenListRef = firestore.collection('userTokenList').doc(email_id);
+                        var userTokenListRef = firestore.collection('userTokenList');
                         console.log(userToken);
-                        userTokenListRef.set({
-                            token_id: userToken
+                        userTokenListRef.add({
+                            token_id: userToken,
+                            user_id: email_id
                         })
                         .then(function() {
-                            console.log("it is work!!"); 
+                            console.log("it is work!!");
                         })
                         .catch(function(err) {
-                            console.log("error : ", err); 
+                            console.log("error : ", err);
                         });
 
                         var user = firebase.auth().currentUser;
@@ -312,6 +342,17 @@
                 await firebase.auth().signInWithPopup(provider).then(function (result) {
                     var token = result.credential.accessToken;
                     var user = result.user;
+                    var docRef = firestore.collection("users").doc(user.email);
+                    docRef.get().then(function(doc) {
+                        if (!doc.exists) {
+                            var userRef = firestore.collection('users').doc(user.email);
+                            var setUser = userRef.set({
+                                user_class: "guest"
+                            });
+                        }
+                    }).catch(function(error) {
+                        console.log("Error getting document:", error);
+                    });
                     Swal.fire({
                         type: 'success',
                         position: 'center',
@@ -340,6 +381,17 @@
                 await firebase.auth().signInWithPopup(provider).then(function (result) {
                     var token = result.credential.accessToken;
                     var user = result.user;
+                    var docRef = firestore.collection("users").doc(user.email);
+                    docRef.get().then(function(doc) {
+                        if (!doc.exists) {
+                            var userRef = firestore.collection('users').doc(user.email);
+                            var setUser = userRef.set({
+                                user_class: "guest"
+                            });
+                        }
+                    }).catch(function(error) {
+                        console.log("Error getting document:", error);
+                    });
                     Swal.fire({
                         type: 'success',
                         position: 'center',

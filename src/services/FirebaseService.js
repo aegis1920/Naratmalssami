@@ -7,6 +7,8 @@ const POSTS = 'posts';
 const BOARDS = 'boards';
 const IMGBANNER = 'imgbanner';
 const COMMENTS = 'comments';
+const USERS = 'users';
+const QNA = 'qna';
 
 // const config = {
 //   apiKey: "AIzaSyC8aq7GouxjIjJGA7WGccNNCn1HhL8uCys",
@@ -33,9 +35,9 @@ const firestore = firebase.firestore();
 const messaging = firebase.messaging();
 
 firestore.enablePersistence()
-  .then(function(){
+  .then(function () {
     console.log("성공");
-    
+
   })
   .catch(function (err) {
     if (err.code == 'failed-precondition') {
@@ -70,8 +72,7 @@ messaging.onMessage(function (payload) {
 
   if (!("Notification" in window)) {
     console.log("This browser does not support system notifications");
-  }
-  else if (Notification.permission === "granted") {
+  } else if (Notification.permission === "granted") {
     var notification = new Notification(notificationTitle, notificationOptions);
 
   }
@@ -106,33 +107,33 @@ export default{
         });
         return arr;
       })
-
   },
   async getBoard(doc_id) {
     const postsCollection = firestore.collection(BOARDS);
     let result = {};
     await postsCollection
-        .get()
-        .then((docSnapshots) => {
-          return docSnapshots.docs.map((doc) => {
-            let data = doc.data();
-            // doc 부분을 계속 반복하는듯.
-            if (data.doc_id === doc_id) {
-              result = data;
-            }
-          })
-        });
+      .get()
+      .then((docSnapshots) => {
+        return docSnapshots.docs.map((doc) => {
+          let data = doc.data();
+          // doc 부분을 계속 반복하는듯.
+          if (data.doc_id === doc_id) {
+            result = data;
+          }
+        })
+      });
     return result;
   },
   async userTokenListFunc() {
     var userTokenList = [];
-    await firestore.collection('userTokenList').get().then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        userTokenList.push(doc.data().token_id);
+    await firestore.collection('userTokenList')
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          userTokenList.push(doc.data().token_id);
+        });
       });
-    });
     return userTokenList;
-
   },
   postBoard(title, body, img) {
     let user = firebase.auth().currentUser;
@@ -141,8 +142,8 @@ export default{
       let userId = userEmail.split('@')[0];
 
       var userTokenList = FirebaseService.userTokenListFunc();
-      userTokenList.then(function(result){
-        result.forEach(function(element){
+      userTokenList.then(function (result) {
+        result.forEach(function (element) {
           FirebaseService.requestToFCM(element, userId);
         });
       });
@@ -216,8 +217,8 @@ export default{
   updateImgUrl(pagename, imgurl) {
     const imgCollection = firestore.collection(IMGBANNER)
     return imgCollection.doc(pagename).set({
-        imgurl: imgurl
-      })
+      imgurl: imgurl
+    })
       .then(function () {
         console.log("Document successfully written!");
       })
@@ -247,7 +248,7 @@ export default{
       body: JSON.stringify({
         "to": to,
         "notification": {
-          "title": "아주 중요한 메세지입니다!!!",
+          "title": "postBoard에 대한 글입니다",
           "body": userId + "님이 글을 쓰셨습니다"
         }
       })
@@ -255,71 +256,69 @@ export default{
       console.log(body);
     });
   },
-  notificationService() {
-    messaging
-   .requestPermission()
-   .then(function () {
-     console.log("Notification permission granted.");
-     return messaging.getToken()
-   })
-   .then(function(token) {
-     console.log("token is : " + token);
-   })
-   .catch(function (err) {
-   console.log("Unable to get permission to notify.", err);
- });
+  // user_class가 admin인 얘들의 id를 리스트에 넣어서 token_id를 가져와야 한다.
+  pushToAdmin() {
+    firestore.collection('userTokenList')
+      .where('userClass', '==', 'administrator')
+      .get()
+      .then( function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {  
+          FirebaseService.requestToFCM(doc.data().tokenId, doc.data().userId);
+        })
+    });
   },
-
-
   // Comment methods
   async getComments() { // 그 문서 doc_id랑 같은거만 보여주게 수정하기.
     const postsCollection = await firestore.collection(COMMENTS);
     return postsCollection
-        .orderBy('created_at', 'asc')
-        .get()
-        .then((docSnapshots) => {
-          return docSnapshots.docs.map((doc) => {
-            let data = doc.data()
-            /*data.created_at = new Date(data.created_at.toDate)*/
-            return data
-          })
+      .orderBy('created_at', 'asc')
+      .get()
+      .then((docSnapshots) => {
+        return docSnapshots.docs.map((doc) => {
+          let data = doc.data()
+          /*data.created_at = new Date(data.created_at.toDate)*/
+          return data
         })
+      })
   },
   postComment(doc_id, comment) { // 완성
     let user = firebase.auth().currentUser;
-    if(user !== null){
+    if (user !== null) {
       let userEmail = user.email.split('@');
       let userId = userEmail[0];
       return firestore.collection(COMMENTS).add({
         comment: comment,
         created_at: firebase.firestore.FieldValue.serverTimestamp(),
         doc_id: doc_id,
-        user_id:userId,
-        com_id:firestore.collection(COMMENTS).doc().id,
+        user_id: userId,
+        com_id: firestore.collection(COMMENTS).doc().id,
       })
-    }else{
+        .then(function () {
+          FirebaseService.pushToAdmin();
+        })
+    } else {
       alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
     }
   },
   async updateComment(comment, com_id) {
-    await firestore.collection(COMMENTS).where('com_id','==',com_id)
-        .get()
-        .then(function(querySnapshot){
-          querySnapshot.forEach(function(doc){
-            firestore.collection(COMMENTS).doc(doc.id).update({
-              comment: comment
-            });
+    await firestore.collection(COMMENTS).where('com_id', '==', com_id)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          firestore.collection(COMMENTS).doc(doc.id).update({
+            comment: comment
           });
-        })
+        });
+      })
   },
   async deleteComment(com_id) {
-    await firestore.collection(COMMENTS).where('com_id','==',com_id)
-        .get()
-        .then(function(querySnapshot){
-          querySnapshot.forEach(function(doc){
-            firestore.collection(COMMENTS).doc(doc.id).delete();
-          });
-        })
+    await firestore.collection(COMMENTS).where('com_id', '==', com_id)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          firestore.collection(COMMENTS).doc(doc.id).delete();
+        });
+      })
   },
   getUserMessageList() {
     let userEmail = firebase.auth().currentUser.email;
@@ -337,6 +336,55 @@ export default{
       currentUserRef.update({
         messageList: messageList
       })
+    }
+  },
+  postQuestion(selectedTag, title, body) {
+    let user = firebase.auth().currentUser;
+    if (user !== null) {
+      let userId = user.displayName;
+      return firestore.collection(QNA).add({
+        doc_id: firestore.collection(QNA).doc().id,
+        tag: selectedTag,
+        title,
+        body,
+        author: userId,
+        created_at: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function () {
+        return true;
+      }).catch(function () {
+        return false;
+      })
+    } else {
+      alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
+    }
+  },
+  getQuestions() {
+    console.log("dwefasd");
+    const QuestionCollection = firestore.collection(QNA);
+    return QuestionCollection.get()
+      .then((docSnapshots) => {
+        return docSnapshots.docs.map((doc) => {
+          let data = doc.data();
+          console.log(data);
+
+          return data;
+        })
+      })
+  },
+  isAdmin() {
+    let user = firebase.auth().currentUser;
+    if (user !== null) {
+      const userCollection = firestore.collection(USERS);
+      userCollection.doc(user.email).get()
+        .then(function (doc) {
+          if (doc.data().user_class === 'administrator') {
+            return true;
+          } else {
+            return false;
+          }
+        })
+    } else {
+      return false;
     }
   }
 }

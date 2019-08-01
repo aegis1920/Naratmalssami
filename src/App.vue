@@ -18,7 +18,6 @@
 
       <!-- scroll -->
     </v-content>
-    <chat v-if="isLogin()"/>
     <scroll />
     <Footer />
   </v-app>
@@ -30,7 +29,7 @@ import Footer from './components/Footer.vue'
 import store from './store'
 import scroll from './components/Scroll.vue'
 import Translate from './components/Translate.vue'
-import chat from './components/Chat.vue'
+
 import {mapGetters} from 'vuex'
 export default {
   name: 'App',
@@ -39,7 +38,6 @@ export default {
     Header,
     Footer,
     scroll,
-    chat,
     Translate,
   },
   data() {
