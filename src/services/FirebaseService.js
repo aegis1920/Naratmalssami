@@ -112,7 +112,6 @@ export default {
     return result;
   },
   async userTokenListFunc() {
-    let user_id = firebase.auth().currentUser.email;
     var userTokenList = [];
     await firestore.collection('userTokenList')
       .get()
@@ -220,51 +219,15 @@ export default {
       console.log(body);
     });
   },
-  async getAdminList() {
-    var adminList = [];
-    await firestore.collection('users')
-    .where('user_class', '==', 'administrator')
-    .get()
-    .then( function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {  
-        firestore.collection('user')
-        .doc(doc.id)
-        .get()
-        .then(function (documentSnapshot) {
-          adminList.push(documentSnapshot.id);
-        });
-      });
-    });
-    return adminList;
-  },
-  async pushToAdmin(adminList){
-    var a = {};
-    var b = ["sdfsdf"];
-    // console.log(typeof a);
-    // console.log(typeof b);
-    console.log(b[0]);
-    // console.log(Array.isArray(a));
-    // console.log(Array.isArray(b));
-    var adminToken = '';
-    console.log(b);
-    console.log(await adminList);
-    adminList.then(function (result) {
-      // console.log(Array.isArray(result));
-      // console.log(typeof result);
-      console.log(result);
-      // console.log(result["0"]);
-      result.forEach(function (element) {
-        console.log(element);
-        //   firestore.collection('userTokenList')
-    //     .where('user_id', '==', element)
-    //     .get()
-    //     .then(function (querySnapshot) {
-    //       querySnapshot.forEach(function (doc) {
-    //         adminToken = doc.data().token_id;
-    //         FirebaseService.requestToFCM(adminToken, user.email);
-    //       });
-    //     });
-      });
+  // user_class가 admin인 얘들의 id를 리스트에 넣어서 token_id를 가져와야 한다.
+  pushToAdmin() {
+    firestore.collection('userTokenList')
+      .where('userClass', '==', 'administrator')
+      .get()
+      .then( function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {  
+          FirebaseService.requestToFCM(doc.data().tokenId, doc.data().userId);
+        })
     });
   },
   // Comment methods
@@ -294,8 +257,7 @@ export default {
         com_id: firestore.collection(COMMENTS).doc().id,
       })
         .then(function () {
-          var adminList = FirebaseService.getAdminList();
-          FirebaseService.pushToAdmin(adminList);
+          FirebaseService.pushToAdmin();
         })
     } else {
       alert("로그인을 하지 않으셨습니다. 로그인해주세요.")

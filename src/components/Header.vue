@@ -179,7 +179,7 @@ export default {
             })
             .then(function(){
               console.log(user_id);
-              let deleteDocRef = firestore.collection('userTokenList').where('user_id', '==', user_id);
+              let deleteDocRef = firestore.collection('userTokenList').where('userId', '==', user_id);
               deleteDocRef.get().then(function(querySnapshot){
                 querySnapshot.forEach(function(doc) {
                  doc.ref.delete(); 
