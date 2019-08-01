@@ -7,6 +7,8 @@ const POSTS = 'posts';
 const BOARDS = 'boards';
 const IMGBANNER = 'imgbanner';
 const COMMENTS = 'comments';
+const USERS = 'users';
+const QNA = 'qna';
 
 // const config = {
 //   apiKey: "AIzaSyC8aq7GouxjIjJGA7WGccNNCn1HhL8uCys",
@@ -33,9 +35,9 @@ const firestore = firebase.firestore();
 const messaging = firebase.messaging();
 
 firestore.enablePersistence()
-  .then(function(){
+  .then(function () {
     console.log("성공");
-    
+
   })
   .catch(function (err) {
     if (err.code == 'failed-precondition') {
@@ -71,8 +73,7 @@ messaging.onMessage(function (payload) {
 
   if (!("Notification" in window)) {
     console.log("This browser does not support system notifications");
-  }
-  else if (Notification.permission === "granted") {
+  } else if (Notification.permission === "granted") {
     var notification = new Notification(notificationTitle, notificationOptions);
 
   }
@@ -90,7 +91,7 @@ export default {
           data.created_at = new Date(data.created_at.toDate())
           var source = change.doc.metadata.fromCache ? "local cache" : "server";
           //console.log("this data from ", source);
-          
+
           return data
         })
       })
@@ -99,16 +100,16 @@ export default {
     const postsCollection = firestore.collection(BOARDS);
     let result = {};
     await postsCollection
-        .get()
-        .then((docSnapshots) => {
-          return docSnapshots.docs.map((doc) => {
-            let data = doc.data();
-            // doc 부분을 계속 반복하는듯.
-            if (data.doc_id === doc_id) {
-              result = data;
-            }
-          })
-        });
+      .get()
+      .then((docSnapshots) => {
+        return docSnapshots.docs.map((doc) => {
+          let data = doc.data();
+          // doc 부분을 계속 반복하는듯.
+          if (data.doc_id === doc_id) {
+            result = data;
+          }
+        })
+      });
     return result;
   },
   async userTokenListFunc() {
@@ -128,8 +129,8 @@ export default {
       let userId = userEmail.split('@')[0];
 
       var userTokenList = FirebaseService.userTokenListFunc();
-      userTokenList.then(function(result){
-        result.forEach(function(element){
+      userTokenList.then(function (result) {
+        result.forEach(function (element) {
           FirebaseService.requestToFCM(element, userId);
         });
       });
@@ -219,68 +220,68 @@ export default {
   },
   notificationService() {
     messaging
-   .requestPermission()
-   .then(function () {
-     console.log("Notification permission granted.");
-     return messaging.getToken()
-   })
-   .then(function(token) {
-     console.log("token is : " + token);
-   })
-   .catch(function (err) {
-   console.log("Unable to get permission to notify.", err);
- });
+      .requestPermission()
+      .then(function () {
+        console.log("Notification permission granted.");
+        return messaging.getToken()
+      })
+      .then(function (token) {
+        console.log("token is : " + token);
+      })
+      .catch(function (err) {
+        console.log("Unable to get permission to notify.", err);
+      });
   },
 
   // Comment methods
   getComments() { // 그 문서 doc_id랑 같은거만 보여주게 수정하기.
     const postsCollection = firestore.collection(COMMENTS);
     return postsCollection
-        .orderBy('created_at', 'asc')
-        .get()
-        .then((docSnapshots) => {
-          return docSnapshots.docs.map((doc) => {
-            let data = doc.data()
-            /*data.created_at = new Date(data.created_at.toDate)*/
-            return data
-          })
+      .orderBy('created_at', 'asc')
+      .get()
+      .then((docSnapshots) => {
+        return docSnapshots.docs.map((doc) => {
+          let data = doc.data()
+          /*data.created_at = new Date(data.created_at.toDate)*/
+          return data
         })
+      })
   },
   postComment(doc_id, comment) { // 완성
     let user = firebase.auth().currentUser;
-    if(user !== null){
+    if (user !== null) {
       let userEmail = user.email.split('@');
       let userId = userEmail[0];
       return firestore.collection(COMMENTS).add({
         comment: comment,
         created_at: firebase.firestore.FieldValue.serverTimestamp(),
         doc_id: doc_id,
-        user_id:userId,
-        com_id:firestore.collection(COMMENTS).doc().id,
+        user_id: userId,
+        com_id: firestore.collection(COMMENTS).doc().id,
       })
-    }else{
+    } else {
       alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
     }
   },
   async updateComment(comment, com_id) {
-    await firestore.collection(COMMENTS).where('com_id','==',com_id)
-        .get()
-        .then(function(querySnapshot){
-          querySnapshot.forEach(function(doc){
-            firestore.collection(COMMENTS).doc(doc.id).update({
-              comment: comment
-            });
+    await firestore.collection(COMMENTS).where('com_id', '==', com_id)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          firestore.collection(COMMENTS).doc(doc.id).update({
+            comment: comment
           });
-        })
+        });
+      })
   },
   async deleteComment(com_id) {
-    await firestore.collection(COMMENTS).where('com_id','==',com_id)
-        .get()
-        .then(function(querySnapshot){
-          querySnapshot.forEach(function(doc){
-            firestore.collection(COMMENTS).doc(doc.id).delete();
-          });
-        })
+    await firestore.collection(COMMENTS).where('com_id', '==', com_id)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          firestore.collection(COMMENTS).doc(doc.id).delete();
+        });
+      })
   },
   getUserMessageList() {
     let userEmail = firebase.auth().currentUser.email;
@@ -298,6 +299,55 @@ export default {
       currentUserRef.update({
         messageList: messageList
       })
+    }
+  },
+  postQuestion(selectedTag, title, body) {
+    let user = firebase.auth().currentUser;
+    if (user !== null) {
+      let userId = user.displayName;
+      return firestore.collection(QNA).add({
+        doc_id: firestore.collection(QNA).doc().id,
+        tag: selectedTag,
+        title,
+        body,
+        author: userId,
+        created_at: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function () {
+        return true;
+      }).catch(function () {
+        return false;
+      })
+    } else {
+      alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
+    }
+  },
+  getQuestions() {
+    console.log("dwefasd");
+    const QuestionCollection = firestore.collection(QNA);
+    return QuestionCollection.get()
+      .then((docSnapshots) => {
+        return docSnapshots.docs.map((doc) => {
+          let data = doc.data();
+          console.log(data);
+
+          return data;
+        })
+      })
+  },
+  isAdmin() {
+    let user = firebase.auth().currentUser;
+    if (user !== null) {
+      const userCollection = firestore.collection(USERS);
+      userCollection.doc(user.email).get()
+        .then(function (doc) {
+          if (doc.data().user_class === 'administrator') {
+            return true;
+          } else {
+            return false;
+          }
+        })
+    } else {
+      return false;
     }
   }
 }

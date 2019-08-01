@@ -9,7 +9,6 @@
           width="30px"
           height="30px"
           style="margin:auto; margin-right: 10px;"
-          @click="chatOpen()"
         ></v-img>
       </template>
       <span>
