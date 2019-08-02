@@ -28,13 +28,13 @@
         <ChatBotBtn />
       </v-toolbar-items>
       <v-toolbar-items v-if="this.user_class == 'administrator'" class="hidden-xs-only" >
-        <v-btn flat dark :to="adminLink">관리자</v-btn>
+        <v-btn flat :to="adminLink">관리자</v-btn>
       </v-toolbar-items>
       <v-toolbar-items class="hidden-xs-only" v-for="item in items" :key="item.title">
         <v-btn flat :to="item.link">{{item.title}}</v-btn>
       </v-toolbar-items>
       <v-toolbar-items v-if="this.isLogin" class="hidden-xs-only">
-        <v-btn flat dark v-on:click="userSignOut">나가기</v-btn>
+        <v-btn flat v-on:click="userSignOut">나가기</v-btn>
       </v-toolbar-items>
       <v-toolbar-items v-else class="hidden-xs-only">
         <LoginModal />

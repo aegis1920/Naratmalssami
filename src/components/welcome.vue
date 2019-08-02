@@ -29,12 +29,12 @@
 .left-door {
   float: right;
   animation-name: leftopen;
-  animation-duration: 2s;
+  animation-duration: 3s;
 }
 .right-door {
   float: left;
   animation-name: rightopen;
-  animation-duration: 2s;
+  animation-duration: 3s;
 }
 @keyframes leftopen {
   0% {
