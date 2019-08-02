@@ -5,12 +5,9 @@
         <!-- logo -->
         <router-link to="/" style="text-decoration:none; color:black">
           <v-container fill-height pa-0 mr-3>
-            <v-avatar align-center size="40">
-              <img src="../assets/aladdin-lamp-gold.png" alt="avatar" />
-            </v-avatar>
-            <v-layout ml-3 style="display:inline-block; color:white">
+            <v-layout ml-3 style="display:inline-block; color:black">
               <h2>
-                <strong style="font-family:Aladdin">Aladdin</strong>
+                <strong>나랏말싸미</strong>
               </h2>
             </v-layout>
           </v-container>
@@ -31,13 +28,13 @@
         <ChatBotBtn />
       </v-toolbar-items>
       <v-toolbar-items v-if="this.user_class == 'administrator'" class="hidden-xs-only" >
-        <v-btn flat dark :to="adminLink"> ADMIN </v-btn>
+        <v-btn flat dark :to="adminLink">관리자</v-btn>
       </v-toolbar-items>
       <v-toolbar-items class="hidden-xs-only" v-for="item in items" :key="item.title">
-        <v-btn flat :to="item.link" color="white">{{item.title}}</v-btn>
+        <v-btn flat :to="item.link">{{item.title}}</v-btn>
       </v-toolbar-items>
       <v-toolbar-items v-if="this.isLogin" class="hidden-xs-only">
-        <v-btn flat dark v-on:click="userSignOut">LOGOUT</v-btn>
+        <v-btn flat dark v-on:click="userSignOut">나가기</v-btn>
       </v-toolbar-items>
       <v-toolbar-items v-else class="hidden-xs-only">
         <LoginModal />
@@ -50,7 +47,7 @@
         <v-toolbar flat>
           <v-list>
             <v-list-tile>
-              <v-list-tile-title class="title">Aladdin</v-list-tile-title>
+              <v-list-tile-title class="title">나랏말싸미</v-list-tile-title>
             </v-list-tile>
           </v-list>
         </v-toolbar>
@@ -65,7 +62,7 @@
           </v-list-tile>
           <v-list-tile v-if="this.isLogin">
             <v-list-tile-content v-on:click="userSignOut">
-              <v-list-tile-title>Logout</v-list-tile-title>
+              <v-list-tile-title>나가기</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
           <v-list-tile v-else>
@@ -108,15 +105,15 @@ export default {
       drawer: null,
       items: [
         {
-          title: "Home",
+          title: "거택",
           link: "/"
         },
         {
-          title: "Board",
+          title: "알림판",
           link: "/Board"
         },
         {
-          title: "Aboutus",
+          title: "맹근이",
           link: "/aboutus"
         }
         // {
@@ -187,7 +184,7 @@ export default {
               let deleteDocRef = firestore.collection('userTokenList').where('userId', '==', user_id);
               deleteDocRef.get().then(function(querySnapshot){
                 querySnapshot.forEach(function(doc) {
-                 doc.ref.delete(); 
+                 doc.ref.delete();
                 });
               });
             })
@@ -218,7 +215,6 @@ export default {
         var docRef = firestore.collection("users").doc(user.email)
         docRef.get().then(function(doc) {
           data.user_class = doc.data().user_class
-          // console.log(data.user_class)
         }).catch(function(error) {
           console.log("Error getting document:", error);
         });
@@ -231,8 +227,4 @@ export default {
 //  test
 </script>
 <style>
-@font-face {
-  font-family: "Aladdin";
-  src: url("../assets/fonts/aladdin.ttf");
-}
 </style>

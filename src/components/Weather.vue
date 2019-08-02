@@ -26,7 +26,7 @@
 <!--</template>-->
 <template>
     <div style="display:flex; flex-wrap: wrap; align-items: center;">
-        <strong>Weather In Seoul</strong>
+        <strong>서울의 날씨는</strong>
         <img :src="weatherIconURL" style="max-width: 30px">
         <strong> {{weatherTemp}} ºC </strong>
     </div>

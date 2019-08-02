@@ -3,7 +3,7 @@
 <template>
 <div>
   <ImgBanner :pagename="routeName()">
-    <div style="line-height:1.2em; font-size:10vw; font-family: Aladdin;" slot="text">About Us</div>
+    <div style="line-height:1.2em; font-size:8vw;" slot="text">맹근이</div>
   </ImgBanner>
   <v-container>
     <v-layout my-5>
@@ -24,7 +24,7 @@
                 <v-flex xs8>
                   <v-card-title primary-title>
                     <div>
-                      <div class="headline">{{team.name}} ({{team.age}})</div>
+                      <div style="font-size:1.5em;">{{team.name}} ({{team.age}})</div>
                       <div>{{team.description}}</div>
                     </div>
                   </v-card-title>

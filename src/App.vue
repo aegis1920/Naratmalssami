@@ -1,15 +1,16 @@
-<template>
+<template style="font-family:Arita-buri-SemiBold">
   <!-- vapp -->
   <v-app v-scroll="onScroll">
     <!-- vcontent -->
     <Header />
-    <video id="videoBG"
+    <img id="videoBG" src="@/assets/paper-light.jpg" alt="">
+    <!-- <video id="videoBG"
            :src="videoUrl"
            autoplay
            loop
            muted
     >
-    </video>
+    </video> -->
     <v-content class="content"
         style="padding-right: 0px;">
 
@@ -89,8 +90,8 @@ export default {
 }
 #videoBG {
   position: fixed;
-  height: auto;
-  width: auto;
+  height: 100%;
+  width: 100%;
   z-index: 0;
 }
 .threeLine{
@@ -106,4 +107,13 @@ export default {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
 }
+
+@font-face { 
+  font-family: 'Arita-buri-SemiBold'; 
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Arita-buri-SemiBold.woff') format('woff'); 
+  font-weight: normal; 
+  font-style: normal;
+}
+
+@import url(//fonts.googleapis.com/earlyaccess/jejumyeongjo.css); .jejumyeongjo * { font-family: 'Jeju Myeongjo', serif; }
 </style>
