@@ -1,4 +1,4 @@
-<template>
+<template style="font-family:Arita-buri-SemiBold">
   <!-- vapp -->
   <v-app v-scroll="onScroll">
     <!-- vcontent -->
@@ -114,4 +114,6 @@ export default {
   font-weight: normal; 
   font-style: normal;
 }
+
+@import url(//fonts.googleapis.com/earlyaccess/jejumyeongjo.css); .jejumyeongjo * { font-family: 'Jeju Myeongjo', serif; }
 </style>

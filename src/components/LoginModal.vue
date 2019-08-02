@@ -14,24 +14,24 @@
     <v-layout row justify-center>
         <v-dialog v-model="dialog3" max-width="50%">
             <template v-slot:activator="{ on }">
-                <v-btn flat dark v-on="on" style="height: 100%;">LOGIN</v-btn>
+                <v-btn flat v-on="on" style="height: 100%;">들어가기</v-btn>
             </template>
             <v-container fluid style="max-height: 500px; background-color: transparent; box-shadow: none; border: hidden">
                     <v-layout row wrap justify-center>
                         <v-flex mr-3 >
-                            <v-btn round color="#df4a31" dark v-on:click="loginWithGoogle" style="width:100%;">
+                            <v-btn round color="#df4a31" v-on:click="loginWithGoogle" style="width:100%;">
                                 <v-icon size="25" class="mr-2">fab fa-google</v-icon>
                                 Google 로그인
                             </v-btn>
-                            <v-btn v-on:click="facebookLogin" round color="#3C5A99" dark style="width: 100%">
+                            <v-btn v-on:click="facebookLogin" round color="#3C5A99"  style="width: 100%">
                                 <v-icon size="25" class="mr-2">fab fa-facebook</v-icon>
                                 FACEBOOK 로그인
                             </v-btn>
-                            <v-btn round color="#fdd835" dark style="width: 100%" @click="dialog = true">
+                            <v-btn round color="#fdd835"  style="width: 100%" @click="dialog = true">
                                 <v-icon size="25" class="mr-2">far fa-envelope</v-icon>
                                 EMAIL 로그인
                             </v-btn>
-                            <v-btn round color="#A9B0A8" dark style="width: 100%" @click="dialog2 = true">
+                            <v-btn round color="#A9B0A8"  style="width: 100%" @click="dialog2 = true">
                                 <v-icon size="25" class="mr-2">fas fa-user-plus</v-icon>
                                 회원가입
                             </v-btn>
@@ -40,8 +40,8 @@
                                     max-width="500px"
                             >
                                 <v-card tile>
-                                    <v-toolbar card dark color="#fdd835">
-                                        <v-btn icon dark @click="dialog = false">
+                                    <v-toolbar card  color="#fdd835">
+                                        <v-btn icon  @click="dialog = false">
                                             <v-icon>close</v-icon>
                                         </v-btn>
                                         <v-toolbar-title>EMAIL 로그인</v-toolbar-title>
@@ -79,7 +79,7 @@
                                                         ></v-text-field>
                                                     </v-flex>
                                                     <v-flex xs12 text-xs-center>
-                                                        <v-btn v-on:click="emailLogin" dark color="#fdd835"> 로그인 </v-btn>
+                                                        <v-btn v-on:click="emailLogin"  color="#fdd835"> 로그인 </v-btn>
                                                     </v-flex>
                                                 </v-layout>
                                             </v-container>
@@ -93,8 +93,8 @@
                                     max-width="500px"
                             >
                                 <v-card tile>
-                                    <v-toolbar card dark color="#A9B0A8">
-                                        <v-btn icon dark @click="dialog2 = false">
+                                    <v-toolbar card  color="#A9B0A8">
+                                        <v-btn icon  @click="dialog2 = false">
                                             <v-icon>close</v-icon>
                                         </v-btn>
                                         <v-toolbar-title>회원가입</v-toolbar-title>
@@ -132,7 +132,7 @@
                                                         ></v-text-field>
                                                     </v-flex>
                                                     <v-flex xs12 text-xs-center>
-                                                        <v-btn v-on:click="userSignUp" dark color="#A9B0A8"> 가입 </v-btn>
+                                                        <v-btn v-on:click="userSignUp"  color="#A9B0A8"> 가입 </v-btn>
                                                     </v-flex>
                                                 </v-layout>
                                             </v-container>

@@ -5,7 +5,7 @@
 
     <!-- imgbanner -->
     <ImgBanner :pagename="routeName()">
-      <div style="line-height:1.2em; font-size:8vw; color:black; font-family: Arita-buri-SemiBold; text-shadow:none" slot="text">
+      <div style="line-height:1.2em; font-size:6vw;" slot="text">
         나랏말싸미에
         <br />오신 것을
         <br />환영합니다.
@@ -20,7 +20,7 @@
     <v-layout my-5>
       <v-flex xs12>
         <router-link to="/Board" style="text-decoration:none;">
-          <h2 class="my-5 text-xs-center page_title">Board</h2>
+          <h2 class="my-5 text-xs-center page_title" >게시판</h2>
         </router-link>
         <BoardList></BoardList>
       </v-flex>
@@ -30,7 +30,7 @@
       <v-layout my-5>
         <v-flex xs12>
           <router-link to="/aboutus" style="text-decoration:none;">
-            <h2 class="my-5 text-xs-center page_title">About Us</h2>
+            <h2 class="my-5 text-xs-center page_title">맹근이</h2>
           </router-link>
           <v-card flat style="background-color:#fff0">
             <v-container fluid grid-list-lg style="background-color:#fff0;">
