@@ -187,7 +187,7 @@ export default {
               let deleteDocRef = firestore.collection('userTokenList').where('userId', '==', user_id);
               deleteDocRef.get().then(function(querySnapshot){
                 querySnapshot.forEach(function(doc) {
-                 doc.ref.delete(); 
+                 doc.ref.delete();
                 });
               });
             })
@@ -218,7 +218,6 @@ export default {
         var docRef = firestore.collection("users").doc(user.email)
         docRef.get().then(function(doc) {
           data.user_class = doc.data().user_class
-          // console.log(data.user_class)
         }).catch(function(error) {
           console.log("Error getting document:", error);
         });
