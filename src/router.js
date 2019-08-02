@@ -7,6 +7,8 @@ import AdminPage from './views/AdminPage.vue'
 import FirebaseService from './services/FirebaseService'
 import BoardDetail from "./views/BoardDetail";
 import QnAPage from './views/QnAPage.vue'
+import FAQPage from './views/FAQPage.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -57,6 +59,11 @@ export default new Router({
             path: '/qna',
             name: 'qna',
             component: QnAPage
+        },
+        {
+            path: '/faq',
+            name: 'faq',
+            component: FAQPage
         }
     ]
 })
