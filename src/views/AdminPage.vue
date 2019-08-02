@@ -1,7 +1,8 @@
 <template>
-    <v-container>
+    <v-container v-if="UserClass == 'administrator'">
         <div class="mt-5" sytle="margin: auto;">
-           <h2 class="text-xs-center" style="color: white"> 현재까지 <strong>{{boardList.length}} Boards </strong>, <strong>{{commentList.length}} Comments</strong>가 작성되었습니다. </h2>
+<!--            style="color: white"-->
+           <h2 class="text-xs-center mb-2" > 현재까지 <strong>{{boardList.length}} Boards </strong>, <strong>{{commentList.length}} Comments</strong>가 작성되었습니다. </h2>
         </div>
         <table class="content-table">
         <thead>
@@ -34,17 +35,34 @@
         </tbody>
         </table>
     </v-container>
+
+    <v-container v-else>
+        <div class="mt-5" sytle="margin: auto;">
+            <h1 class="text-xs-center"> 잘못된 접근입니다 </h1>
+            <br>
+            <p class="text-xs-center">
+                관리자 권한이 없는 사용자는 해당 페이지를 열람하거나 이용할 수 없습니다.
+            </p>
+            <p class="text-xs-center">
+                <strong>{{redirectTime}}</strong>초 뒤에 메인페이지로 이동합니다.
+            </p>
+        </div>
+
+    </v-container>
+
 </template>
 
 <script>
     import firebase from "firebase"
-
     const firestore = firebase.firestore();
+    // console.log(this,user)
 
     export default {
         name: "AdminPage",
         data() {
             return {
+                UserClass: "",
+                redirectTime: 3,
                 columns: [
                     {
                         label: 'User Email',
@@ -90,16 +108,42 @@
                     data.boardList.push(doc.id)
                 });
             });
-
             firestore.collection("comments").get().then(function (querySnapshot) {
                 querySnapshot.forEach(function (doc) {
                     // doc.data() is never undefined for query doc snapshots
                     data.commentList.push(doc.id)
                 });
             });
-            console.log(data.userList)
-            console.log(data.boardList)
-            console.log(data.commentList)
+
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    var docRef = firestore.collection("users").doc(user.email)
+                    docRef.get().then(function(doc) {
+                        data.UserClass = doc.data().user_class
+                        if (data.UserClass != "administrator") {
+                            setInterval(function(){
+                                if (data.redirectTime > 0) {
+                                    data.redirectTime = parseInt(data.redirectTime) - 1;
+                                } else {
+                                    clearInterval()
+                                    window.location.href = "/"
+                                }
+                            }.bind(this), 1000);
+                        }
+                    }).catch(function(error) {
+                        console.log("Error getting document:", error);
+                    });
+                } else {
+                    setInterval(function(){
+                        if (data.redirectTime > 0) {
+                            data.redirectTime = parseInt(data.redirectTime) - 1;
+                        } else {
+                            clearInterval()
+                            window.location.href = "/"
+                        }
+                    }.bind(this), 1000);
+                }
+            });
         }
     }
 </script>
