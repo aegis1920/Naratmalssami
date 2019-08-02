@@ -90,6 +90,32 @@ export default{
   },
 
   // Board Methods ==============================================================
+  getNumBoard(start, num, cur) {
+    let count = 0;
+    let max = 0;
+    const postsCollection = firestore.collection(BOARDS);
+    let arr = [];
+    let data;
+    return postsCollection
+        .orderBy('created_at', 'desc')
+        .get()
+        .then((docSnapshots) => {
+          docSnapshots.docChanges().map((change) => {
+            data = change.doc.data()
+            arr.push(data);
+          });
+         max = arr.length; // 전체 갯수
+          //console.log(max + " " + cur);
+
+         if(max <= cur) { // null이 반환되면 모든 보드를 불러왔다는 것.
+           return null;
+         }
+
+         arr = arr.splice(start, num);
+         return arr;
+        })
+
+  },
   getBoards() {
     const postsCollection = firestore.collection(BOARDS);
     let arr = [];

@@ -29,12 +29,12 @@
                         {{errorMsg}}
                     </v-snackbar>
                     <v-flex xs12>
-                        <v-text-field label="제목" box required v-model="ctitle"></v-text-field>
+                        <v-text-field label="제목" box required v-model="title"></v-text-field>
                     </v-flex>
                     <div>
-                        <ImageUpload :imgUrl="cimg"/>
+                        <ImageUpload :imgUrl="imgSrc"/>
                     </div>
-                    <markdown-editor :options="options" v-model="cbody" ></markdown-editor>
+                    <markdown-editor :options="options" v-model="body" ></markdown-editor>
                 </div>
 
             </v-card>
@@ -94,24 +94,24 @@
               this.cimg = this.imgSrc;
             },
             postBoard() {
-                if(this.ctitle==''){
+                if(this.title==''){
                     this.errorMsg = '제목을 입력해주세요.';
                     this.alert = true;
                     return;
                 }
-                if(this.cbody==''){
+                if(this.body==''){
                     this.errorMsg = '내용을 입력해주세요.';
                     this.alert = true;
                     return;
                 }
-                if(this.cimg==''){
+                if(this.img==''){
                     this.errorMsg = '이미지를 첨부해주세요.';
                     this.alert = true;
                     return;
                 }
                 let imagefile = document.getElementsByClassName('imagefile');
                 let img = imagefile[0].src;
-                FirebaseService.updateBoard(this.doc_id, this.ctitle, this.cbody, img);
+                FirebaseService.updateBoard(this.doc_id, this.title, this.body, img);
                 this.dialog = false;
                 // 너무 빨리 넘어가지는 문제 때문에 좀 기다려야 함
                 setTimeout(function(){

@@ -1,5 +1,5 @@
 <template>
-    <div v-infinite-scroll="more"
+    <div v-infinite-scroll="getNumBoards"
         infinite-scroll-disabled="busy"
     >
         <v-layout mt-5 wrap>
@@ -48,8 +48,9 @@ export default {
   },
   data() {
     return {
-      start: 0,
-      end : 0,
+      start: 0, // 몇번째인가
+      cur : 0, // 현재 몇개를 불러왔는가
+      num : 3, // 몇개씩 가져올 것인가
       cur_user_id: '',
       boards: [],
       showBoards: [],
@@ -59,33 +60,32 @@ export default {
   components: {
     Board
   },
-  mounted() {
-    this.getBoards();
-    this.getUser();
-    this.end += this.limits;
-  },
   methods: {
+     async getNumBoards() {
+          this.busy = true;
+          let arr = [];
+          arr = await FirebaseService.getNumBoard(this.start, this.num, this.cur);
+          console.log(arr);
+
+          if(arr === null) {
+              this.busy = true;
+              return;
+          }
+          this.showBoards = this.showBoards.concat(arr);
+          this.start += this.num;
+          this.cur += this.num;
+          this.busy = false;
+     },
      async getBoards() {
          this.boards = await FirebaseService.getBoards();
          this.showBoards = this.boards.splice(this.start, this.end);
      },
      getget() {
-         this.boards = [];
-         this.getBoards();
+         this.showBoards = [];
+         this.start = 0; this.cur = 0;
+         this.getNumBoards();
+         this.busy = false;
      },
-    async getUser() {
-        this.cur_user_id = FirebaseService.getUser();
-    },
-    loadMoreBoards() {
-      this.limits += 2;
-    },
-    more() {
-        this.busy = true
-        this.start += 3;
-        this.end += 3;
-        this.showBoards.concat(this.boards.splice(this.start, this.end));
-        console.log('moremoremore');
-    }
   },
 }
 </script>

@@ -62,8 +62,8 @@ export default {
       },
       isMyBoard() {
         //console.log('cur : ' + this.cur_user_id);
-
-        if(this.cur_user_id === this.author) {
+        let cur = FirebaseService.getUser();
+        if(cur === this.author) {
           console.log('MyBoard');
           this.modiOn = true;
         }
@@ -71,10 +71,12 @@ export default {
       deleteBoard() {
         FirebaseService.deleteBoard(this.doc_id);
         alert('글이 삭제되었습니다.');
-        this.$emit('reload');
+        setTimeout(()=> {
+          this.$emit('reload');
+        }, 1000);
       }
     },
-    beforeMount() {
+    created() {
       this.isMyBoard();
     }
 }
