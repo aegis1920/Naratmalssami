@@ -5,9 +5,10 @@
 
     <!-- imgbanner -->
     <ImgBanner :pagename="routeName()">
-      <div style="line-height:1.2em; font-size:10vw; font-family: Aladdin" slot="text">
-        Welcome To
-        <br />Aladdin
+      <div style="line-height:1.2em; font-size:8vw; color:black; font-family: Arita-buri-SemiBold; text-shadow:none" slot="text">
+        나랏말싸미에
+        <br />오신 것을
+        <br />환영합니다.
       </div>
     </ImgBanner>
     <!-- container -->

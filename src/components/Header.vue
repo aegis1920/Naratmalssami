@@ -5,12 +5,9 @@
         <!-- logo -->
         <router-link to="/" style="text-decoration:none; color:black">
           <v-container fill-height pa-0 mr-3>
-            <v-avatar align-center size="40">
-              <img src="../assets/aladdin-lamp-gold.png" alt="avatar" />
-            </v-avatar>
-            <v-layout ml-3 style="display:inline-block; color:white">
+            <v-layout ml-3 style="display:inline-block; color:black">
               <h2>
-                <strong style="font-family:Aladdin">Aladdin</strong>
+                <strong style="font-family:Arita-buri-SemiBold">나랏말싸미</strong>
               </h2>
             </v-layout>
           </v-container>
@@ -231,8 +228,4 @@ export default {
 //  test
 </script>
 <style>
-@font-face {
-  font-family: "Aladdin";
-  src: url("../assets/fonts/aladdin.ttf");
-}
 </style>
