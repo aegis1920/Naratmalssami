@@ -30,7 +30,7 @@ export default {
   components: {
 		ImgBanner,
 		BoardList,
-    BoardWriteBtn
+      BoardWriteBtn
 	},
   methods: {
     routeName(){

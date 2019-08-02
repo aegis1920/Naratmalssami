@@ -1,28 +1,33 @@
 <template>
-<v-layout mt-5 wrap>
-
-    <table class="content-table">
-        <thead>
-            <tr>
-                <th>작성자</th>
-                <th>제목</th>
-                <th>조회수</th>
-            </tr>
-        </thead>
-        <tbody>
-            <Board v-for="board in boards"
-                  :board="board"
-                  :title="board.title"
-                  :author="board.author"
-                  :body ="board.body"
-                  :boardViewCount ="board.boardViewCount"
-            ></Board>
-        </tbody>
-    </table>
-
-
-
-</v-layout>
+    <div v-infinite-scroll="getNumBoards"
+        infinite-scroll-disabled="busy"
+    >
+        <v-layout mt-5 wrap>
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>작성자</th>
+                        <th>제목</th>
+                        <th>조회수</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <Board v-for="board in showBoards"
+                          :board="board"
+                          :title="board.title"
+                          :author="board.author"
+                          :body ="board.body"
+                          :boardViewCount ="board.boardViewCount"
+                          :cur_user_id="cur_user_id"
+                          :imgSrc="board.img"
+                          :doc_id="board.doc_id"
+                          @reload="getget"
+                    ></Board>
+                </tbody>
+            </table>
+        </v-layout>
+    </div>
 </template>
 <script>
 import Board from '@/components/Board'
@@ -43,95 +48,44 @@ export default {
   },
   data() {
     return {
-      previewShow: false,
-      board_title:'',
-      board_body:'',
-      board_author:'',
-      board_doc_id:'',
-      board_created_at:'',
-      board_boardViewCount:0,
-      board_imgSrc:'',
-      pagination: {
-          sortBy: 'index'
-      },
-      selected:[],
-      search:'',
-      isMobile: false,
-      headers: [{
-          text: 'index',
-          align: 'center',
-          sortable: false,
-          value: 'index'
-        },
-        {
-          text: '제목',
-          value: 'title',
-          align: 'center',
-        },
-        {
-          text: '작성자',
-          value: 'author',
-          align: 'center',
-        },
-        {
-          text: '작성일',
-          value: 'created_at',
-          align: 'center',
-        },
-        {
-          text: '조회수',
-          value: 'boardViewCount',
-          align: 'center',
-        }
-      ],
-      boards: []
+      start: 0, // 몇번째인가
+      cur : 0, // 현재 몇개를 불러왔는가
+      num : 3, // 몇개씩 가져올 것인가
+      cur_user_id: '',
+      boards: [],
+      showBoards: [],
+      busy: false,
     }
   },
   components: {
     Board
   },
-  mounted() {
-    this.getBoards()
-  },
   methods: {
-    async getBoards() {
-      this.boards = await FirebaseService.getBoards();
-    },
-    loadMoreBoards() {
-      this.limits += 2;
-    },
-    showBoard(title, body, author, doc_id, created_at, boardViewCount, imgSrc){
-      this.previewShow = true;
-      this.board_title = title,
-      this.board_body = body,
-      this.board_author = author,
-      this.board_doc_id = doc_id,
-      this.board_created_at = created_at,
-      this.board_boardViewCount = boardViewCount,
-      this.board_imgSrc = imgSrc
-    },
-    previewShowClose(){
-      this.previewShow = false;
-    },
-    onResize() {
-          if (window.innerWidth < 769)
-            this.isMobile = true;
-          else
-            this.isMobile = false;
-        },
-        toggleAll() {
-          if (this.selected.length) this.selected = []
-          else this.selected = this.desserts.slice()
-        },
-        changeSort(column) {
-          console.log(column);
-          if (this.pagination.sortBy === column) {
-            this.pagination.descending = !this.pagination.descending
-          } else {
-            this.pagination.sortBy = column
-            this.pagination.descending = false
+     async getNumBoards() {
+          this.busy = true;
+          let arr = [];
+          arr = await FirebaseService.getNumBoard(this.start, this.num, this.cur);
+          console.log(arr);
+
+          if(arr === null) {
+              this.busy = true;
+              return;
           }
-        }
+          this.showBoards = this.showBoards.concat(arr);
+          this.start += this.num;
+          this.cur += this.num;
+          this.busy = false;
+     },
+     async getBoards() {
+         this.boards = await FirebaseService.getBoards();
+         this.showBoards = this.boards.splice(this.start, this.end);
+     },
+     getget() {
+         this.showBoards = [];
+         this.start = 0; this.cur = 0;
+         this.getNumBoards();
+         this.busy = false;
+     },
   },
 }
 </script>
