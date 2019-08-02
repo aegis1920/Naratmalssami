@@ -143,7 +143,7 @@ export default {
       setTimeout(function() {
         var intro = document.getElementById("intro");
         intro.style.display = "none";
-      }, 1900);
+      }, 2900);
     },
   },
   mounted() {
