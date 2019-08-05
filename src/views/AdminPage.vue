@@ -36,7 +36,7 @@
         </table>
     </v-container>
 
-    <v-container v-else>
+    <v-container v-else-if="UserClass != 'administrator'">
         <div class="mt-5" sytle="margin: auto;">
             <h1 class="text-xs-center"> 잘못된 접근입니다 </h1>
             <br>
@@ -47,7 +47,9 @@
                 <strong>{{redirectTime}}</strong>초 뒤에 메인페이지로 이동합니다.
             </p>
         </div>
+    </v-container>
 
+    <v-container v-else>
     </v-container>
 
 </template>
