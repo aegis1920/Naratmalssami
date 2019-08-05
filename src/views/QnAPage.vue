@@ -1,16 +1,10 @@
 <template>
   <v-container>
-    <!-- <ImgBanner>
-      <div style="line-height:1.2em; font-size:10vw; font-family: Aladdin;" slot="text">1 : 1 문의</div>
-    </ImgBanner>-->
-    <v-sheet
-      class="mt-3 pa-3"
-      width="100%"
-      height="70vh"
-      elevation="50"
-      color="white"
-      opacity="0.5"
-    >
+    <v-layout width="100vw" align-center justify-center>
+      <div style="line-height:3.5em; font-size:8vw;" slot="text">돌쇠에게 전달하기</div>
+    </v-layout>
+    <v-sheet class="mt-3 pa-3" width="100%" elevation="50" color="white" opacity="0.5">
+      <v-snackbar v-model="alert" color="error" top :timeout="time">{{errorMsg}}</v-snackbar>
       <v-btn-toggle
         mandatory
         light
@@ -30,9 +24,28 @@
       <br />
       <v-spacer />
       <br />
-      <v-text-field xs-12 label="제목" placeholder="제목을 입력하세요" outline light v-model="title"></v-text-field>
+      <v-text-field
+        xs-12
+        label="제목"
+        placeholder="제목을 입력하세요"
+        outline
+        light
+        v-model="title"
+        required
+        :rules="titleRules"
+      ></v-text-field>
+      <v-text-field
+        xs-12
+        label="이메일"
+        placeholder="답변을 받을 이메일 주소를 입력하세요"
+        outline
+        light
+        v-model="email"
+        required
+        :rules="emailRules"
+      ></v-text-field>
 
-      <v-textarea xs-12 outline label="문의내용" v-model="body"></v-textarea>
+      <v-textarea xs-12 outline label="문의내용" v-model="body" required :rules="bodyRules" rows="10"></v-textarea>
       <v-btn large color="error" @click="check = true">취소하고 돌아가기</v-btn>
       <v-btn large color="primary" @click="postQuestion()">문의 등록하기</v-btn>
     </v-sheet>
@@ -69,9 +82,18 @@ export default {
     return {
       title: "",
       body: "",
+      email: "",
       tags: ["기타", "오류", "개인 정보", "한글 관련"],
       selectedTag: "기타",
-      check: false
+      check: false,
+      alert: false,
+      errorMsg: "",
+      titleRules: [v => !!v || "제목을 입력해주세요!!"],
+      emailRules: [
+        v => !!v || "이메일을 입력해주세요!!",
+        v => /.+@.+/.test(v) || "이메일 형식을 지켜주세요!!"
+      ],
+      bodyRules: [v => !!v || "내용을 입력해주세요!!"]
     };
   },
   components: {
@@ -79,24 +101,36 @@ export default {
   },
   methods: {
     async postQuestion() {
-      const close = this.cancel();
-      console.log(window);
-
-      FirebaseService.postQuestion(
-        this.selectedTag,
-        this.title,
-        this.body
-      ).then(function(result) {
-        // window.close();
-        if (result) {
-          close();
-        }
-      });
+      if (this.title == "") {
+        this.errorMsg = "제목을 입력해주세요.";
+        this.alert = true;
+        return;
+      }
+      if (this.email == "") {
+        this.errorMsg = "이메일을 등록해주세요.";
+        this.alert = true;
+        return;
+      }
+      if (this.body == "") {
+        this.errorMsg = "내용을 입력해주세요.";
+        this.alert = true;
+        return;
+      }
+      FirebaseService.postQuestion(this.selectedTag, this.title, this.body)
+        .then(
+          function(result) {
+            if (result) {
+              window.alert("1:1 문의를 전송하였습니다.");
+              self.close();
+            }
+          }.bind(this)
+        )
+        .catch(function(err) {
+          console.log(err);
+        });
     },
     cancel() {
-      this.title = "";
-      this.body = "";
-      window.close();
+      self.close();
     },
     async isAdmin() {
       return await FirebaseService.isAdmin();
@@ -119,5 +153,8 @@ export default {
 }
 .v-btn--active {
   background-color: #e0ff80 !important;
+}
+.v-messages__message {
+  color: red !important;
 }
 </style>

@@ -9,6 +9,7 @@ const IMGBANNER = 'imgbanner';
 const COMMENTS = 'comments';
 const USERS = 'users';
 const QNA = 'qna';
+const FAQ = 'faq';
 
 // const config = {
 //   apiKey: "AIzaSyC8aq7GouxjIjJGA7WGccNNCn1HhL8uCys",
@@ -388,6 +389,18 @@ export default{
     console.log("dwefasd");
     const QuestionCollection = firestore.collection(QNA);
     return QuestionCollection.get()
+      .then((docSnapshots) => {
+        return docSnapshots.docs.map((doc) => {
+          let data = doc.data();
+          console.log(data);
+
+          return data;
+        })
+      })
+  },
+  getFAQs(){
+    const FAQCollection = firestore.collection(FAQ);
+    return FAQCollection.get()
       .then((docSnapshots) => {
         return docSnapshots.docs.map((doc) => {
           let data = doc.data();
