@@ -9,14 +9,15 @@
                 <v-flex xs12>
                     <v-card>
                         <v-img :src="board.img"></v-img>
-                        <v-card-title>
-                            제목 : {{board.title}}
+                        <v-card-title class="title">
+                            {{board.title}}
                         </v-card-title>
+                        <!-- 일단 내용만 세로로 글쓰기 위해서  -->
                         <v-card-text>
-                            작성자 : {{board.author}}
+                            <div style="writing-mode:tb-rl" v-html="board.body"></div>
                         </v-card-text>
                         <v-card-text>
-                            내용 : {{board.body}}
+                            글품쟁이 : {{board.author}}
                         </v-card-text>
                         <v-card-text>
                             조회수 : {{board.boardViewCount}}
