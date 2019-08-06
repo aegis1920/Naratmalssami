@@ -1,7 +1,7 @@
 <template>
     <div>
         <ImgBanner :pagename="routeName()">
-            <div style="line-height:1.2em; font-size:10vw; font-family: Aladdin;" slot="text">BOARD Detail</div>
+            <div style="line-height:1.2em; font-size:10vw " slot="text">자세한 알림판</div>
         </ImgBanner>
         <v-container>
             <!-- Board -->
@@ -9,23 +9,48 @@
                 <v-flex xs12>
                     <v-card>
                         <v-img :src="board.img"></v-img>
-                        <v-card-title class="title">
+                        <template v-if="changeColRow === true">
+                            <div style="writing-mode:tb-rl">
+                        <v-card-title>
                             {{board.title}}
                         </v-card-title>
                         <!-- 일단 내용만 세로로 글쓰기 위해서  -->
                         <v-card-text>
-                            <div style="writing-mode:tb-rl" v-html="board.body"></div>
+                            <div v-html="board.body"></div>
                         </v-card-text>
                         <v-card-text>
-                            글품쟁이 : {{board.author}}
+                            글품쟁이, {{board.author}}
                         </v-card-text>
                         <v-card-text>
-                            조회수 : {{board.boardViewCount}}
+                            눈깔모숨, {{board.boardViewCount}}
                         </v-card-text>
                         <v-card-text>
-                            작성 날짜 : {{board.created_at}}
+                            맹근 시간, {{board.created_at}}
                         </v-card-text>
+                        </div>
+                        </template>
+                        <template v-else>
+                            <div>
+                        <v-card-title>
+                            {{board.title}}
+                        </v-card-title>
+                        <!-- 일단 내용만 세로로 글쓰기 위해서  -->
+                        <v-card-text>
+                            <div v-html="board.body"></div>
+                        </v-card-text>
+                        <v-card-text>
+                            글품쟁이, {{board.author}}
+                        </v-card-text>
+                        <v-card-text>
+                            눈깔모숨, {{board.boardViewCount}}
+                        </v-card-text>
+                        <v-card-text>
+                            맹근 시간, {{board.created_at}}
+                        </v-card-text>
+                        </div>
+                        </template>
                     </v-card>
+                    <v-btn @click="changeColRowButton">글씨 회전</v-btn>
                 </v-flex>
             </v-layout>
         </v-container>
@@ -53,6 +78,7 @@
         },
         data() {
             return {
+                changeColRow:false,
                 board: {},
                 boards: [],
             }
@@ -77,6 +103,9 @@
                     console.log(res);
                     this.board = res;
                 })
+            },
+            changeColRowButton() {
+                this.changeColRow = !this.changeColRow;
             }
         },
         created() {
