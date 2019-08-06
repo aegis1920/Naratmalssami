@@ -24,6 +24,9 @@
                           :doc_id="board.doc_id"
                           @reload="getget"
                     ></Board>
+                    <tr v-if="loading">
+                        <v-img :src="loadingSrc" />
+                    </tr>
                 </tbody>
             </table>
         </v-layout>
@@ -50,11 +53,13 @@ export default {
     return {
       start: 0, // 몇번째인가
       cur : 0, // 현재 몇개를 불러왔는가
-      num : 3, // 몇개씩 가져올 것인가
+      num : 6, // 몇개씩 가져올 것인가
       cur_user_id: '',
       boards: [],
       showBoards: [],
       busy: false,
+      loading: false,
+      loadingSrc: require('@/assets/Infinity-7.6s-200px.gif'),
     }
   },
   components: {
@@ -62,6 +67,7 @@ export default {
   },
   methods: {
      async getNumBoards() {
+          this.loading = true;
           this.busy = true;
           let arr = [];
           arr = await FirebaseService.getNumBoard(this.start, this.num, this.cur);
@@ -69,12 +75,14 @@ export default {
 
           if(arr === null) {
               this.busy = true;
+              this.loading = false;
               return;
           }
           this.showBoards = this.showBoards.concat(arr);
           this.start += this.num;
           this.cur += this.num;
           this.busy = false;
+         this.loading = false;
      },
      async getBoards() {
          this.boards = await FirebaseService.getBoards();
@@ -101,9 +109,9 @@ export default {
     }
 
     .content-table thead tr {
-        background-color: #009879;
-        color: #ffffff;
-        text-align: left;
+        background-color: #986a08 !important;
+        font-weight: bold;
+        font-size: 1.2rem;
         font-weight: bold;
     }
 
@@ -122,7 +130,7 @@ export default {
     }
 
     .content-table tbody tr:last-of-type {
-        border-bottom: 2px solid #009879;
+        border-bottom: 2px solid #986a08 !important;
     }
 
     @media screen and (min-width: 600px) and (max-width: 960px){
