@@ -1,15 +1,19 @@
+<style scope>
+  .v-toolbar {
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important
+  }
+</style>
+
 <template>
   <nav>
-    <v-toolbar fixed color="transparent" style="border: 5px solid #522A83">
+    <v-toolbar fixed color="rgba(255, 255, 255, 0.5)" style="border-bottom: white solid gray!important;">
       <v-toolbar-title>
         <!-- logo -->
         <router-link to="/" style="text-decoration:none; color:black">
           <v-container fill-height pa-0 mr-3>
-            <v-layout ml-3 style="display:inline-block; color:black">
-              <h2>
-                <strong>나랏말싸미</strong>
-              </h2>
-            </v-layout>
+            <v-img class="" :src="headerImg" style="min-width: 30px;"/>
+            <v-img class="ml-2" :src="logoImg" style="min-width: 150px;"/>
           </v-container>
         </router-link>
       </v-toolbar-title>
@@ -99,6 +103,8 @@ export default {
   data() {
     return {
       // isGuest: firebase.auth().currentUser,
+      headerImg: require('@/assets/traditional_pattern2.png'),
+      logoImg: require('@/assets/logo_header.png'),
       user_class: "",
       adminLink: "/admin",
       isLogin: false,
@@ -221,6 +227,9 @@ export default {
       } else {
         data.isLogin = false;
       }
+
+    //  this.islogin = user ? true  : false ;
+    //   .bind(this)
     });
   }
 };

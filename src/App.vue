@@ -1,9 +1,10 @@
-<template style="font-family:Arita-buri-SemiBold">
+<template style="font-family:Arita-buri-SemiBold; background-color: white ">
   <!-- vapp -->
   <v-app v-scroll="onScroll">
     <!-- vcontent -->
-    <Header />
-    <img id="videoBG" src="@/assets/paper-light.jpg" alt="">
+    <Header/>
+<!--    배경 -->
+    <img id="videoBG" src="@/assets/white-background.jpg" alt="">
     <!-- <video id="videoBG"
            :src="videoUrl"
            autoplay
@@ -108,10 +109,10 @@ export default {
   -webkit-line-clamp: 1;
 }
 
-@font-face { 
-  font-family: 'Arita-buri-SemiBold'; 
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Arita-buri-SemiBold.woff') format('woff'); 
-  font-weight: normal; 
+@font-face {
+  font-family: 'Arita-buri-SemiBold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Arita-buri-SemiBold.woff') format('woff');
+  font-weight: normal;
   font-style: normal;
 }
 
