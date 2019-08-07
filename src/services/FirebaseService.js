@@ -120,7 +120,6 @@ export default{
   getBoards() {
     const postsCollection = firestore.collection(BOARDS);
     let arr = [];
-    let count = 1;
     let data;
     return postsCollection
       .orderBy('created_at', 'desc')
@@ -128,8 +127,9 @@ export default{
       .then((docSnapshots) => {
         docSnapshots.docChanges().map((change) => {
           data = change.doc.data()
-          data.created_at = new Date(data.created_at.toDate())
-          var source = change.doc.metadata.fromCache ? "local cache" : "server";
+          // data.created_at = new Date(data.created_at.toDate())
+          data.created_at = data.created_at.toString();
+          console.log(data);
           arr.push(data);
         });
         return arr;
