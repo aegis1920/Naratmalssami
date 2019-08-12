@@ -1,4 +1,4 @@
-<template style="font-family:Arita-buri-SemiBold">
+<template style="font-family:Arita-buri-SemiBold; background-color: white ">
   <!-- vapp -->
   <v-app v-scroll="onScroll">
     <!-- vcontent -->

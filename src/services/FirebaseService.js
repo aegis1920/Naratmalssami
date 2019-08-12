@@ -120,7 +120,6 @@ export default{
   getBoards() {
     const postsCollection = firestore.collection(BOARDS);
     let arr = [];
-    let count = 1;
     let data;
     return postsCollection
       .orderBy('created_at', 'desc')
@@ -128,8 +127,9 @@ export default{
       .then((docSnapshots) => {
         docSnapshots.docChanges().map((change) => {
           data = change.doc.data()
-          data.created_at = new Date(data.created_at.toDate())
-          var source = change.doc.metadata.fromCache ? "local cache" : "server";
+          // data.created_at = new Date(data.created_at.toDate())
+          data.created_at = data.created_at.toString();
+          console.log(data);
           arr.push(data);
         });
         return arr;
@@ -365,7 +365,7 @@ export default{
       })
     }
   },
-  postQuestion(selectedTag, title, body) {
+  postQuestion(selectedTag, title, body, email) {
     let user = firebase.auth().currentUser;
     if (user !== null) {
       let userId = user.displayName;
@@ -375,7 +375,9 @@ export default{
         title,
         body,
         author: userId,
-        created_at: firebase.firestore.FieldValue.serverTimestamp()
+        email,
+        created_at: firebase.firestore.FieldValue.serverTimestamp(),
+        isAnswered : false
       }).then(function () {
         return true;
       }).catch(function () {
@@ -388,7 +390,7 @@ export default{
   getQuestions() {
     console.log("dwefasd");
     const QuestionCollection = firestore.collection(QNA);
-    return QuestionCollection.get()
+    return QuestionCollection.orderBy("created_at", "desc").get()
       .then((docSnapshots) => {
         return docSnapshots.docs.map((doc) => {
           let data = doc.data();
@@ -397,6 +399,17 @@ export default{
           return data;
         })
       })
+  },
+  postAnswer(doc_id){
+    firestore.collection(QNA).where('doc_id', '==', doc_id)
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            firestore.collection(QNA).doc(doc.id).update({
+              isAnswered: true
+            });
+          });
+        })
   },
   getFAQs(){
     const FAQCollection = firestore.collection(FAQ);
@@ -425,5 +438,16 @@ export default{
     } else {
       return false;
     }
-  }
+  },
+  getUserList(){
+    const UserCollection = firestore.collection(USERS);
+    return UserCollection.get()
+      .then((docSnapshots) => {
+        return docSnapshots.docs.map((doc) => {
+          let data = doc.data();
+          console.log(data);
+          return data;
+        })
+      })
+  },
 }

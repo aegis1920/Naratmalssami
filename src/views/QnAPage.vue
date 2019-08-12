@@ -80,6 +80,7 @@ export default {
   name: "QnAPage",
   data() {
     return {
+      time: 2000,
       title: "",
       body: "",
       email: "",
@@ -116,7 +117,7 @@ export default {
         this.alert = true;
         return;
       }
-      FirebaseService.postQuestion(this.selectedTag, this.title, this.body)
+      FirebaseService.postQuestion(this.selectedTag, this.title, this.body, this.email)
         .then(
           function(result) {
             if (result) {
