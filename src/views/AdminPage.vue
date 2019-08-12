@@ -1,6 +1,5 @@
+ <template>
 
-
-    <template>
     <v-container v-if="UserClass == 'administrator'">
         <div class="mt-5" sytle="margin: auto;">
 <!--            style="color: white"-->

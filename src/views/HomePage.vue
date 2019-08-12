@@ -2,38 +2,36 @@
     <!-- div -->
     <div>
         <welcome id="intro"/>
+        <v-container class="pt-1" style="margin-top: 9em; margin-bottom: 5em; background-color: white;">
+            <!--      <v-img src="http://asaninst.org/wp-content/uploads/2014/07/140731_js_00011.jpg" class="mt-3" style="max-height: 50px" alt="">-->
+            <!--      </v-img>-->
+            <v-layout wrap>
+                <v-flex xs1>
+                    <v-img class="" :src="danchungImg" style="height: 100%; width: 25px"/>
+                </v-flex>
+                <v-flex xs7 style="background-color: white; vertical-align: middle;">
+                    <div class="" style="line-height:1.1em; font-size: 2.4vw;" slot="text">
+                        나랏말싸미에 오신 것을 환영합니다.
+                    </div>
+                    <div class="" style="line-height:1.1em; font-size: 2.4vw; color: rgb(170,170,170)"
+                         slot="text">
+                        한국 전통의 맛을 느껴보세요.
+                    </div>
+                    <div class="" style="line-height:1.1em; font-size: 2.4vw; color: rgb(220,220,220)"
+                         slot="text">
+                        구수한 된장과 매운 고추장의 맛을.
+                    </div>
+                </v-flex>
+            </v-layout>
+        </v-container>
 
-        <!-- imgbanner -->
+<!--        <div v-bind:style="{ 'background-image': 'url(' + danchungImg + ')'}" class="imgLine">-->
+<!--        </div>-->
 
-            <v-container class="pt-1" style="margin-top: 150px; margin-bottom: 100px; background-color: white;">
-                <!--      <v-img src="http://asaninst.org/wp-content/uploads/2014/07/140731_js_00011.jpg" class="mt-3" style="max-height: 50px" alt="">-->
-                <!--      </v-img>-->
-                <v-layout wrap style="
-                background-image: url('https://t1.daumcdn.net/cfile/tistory/99913D3359DDA5F012');
-                background-repeat: no-repeat;
-                background-size: cover;
-                background-position: center center;
-                height: 120px;
-                opacity: 0.8;
-                "
-                >
-                    <v-flex xs7 style="background-color: white; vertical-align: middle;">
-                        <div class="" style="line-height:1.1em; font-size: 2.4vw;" slot="text">
-                            나랏말싸미에 오신 것을 환영합니다.
-                        </div>
-                        <div class="" style="line-height:1.1em; font-size: 2.4vw; color: rgb(170,170,170)"
-                             slot="text">
-                            한국 전통의 맛을 느껴보세요.
-                        </div>
-                        <div class="" style="line-height:1.1em; font-size: 2.4vw; color: rgb(220,220,220)"
-                             slot="text">
-                            구수한 된장과 매운 고추장의 맛을.
-                        </div>
-                    </v-flex>
-                </v-layout>
-            </v-container>
+<!--        <v-img class="" :src="danchungImg" style="width: 100%; height: px"/>-->
 
-
+        <div v-bind:style="{ 'background-image': 'url(' + HanGImg + ')'}" class="backgroundImg">
+            <v-container>
                 <v-carousel hide-delimiters>
                     <v-carousel-item
                             v-for="(item,i) in items"
@@ -41,6 +39,9 @@
                             :src="item.src"
                     ></v-carousel-item>
                 </v-carousel>
+            </v-container>
+        </div>
+
         <!--      <div style="line-height:1.2em; font-size:3vw;" slot="text">-->
         <!--        나랏말싸미에 오신 것을 환영합니다.-->
         <!--      </div>-->
@@ -106,6 +107,8 @@
         name: "HomePage",
         data() {
             return {
+                HanGImg: require('@/assets/HanG.jpg'),
+                danchungImg: require('@/assets/danchung3.jpg'),
                 items: [
                     {
                         src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
@@ -207,4 +210,16 @@
 </script>
 
 <style>
+    .backgroundImg {
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+    };
+
+    .imgLine {
+        background-size: cover;
+        background-position: center center;
+        background-repeat: repeat-x;
+    }
+
 </style>
