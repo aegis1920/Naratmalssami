@@ -1,3 +1,4 @@
+
 <template>
   <v-container v-if="UserClass == 'administrator'">
     <v-layout width="100vw" align-center justify-center>
