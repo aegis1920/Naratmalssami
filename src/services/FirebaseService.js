@@ -400,6 +400,17 @@ export default{
         })
       })
   },
+  postAnswer(doc_id){
+    firestore.collection(QNA).where('doc_id', '==', doc_id)
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            firestore.collection(QNA).doc(doc.id).update({
+              isAnswered: true
+            });
+          });
+        })
+  },
   getFAQs(){
     const FAQCollection = firestore.collection(FAQ);
     return FAQCollection.get()

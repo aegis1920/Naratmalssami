@@ -31,11 +31,7 @@
             <div class="box question">{{title}}</div>
             <div class="box question">{{body}}</div>
             <div class="box answer">
-              <form
-                class="gform"
-                method="POST"
-                action="https://script.google.com/macros/s/AKfycbxfiqbR-q13b_kFqWJRIHKfv-5UGbvDi9tc9A4Sx6LbfNCO6MQ7/exec"
-              >
+              <form id="gform">
                 <div class="form">
                   <div class="floating-placeholder">
                     <input id="email" name="email" type="text" placeholder="이메일" :value="email" />
@@ -58,12 +54,15 @@
                 </div>
                 <div class="text-xs-center">
                   <!-- <v-btn color="primary">보내기</v-btn> -->
-                  <input type="submit" color="primary" value="보내기">
-                </div>
-                <div style="display:none;" id="thankyou_message">
-                  <h1>감사합니다.</h1>
+                  <!-- <input type="submit" color="primary" value="보내기" /> -->
                 </div>
               </form>
+              <button class="button-success pure-button button-xlarge" @click="sendEmail()">
+                <i class="fa fa-paper-plane"></i>&nbsp;Send
+              </button>
+              <div style="display:none;" class="thankyou_message">
+                <h1>감사합니다.</h1>
+              </div>
             </div>
           </v-card-text>
         </div>
@@ -74,11 +73,13 @@
 
 <script>
 import FirebaseService from "../services/FirebaseService";
+import $ from "jquery";
 
 export default {
   name: "UserList",
   data() {
     return {
+      docId: "",
       qnaList: [],
       title: "",
       body: "",
@@ -96,7 +97,7 @@ export default {
     },
     questionDetail(q) {
       console.log(q);
-
+      this.docId = q.doc_id;
       this.title = q.title;
       this.author = q.author;
       this.body = q.body;
@@ -105,29 +106,48 @@ export default {
     },
     sendEmail() {
       console.log("send이메일");
-      const formData = document.getElementById("gform");
-      console.log(formData);
-      const data = new FormData(formData);
-      console.log(data);
+      const form = $("#gform");
+      const formData = form.serialize();
+      const method = "POST";
       const url =
-        "https://script.google.com/macros/s/AKfycbxfiqbR-q13b_kFqWJRIHKfv-5UGbvDi9tc9A4Sx6LbfNCO6MQ7/exec";
+        "https://script.google.com/macros/s/AKfycbzpQttyMp9C9-oskfhlGYvGOPmUcMcqcCFXrkjB9g/exec";
+      const docId = this.docId;
 
-      var xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function() {
-        console.log(xhr.readyState);
-
-        if (xhr.readyState === 4) {
-          console.log(xhr.response);
-
-          if (xhr.status === 200) {
-            console.log("성공");
-          } else {
-            console.log("실패");
-          }
+      $.ajax({
+        type: method,
+        url: url,
+        data: formData,
+        success: function(response){
+          console.log("성공",this.docId);
+          FirebaseService.postAnswer(docId);
+          this.docId = '';
+          this.title = '';
+          this.author = '';
+          this.body = '';
+          this.email = '';
+          this.dialog = false;
+          this.getQuestions();
+        }.bind(this),
+        error: function(err){
+          alert(err)
         }
-      };
-      xhr.open("POST", url, true);
-      xhr.send(data);
+      })
+      // var xhr = new XMLHttpRequest();
+      // xhr.onreadystatechange = function() {
+      //   console.log(xhr.readyState);
+
+      //   if (xhr.readyState === 4) {
+      //     console.log(xhr.response);
+
+      //     if (xhr.status === 200) {
+      //       console.log("성공");
+      //     } else {
+      //       console.log("실패");
+      //     }
+      //   }
+      // };
+      // xhr.open("POST", url, true);
+      // xhr.send(data);
     }
   }
 };

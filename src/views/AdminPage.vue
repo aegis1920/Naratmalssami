@@ -27,7 +27,7 @@
       </h2>
       <h2 class="text-xs-center mb-2">
         '나랏말싸미' 에 방문한 사람들의
-        <v-btn outline large color="black" @click="select='log'">
+        <v-btn outline large color="black" @click="log()">
           <h1>기록</h1>
         </v-btn>을 살펴보세요.
       </h2>
@@ -74,7 +74,9 @@ export default {
     QnaList
   },
   methods: {
-    
+    log(){
+        window.open("https://analytics.google.com/analytics/web/#/report/visitors-overview/a144848343w206396916p199290162/overview-graphOptions.primaryConcept=analytics.totalVisitors");
+    }
   },
   created() {
     const data = this.$data;
