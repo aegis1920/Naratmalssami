@@ -2,6 +2,7 @@
   <!-- vapp -->
   <v-app v-scroll="onScroll">
     <!-- vcontent -->
+    <welcome id="intro"/>
     <Header />
     <img id="videoBG" src="@/assets/white-background.jpg" alt="">
 
@@ -31,6 +32,7 @@ import Footer from './components/Footer.vue'
 import store from './store'
 import scroll from './components/Scroll.vue'
 import Translate from './components/Translate.vue'
+import welcome from './components/welcome'
 
 import {mapGetters} from 'vuex'
 export default {
@@ -41,6 +43,7 @@ export default {
     Footer,
     scroll,
     Translate,
+    welcome
   },
   data() {
     return {
@@ -60,12 +63,27 @@ export default {
     },
     isLogin(){
       return (this.getUser['userEmail']!='');
-    }
+    },
+    preLoader() {
+      setTimeout(function () {
+        var intro = document.getElementById("intro");
+        intro.style.display = "none";
+      }, 2900);
+    },
   },
   watch:{
     offsetTop: function(){
       var video = document.getElementById('videoBG');
       video.style.filter= 'blur('+(this.offsetTop/150)+'px)';
+    }
+  },
+  mounted() {
+    if (!this.$store.state.intro) {
+      this.$store.state.intro = true;
+      this.preLoader();
+    } else {
+      var intro = document.getElementById("intro");
+      intro.style.display = "none";
     }
   }
 }

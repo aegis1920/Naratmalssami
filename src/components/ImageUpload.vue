@@ -17,9 +17,7 @@
     <input id="file" type="file" accept="image/*" ref="imgupload" @change="uploadImg" hidden>
   </div>
   <v-dialog v-model="realImg" height="90vh" >
-    <!-- <v-card class="real"> -->
       <img class="real imagefile" v-model:src="imgUrl">
-    <!-- </v-card> -->
   </v-dialog>
 </v-layout>
 </template>
@@ -48,12 +46,6 @@ export default {
     open_upload() {
       this.$refs.imgupload.click();
     },
-    imgSetting(url){
-      var imagefiles = document.getElementsByClassName('imagefile');
-      for(i in imagefiles){
-        imagefiles[i].src = url
-      }
-    },
     uploadImg() {
       var target = event.currentTarget;
       var xmlHttpRequest = new XMLHttpRequest();
@@ -69,7 +61,6 @@ export default {
             }
           } else {
             alert("업로드 실패");
-            // imagefile.src = "http://dy.gnch.or.kr/img/no-image.jpg";
           }
         }
       };
@@ -82,7 +73,6 @@ export default {
                           + '?client_id=156870c5a79746060fc4027a32a8bf99b824c809693cdbece2830ef3d433599b'
                           + '&collections=' + this.collection[randomIdx];
 
-      console.log(randomIdx, getRandomIgmUrl);
       xmlHttpRequest.open('GET', getRandomIgmUrl, true);
       xmlHttpRequest.onreadystatechange = () => {
         if (xmlHttpRequest.readyState == 4) {
@@ -98,7 +88,6 @@ export default {
 
           } else {
             alert("업로드 실패");
-            // imagefile.src = "http://dy.gnch.or.kr/img/no-image.jpg";
           }
         }
       };

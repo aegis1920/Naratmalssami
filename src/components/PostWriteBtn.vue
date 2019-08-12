@@ -92,11 +92,8 @@ export default {
       }
     },
     postPost() {
-      console.log(this.title);
-      console.log(this.body);
 			FirebaseService.postPost(this.title, this.body)
       this.dialog = false;
-      // document.location.href = '/Post';
 		},
   }
 }
