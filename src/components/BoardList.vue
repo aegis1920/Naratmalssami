@@ -25,7 +25,9 @@
                           @reload="getget"
                     ></Board>
                     <tr v-if="loading">
-                        <v-img :src="loadingSrc" />
+                        <td colspan="4" >
+                            <v-img :src="loadingSrc" style="width:50px; margin: auto" />
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -40,9 +42,9 @@ import FirebaseService from '@/services/FirebaseService'
 export default {
   name: 'BoardsList',
   props: {
-    limits: {
-      type: Number,
-      default: 4
+    limit: {
+      type: Boolean,
+      default: false,
     },
     loadMore: {
       type: Boolean,
@@ -95,6 +97,13 @@ export default {
          this.busy = false;
      },
   },
+   async mounted() {
+      if(this.limit) { // 더이상 로딩 안하고 6개만 딱 보여주기 + 더보기 버튼
+          this.busy = true;
+          let arr = await FirebaseService.getNumBoard(this.start, this.num, this.cur);
+          this.showBoards = this.showBoards.concat(arr);
+      }
+    }
 }
 </script>
 <style>

@@ -56,7 +56,9 @@
         <router-link to="/Board" style="text-decoration:none;">
           <h2 class="my-5 text-xs-center page_title">게시판</h2>
         </router-link>
-        <BoardList></BoardList>
+        <BoardList
+          :limit="limit_true"
+        ></BoardList>
       </v-flex>
     </v-layout>
 
@@ -106,6 +108,7 @@
     name: "HomePage",
     data() {
       return {
+        limit_true: true,
         items: [
           {
             src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
