@@ -1,29 +1,3 @@
-<!--<template>-->
-<!--    <v-container grid-list-md text-xs-center>-->
-<!--        <v-layout row wrap>-->
-<!--            <v-flex xs12 sm6 md6 offset-sm3>-->
-<!--                <v-card dark color="primary">-->
-
-<!--                </v-card>-->
-<!--                <v-card dark class="weatherBack" style="border-radius:10px">-->
-<!--                    <v-flex><h2>Weather In Seoul</h2></v-flex>-->
-<!--                    <v-divider></v-divider>-->
-<!--                    <v-layout>-->
-<!--                    <v-flex xs3>-->
-<!--                        <v-card-text class="px-0"><img :src="weatherIconURL"-->
-<!--                        /></v-card-text>-->
-<!--                    </v-flex>-->
-<!--                    <v-flex xs9>-->
-<!--                        <v-flex style="font-size:3rem">{{weatherTemp}} ºC</v-flex>-->
-<!--                        <div>{{weatherTemp_min}}/{{weatherTemp_max}}</div>-->
-<!--                        {{weatherDescription}}-->
-<!--                    </v-flex>-->
-<!--                    </v-layout>-->
-<!--                </v-card>-->
-<!--            </v-flex>-->
-<!--        </v-layout>-->
-<!--    </v-container>-->
-<!--</template>-->
 <template>
     <div style="display:flex; flex-wrap: wrap; align-items: center;">
         <strong>서울의 날씨는</strong>

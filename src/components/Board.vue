@@ -3,21 +3,21 @@
     <td>{{board.author}}</td>
     <td>{{board.title}}</td>
     <td>{{board.boardViewCount}}</td>
-    <td>
-      <v-layout xs12 v-show="modiOn">
-        <v-flex xs6>
+    <td style="padding:0px">
+        <div v-show="modiOn">
           <BoardModifyBtn
             :title="board.title"
             :body="board.body"
             :imgSrc="imgSrc"
             :doc_id="board.doc_id"
           />
-        </v-flex>
-        <v-flex xs6>
-          <v-icon style="cursor: pointer" class="icon" small
-                  @click.stop="deleteBoard">fas fa-trash-alt</v-icon>
-        </v-flex>
-      </v-layout>
+        </div>
+    </td>
+    <td>
+      <div v-show="modiOn">
+        <v-icon style="cursor: pointer" class="icon" small
+                @click.stop="deleteBoard">fas fa-trash-alt</v-icon>
+      </div>
     </td>
   </tr>
 </template>
@@ -61,10 +61,8 @@ export default {
         this.$router.push({name:'boarddetail'});
       },
       isMyBoard() {
-        //console.log('cur : ' + this.cur_user_id);
         let cur = FirebaseService.getUser();
         if(cur === this.author) {
-          console.log('MyBoard');
           this.modiOn = true;
         }
       },
@@ -83,5 +81,8 @@ export default {
 </script>
 
 <style scoped>
-
+  td {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 </style>

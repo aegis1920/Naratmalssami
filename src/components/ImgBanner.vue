@@ -62,14 +62,10 @@ export default {
     }else{
       this.bannerSetting(this.pagename)
     }
-
-    // 잠깐 바꿈
-
   },
   methods: {
     async bannerSetting(page) {
       var data = await FirebaseService.getImgUrl(page);
-      console.log(data);
       var imgurl = String(data.imgurl);
       this.imgSrc = imgurl
     },

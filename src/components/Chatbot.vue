@@ -38,10 +38,8 @@ export default {
       js.id = "frogue-embed";
       js.src = "https://danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
 
-      console.log(js, fjs);
 
       await fjs.parentNode.insertBefore(js, fjs);
-      console.log(js, fjs);
 
       this.isLoad = true;
     }

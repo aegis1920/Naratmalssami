@@ -47,14 +47,12 @@ new Vue({
   created() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-				// console.log("login", user);
         this.$store.commit('setUser', {
           user: user
         })
         this.$store.commit('setUserChat', {
           messageList: FirebaseService.getUserMessageList()
         })
-				// console.log("login", this.$store.state.userChat);
       } else {
         this.$store.commit('setUser', {
           user: null
@@ -62,7 +60,6 @@ new Vue({
         this.$store.commit('setUserChat', {
           messageList: []
         })
-        // console.log(this.$store.state.user, "logout!!!");
       }
     })
   },
