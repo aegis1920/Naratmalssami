@@ -57,14 +57,7 @@ export default {
     ImageUpload
   },
   mounted() {
-    if(this.pagename === 'home' || this.pagename === 'board' || this.pagename === 'boarddetail') {
-      this.imgSrc = '';
-    }else{
       this.bannerSetting(this.pagename)
-    }
-
-    // 잠깐 바꿈
-
   },
   methods: {
     async bannerSetting(page) {
