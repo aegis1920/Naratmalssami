@@ -62,7 +62,6 @@ export default {
   methods: {
     async bannerSetting(page) {
       var data = await FirebaseService.getImgUrl(page);
-      console.log(data);
       var imgurl = String(data.imgurl);
       this.imgSrc = imgurl
     },

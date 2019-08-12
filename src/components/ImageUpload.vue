@@ -71,7 +71,6 @@ export default {
             }
           } else {
             alert("업로드 실패");
-            // imagefile.src = "http://dy.gnch.or.kr/img/no-image.jpg";
           }
         }
       };
@@ -83,8 +82,7 @@ export default {
       var getRandomIgmUrl =
         "https://api.unsplash.com/photos/random?client_id=156870c5a79746060fc4027a32a8bf99b824c809693cdbece2830ef3d433599b&page=1&per_page=1&query=korea,palace";
 
-      console.log(randomIdx, getRandomIgmUrl);
-      xmlHttpRequest.open("GET", getRandomIgmUrl, true);
+      xmlHttpRequest.open('GET', getRandomIgmUrl, true);
       xmlHttpRequest.onreadystatechange = () => {
         if (xmlHttpRequest.readyState == 4) {
           if (xmlHttpRequest.status == 200) {
@@ -97,7 +95,6 @@ export default {
             }
           } else {
             alert("업로드 실패");
-            // imagefile.src = "http://dy.gnch.or.kr/img/no-image.jpg";
           }
         }
       };

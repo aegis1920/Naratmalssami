@@ -37,7 +37,6 @@ const messaging = firebase.messaging();
 
 firestore.enablePersistence()
   .then(function () {
-    console.log("성공");
 
   })
   .catch(function (err) {
@@ -52,14 +51,11 @@ firestore.enablePersistence()
 messaging
   .requestPermission()
   .then(function () {
-    console.log("Notification permission granted.");
     return messaging.getToken()
   })
   .then(function (token) {
-    console.log("token is : " + token);
   })
   .catch(function (err) {
-    console.log("Unable to get permission to notify.", err);
   });
 
 
@@ -72,7 +68,6 @@ messaging.onMessage(function (payload) {
   };
 
   if (!("Notification" in window)) {
-    console.log("This browser does not support system notifications");
   } else if (Notification.permission === "granted") {
     var notification = new Notification(notificationTitle, notificationOptions);
 
@@ -106,7 +101,6 @@ export default{
             arr.push(data);
           });
          max = arr.length; // 전체 갯수
-          //console.log(max + " " + cur);
 
          if(max <= cur) { // null이 반환되면 모든 보드를 불러왔다는 것.
            return null;
@@ -129,7 +123,6 @@ export default{
           data = change.doc.data()
           // data.created_at = new Date(data.created_at.toDate())
           data.created_at = data.created_at.toString();
-          console.log(data);
           arr.push(data);
         });
         return arr;
@@ -247,10 +240,8 @@ export default{
       imgurl: imgurl
     })
       .then(function () {
-        console.log("Document successfully written!");
       })
       .catch(function (error) {
-        console.error("Error writing document: ", error);
       });
   },
   loginWithGoogle() {
@@ -260,7 +251,6 @@ export default{
       let user = result.user
       return result
     }).catch(function (error) {
-      console.error('[Google Login Error]', error)
     })
   },
   requestToFCM(to, userId) {
@@ -280,7 +270,6 @@ export default{
         }
       })
     }, function (error, response, body) {
-      console.log(body);
     });
   },
   // user_class가 admin인 얘들의 id를 리스트에 넣어서 token_id를 가져와야 한다.
@@ -388,13 +377,11 @@ export default{
     }
   },
   getQuestions() {
-    console.log("dwefasd");
     const QuestionCollection = firestore.collection(QNA);
     return QuestionCollection.orderBy("created_at", "desc").get()
       .then((docSnapshots) => {
         return docSnapshots.docs.map((doc) => {
           let data = doc.data();
-          console.log(data);
 
           return data;
         })
@@ -417,7 +404,6 @@ export default{
       .then((docSnapshots) => {
         return docSnapshots.docs.map((doc) => {
           let data = doc.data();
-          console.log(data);
 
           return data;
         })
@@ -445,7 +431,6 @@ export default{
       .then((docSnapshots) => {
         return docSnapshots.docs.map((doc) => {
           let data = doc.data();
-          console.log(data);
           return data;
         })
       })

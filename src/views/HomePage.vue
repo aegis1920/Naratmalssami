@@ -1,10 +1,7 @@
 <template>
     <!-- div -->
     <div>
-        <welcome id="intro"/>
         <v-container class="pt-1" style="margin-top: 9em; margin-bottom: 5em; background-color: white;">
-            <!--      <v-img src="http://asaninst.org/wp-content/uploads/2014/07/140731_js_00011.jpg" class="mt-3" style="max-height: 50px" alt="">-->
-            <!--      </v-img>-->
             <v-layout wrap>
                 <v-flex xs1>
                     <v-img class="" :src="danchungImg" style="height: 100%; width: 25px"/>
@@ -24,12 +21,6 @@
                 </v-flex>
             </v-layout>
         </v-container>
-
-<!--        <div v-bind:style="{ 'background-image': 'url(' + danchungImg + ')'}" class="imgLine">-->
-<!--        </div>-->
-
-<!--        <v-img class="" :src="danchungImg" style="width: 100%; height: px"/>-->
-
         <div v-bind:style="{ 'background-image': 'url(' + HanGImg + ')'}" class="backgroundImg">
             <v-container>
                 <v-carousel hide-delimiters>
@@ -41,16 +32,7 @@
                 </v-carousel>
             </v-container>
         </div>
-
-        <!--      <div style="line-height:1.2em; font-size:3vw;" slot="text">-->
-        <!--        나랏말싸미에 오신 것을 환영합니다.-->
-        <!--      </div>-->
-
-        <!-- container -->
-
-        <!-- About Me -->
         <About></About>
-
 
     <!-- Board -->
     <v-layout my-5>
@@ -95,16 +77,14 @@
     </div>
 </template>
 <script>
-    import Header from "../components/Header";
     import ImgBanner from "../components/ImgBanner";
     import BoardList from "../components/BoardList";
     import RepositoryList from "../components/RepositoryList";
-    import Footer from "../components/Footer";
-    import FirebaseService from "@/services/FirebaseService";
+
 
     import Person from "../components/Person";
     import About from "../components/About";
-    import welcome from "../components/welcome.vue";
+
 
     export default {
         name: "HomePage",
@@ -184,7 +164,6 @@
             BoardList,
             RepositoryList,
             Person,
-            welcome,
             About
         },
         methods: {
@@ -194,21 +173,9 @@
             routeName() {
                 return this.$route.name;
             },
-            preLoader() {
-                setTimeout(function () {
-                    var intro = document.getElementById("intro");
-                    intro.style.display = "none";
-                }, 2900);
-            },
         },
         mounted() {
-            if (!this.$store.state.intro) {
-                this.$store.state.intro = true;
-                this.preLoader();
-            } else {
-                var intro = document.getElementById("intro");
-                intro.style.display = "none";
-            }
+
         }
     };
 </script>

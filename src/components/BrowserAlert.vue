@@ -31,7 +31,6 @@ export default {
       var userAgent = window.navigator.userAgent;
 
       if (userAgent.indexOf("Chrome") > 0) {
-        console.log("크롬임니댜")
         this.snackbar = false;
         return;
       }else {

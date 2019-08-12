@@ -65,8 +65,9 @@ export default {
       var js = document.createElement("script");
       js.id = "frogue-embed";
       js.src = "https://danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
-
       await fjs.parentNode.insertBefore(js, fjs);
+      this.isLoad = true;
+
     }
   }
 };
@@ -98,11 +99,7 @@ export default {
   height: 30px !important;
   opacity: 0.1;
 }
-/* #frogue-container {
-  top: 15px !important;
-  bottom: 0px !important;
-  right: 434.234px !important;
-} */
+
 </style>
 
 
