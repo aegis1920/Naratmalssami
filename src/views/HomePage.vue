@@ -110,6 +110,7 @@
         name: "HomePage",
         data() {
             return {
+                limit_true: true,
                 HanGImg: require('@/assets/HanG.jpg'),
                 danchungImg: require('@/assets/danchung3.jpg'),
                 items: [
