@@ -12,6 +12,8 @@
 
 <script>
 import { log } from "util";
+import { setTimeout } from "timers";
+import $ from 'jquery'
 export default {
   name: "chat",
   data() {
@@ -23,8 +25,27 @@ export default {
       isLoad: false
     };
   },
+  watch: {
+    isLoad: function() {
+      console.log("chat load !!!!");
+      const icon = $('#chat-icon');
+      console.log(icon);
+      console.log(icon.offsetLeft);
+      console.log(icon.left);
+      console.log(icon.clientLeft);
+      
+    }
+  },
   mounted() {
-    this.chatbotLoad();
+    this.chatbotLoad().then(result => {
+      console.log(result);
+
+      setTimeout(() => {
+        this.isLoad = true;
+      }, 600);
+
+
+    });
   },
   methods: {
     async chatbotLoad() {
@@ -38,12 +59,7 @@ export default {
       js.id = "frogue-embed";
       js.src = "https://danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
 
-      console.log(js, fjs);
-
       await fjs.parentNode.insertBefore(js, fjs);
-      console.log(js, fjs);
-
-      this.isLoad = true;
     }
   }
 };
@@ -73,12 +89,12 @@ export default {
   /* left: calc(100% - 350px) !important; */
   width: 30px !important;
   height: 30px !important;
-  opacity: 0.00001;
+  opacity: 1;
 }
 #frogue-container {
   top: 15px !important;
-  bottom:0px!important;
-  right:434.234px!important;
+  bottom: 0px !important;
+  right: 434.234px !important;
 }
 </style>
 
