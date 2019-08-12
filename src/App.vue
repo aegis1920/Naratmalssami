@@ -5,14 +5,6 @@
     <welcome id="intro"/>
     <Header />
     <img id="videoBG" src="@/assets/white-background.jpg" alt="">
-
-    <!-- <video id="videoBG"
-           :src="videoUrl"
-           autoplay
-           loop
-           muted
-    >
-    </video> -->
     <v-content class="content"
         style="padding-right: 0px;">
 

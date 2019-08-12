@@ -3,7 +3,6 @@ import 'firebase/firestore'
 import 'firebase/auth'
 import FirebaseService from '@/services/FirebaseService'
 
-const POSTS = 'posts';
 const BOARDS = 'boards';
 const IMGBANNER = 'imgbanner';
 const COMMENTS = 'comments';
@@ -64,7 +63,7 @@ messaging.onMessage(function (payload) {
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    // icon: payload.notification.icon,
+    icon: payload.notification.icon,
   };
 
   if (!("Notification" in window)) {
@@ -164,7 +163,7 @@ export default{
       var userTokenList = FirebaseService.userTokenListFunc();
       userTokenList.then(function (result) {
         result.forEach(function (element) {
-          FirebaseService.requestToFCM(element, userId);
+          FirebaseService.requestToFCM(element, userId, title);
         });
       });
 
@@ -253,7 +252,7 @@ export default{
     }).catch(function (error) {
     })
   },
-  requestToFCM(to, userId) {
+  requestToFCM(to, userId, title) {
     var request = require("request");
 
     request.post({
@@ -265,8 +264,9 @@ export default{
       body: JSON.stringify({
         "to": to,
         "notification": {
-          "title": "postBoard에 대한 글입니다",
-          "body": userId + "님이 글을 쓰셨습니다"
+          "title": userId + "님이 글을 쓰셨습니다",
+          "body": "제목 : " + title,
+          "icon": "/south-korea.png",
         }
       })
     }, function (error, response, body) {

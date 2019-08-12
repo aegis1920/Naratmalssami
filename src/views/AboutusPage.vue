@@ -3,7 +3,7 @@
 <template>
 <div>
   <ImgBanner :pagename="routeName()">
-    <div style="line-height:1.2em; font-size:8vw;" slot="text">맹근이</div>
+    <div style="line-height:1.2em; font-size:8vw; color:white;" slot="text">맹근이</div>
   </ImgBanner>
   <v-container>
     <v-layout my-5>

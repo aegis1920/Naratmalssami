@@ -38,7 +38,7 @@
     <v-layout my-5>
       <v-flex xs12>
         <router-link to="/Board" style="text-decoration:none;">
-          <h2 class="my-5 text-xs-center page_title">게시판</h2>
+          <h2 class="my-5 text-xs-center page_title">알림판</h2>
         </router-link>
         <BoardList
           :limit="limit_true"
