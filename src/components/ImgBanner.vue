@@ -57,11 +57,7 @@ export default {
     ImageUpload
   },
   mounted() {
-    if(this.pagename === 'home' || this.pagename === 'board' || this.pagename === 'boarddetail') {
-      this.imgSrc = '';
-    }else{
       this.bannerSetting(this.pagename)
-    }
   },
   methods: {
     async bannerSetting(page) {
