@@ -36,7 +36,17 @@
         <div>
           <ImageUpload />
         </div>
-        <markdown-editor :options="options" v-model="body" ></markdown-editor>
+        <!-- <markdown-editor :options="options" v-model="body" ></markdown-editor> -->
+        <v-flex xs12>
+        <v-textarea
+          id="textarea"
+          outlined
+          name="input-7-10"
+          label="Outline textarea"
+          auto-grow
+          v-model="body"
+        ></v-textarea>
+      </v-flex>
       </div>
 
     </v-card>
@@ -57,7 +67,6 @@ import FirebaseService from '@/services/FirebaseService'
 
 // global register
 Vue.use(Editor);
-
 
 export default {
   data: () => ({
@@ -94,6 +103,12 @@ export default {
       }
     },
     async postBoard() {
+
+      // 엔터 적용시키기
+      var str = this.body;
+      str = str.replace(/(?:\r\n|\r|\n)/g, '<br />');
+      this.body = str;
+
       var imagefiles = document.getElementsByClassName('imagefile');
       this.img = imagefiles[0].src;
       if(this.title==''){

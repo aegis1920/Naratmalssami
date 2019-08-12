@@ -2,9 +2,9 @@
   <!-- vapp -->
   <v-app v-scroll="onScroll">
     <!-- vcontent -->
-    <Header/>
-<!--    배경 -->
+    <Header />
     <img id="videoBG" src="@/assets/white-background.jpg" alt="">
+
     <!-- <video id="videoBG"
            :src="videoUrl"
            autoplay
