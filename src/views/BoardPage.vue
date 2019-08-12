@@ -1,7 +1,7 @@
 <template>
   <div>
     <ImgBanner :pagename="routeName()">
-      <div style="line-height:1.2em; font-size:8vw;" slot="text">알림판</div>
+      <div style="line-height:1.2em; font-size:8vw; color:white;" slot="text">알림판</div>
     </ImgBanner>
     <v-container>
 

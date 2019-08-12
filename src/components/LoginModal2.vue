@@ -19,19 +19,19 @@
             <v-container fluid style="max-height: 500px; background-color: transparent; box-shadow: none; border: hidden">
                     <v-layout row wrap justify-center>
                         <v-flex mr-3 >
-                            <v-btn round color="#df4a31" dark v-on:click="loginWithGoogle" style="width:100%;">
+                            <v-btn round color="#df4a31" v-on:click="loginWithGoogle" style="width:100%;">
                                 <v-icon size="25" class="mr-2">fab fa-google</v-icon>
                                 Google 로그인
                             </v-btn>
-                            <v-btn v-on:click="facebookLogin" round color="#3C5A99" dark style="width: 100%">
+                            <v-btn v-on:click="facebookLogin" round color="#3C5A99"  style="width: 100%">
                                 <v-icon size="25" class="mr-2">fab fa-facebook</v-icon>
                                 FACEBOOK 로그인
                             </v-btn>
-                            <v-btn round color="#fdd835" dark style="width: 100%" @click="dialog = true">
+                            <v-btn round color="#fdd835"  style="width: 100%" @click="dialog = true">
                                 <v-icon size="25" class="mr-2">far fa-envelope</v-icon>
                                 EMAIL 로그인
                             </v-btn>
-                            <v-btn round color="#A9B0A8" dark style="width: 100%" @click="dialog2 = true">
+                            <v-btn round color="#A9B0A8"  style="width: 100%" @click="dialog2 = true">
                                 <v-icon size="25" class="mr-2">fas fa-user-plus</v-icon>
                                 회원가입
                             </v-btn>
@@ -40,8 +40,8 @@
                                     max-width="500px"
                             >
                                 <v-card tile>
-                                    <v-toolbar card dark color="#fdd835">
-                                        <v-btn icon dark @click="dialog = false">
+                                    <v-toolbar card  color="#fdd835">
+                                        <v-btn icon  @click="dialog = false">
                                             <v-icon>close</v-icon>
                                         </v-btn>
                                         <v-toolbar-title>EMAIL 로그인</v-toolbar-title>
@@ -79,7 +79,7 @@
                                                         ></v-text-field>
                                                     </v-flex>
                                                     <v-flex xs12 text-xs-center>
-                                                        <v-btn v-on:click="emailLogin" dark color="#fdd835"> 로그인 </v-btn>
+                                                        <v-btn v-on:click="emailLogin"  color="#fdd835"> 로그인 </v-btn>
                                                     </v-flex>
                                                 </v-layout>
                                             </v-container>
@@ -93,8 +93,8 @@
                                     max-width="500px"
                             >
                                 <v-card tile>
-                                    <v-toolbar card dark color="#A9B0A8">
-                                        <v-btn icon dark @click="dialog2 = false">
+                                    <v-toolbar card  color="#A9B0A8">
+                                        <v-btn icon  @click="dialog2 = false">
                                             <v-icon>close</v-icon>
                                         </v-btn>
                                         <v-toolbar-title>회원가입</v-toolbar-title>
@@ -132,7 +132,7 @@
                                                         ></v-text-field>
                                                     </v-flex>
                                                     <v-flex xs12 text-xs-center>
-                                                        <v-btn v-on:click="userSignUp" dark color="#A9B0A8"> 가입 </v-btn>
+                                                        <v-btn v-on:click="userSignUp"  color="#A9B0A8"> 가입 </v-btn>
                                                     </v-flex>
                                                 </v-layout>
                                             </v-container>
@@ -154,6 +154,7 @@
     import Swal from 'sweetalert2'
 
     const firestore = firebase.firestore();
+    const messaging = firebase.messaging();
 
     export default {
         name: "LoginModal2",
@@ -185,7 +186,60 @@
         components: {},
         methods: {
             async emailLogin() {
-                await firebase.auth().signInWithEmailAndPassword(this.email, this.password).catch(function(error) {
+                var email_id = this.email
+                var userToken = '';
+                var user_class = false;
+                messaging
+                .requestPermission()
+                .then(function () {
+                    console.log("Notification permission granted.");
+                    return messaging.getToken()
+                })
+                .then(function (token) {
+                    userToken = token;
+                });
+
+                firestore.collection('users')
+                .where('id', '==', email_id)
+                .get()
+                .then( function (querySnapshot) {
+                    querySnapshot.forEach(function (doc) {
+                        if(doc.data().user_class ===  "administrator")
+                            user_class = true;
+                    })
+                });
+
+                await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+                .then(()=>{
+                    var userTokenListRef = firestore.collection('userTokenList');
+                    console.log(userToken);
+                    if(user_class){
+                        userTokenListRef.add({
+                            tokenId: userToken,
+                            userId: email_id,
+                            userClass: "administrator"
+                        })
+                        .then(function() {
+                            console.log("it is work!!"); 
+                        })
+                        .catch(function(err) {
+                            console.log("error : ", err); 
+                        });
+                    }else{
+                        userTokenListRef.add({
+                            tokenId: userToken,
+                            userId: email_id,
+                            userClass: "other"
+                        })
+                        .then(function() {
+                            console.log("it is work!!"); 
+                        })
+                        .catch(function(err) {
+                            console.log("error : ", err); 
+                        });
+                    }
+                })
+                .catch(function(error) {
                     var errorCode = error.code;
                     var errorMessage = error.message;
                     Swal.fire({
@@ -212,6 +266,16 @@
             },
             async userSignUp() {
                 let email_id = this.email
+                var userToken = '';
+                messaging
+                .requestPermission()
+                .then(function () {
+                    console.log("Notification permission granted.");
+                    return messaging.getToken()
+                })
+                .then(function (token) {
+                    userToken = token;
+                })
                 await firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
                     .then(()=>{
                         var userRef = firestore.collection('users').doc(email_id);
@@ -219,12 +283,38 @@
                             id: email_id,
                             created: firebase.firestore.FieldValue.serverTimestamp(),
                             home: 0,
-                            portfolio: 0,
-                            post: 0,
+                            board:0,
                             repository: 0,
-                            login: 0
+                            login: 0,
+                            user_class: "guest",
+                            messageList: [{
+                                type: 'text',
+                                author: `user1`,
+                                data: {
+                                  text: `반갑습니다. '나랏말싸미'에 오신 것을 환영합니다.`
+                                }
+                            }]
                         });
+
+                        var userTokenListRef = firestore.collection('userTokenList');
+                        console.log(userToken);
+                        userTokenListRef.add({
+                            token_id: userToken,
+                            user_id: email_id
+                        })
+                        .then(function() {
+                            console.log("it is work!!");
+                        })
+                        .catch(function(err) {
+                            console.log("error : ", err);
+                        });
+
+                        var user = firebase.auth().currentUser;
                         let username = email_id.split("@",1)[0]
+                        user.updateProfile({
+                          displayName: username
+                        })
+                        console.log(user);
                         Swal.fire({
                             type: 'success',
                             toast: true,
@@ -255,6 +345,17 @@
                 await firebase.auth().signInWithPopup(provider).then(function (result) {
                     var token = result.credential.accessToken;
                     var user = result.user;
+                    var docRef = firestore.collection("users").doc(user.email);
+                    docRef.get().then(function(doc) {
+                        if (!doc.exists) {
+                            var userRef = firestore.collection('users').doc(user.email);
+                            var setUser = userRef.set({
+                                user_class: "guest"
+                            });
+                        }
+                    }).catch(function(error) {
+                        console.log("Error getting document:", error);
+                    });
                     Swal.fire({
                         type: 'success',
                         toast: true,
@@ -285,6 +386,17 @@
                 await firebase.auth().signInWithPopup(provider).then(function (result) {
                     var token = result.credential.accessToken;
                     var user = result.user;
+                    var docRef = firestore.collection("users").doc(user.email);
+                    docRef.get().then(function(doc) {
+                        if (!doc.exists) {
+                            var userRef = firestore.collection('users').doc(user.email);
+                            var setUser = userRef.set({
+                                user_class: "guest"
+                            });
+                        }
+                    }).catch(function(error) {
+                        console.log("Error getting document:", error);
+                    });
                     Swal.fire({
                         type: 'success',
                         toast: true,
