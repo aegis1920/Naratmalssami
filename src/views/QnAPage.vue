@@ -127,7 +127,6 @@ export default {
           }.bind(this)
         )
         .catch(function(err) {
-          console.log(err);
         });
     },
     cancel() {
@@ -144,18 +143,5 @@ export default {
   width: 20% !important;
   margin: 0px 10px !important;
   border-radius: 28px !important;
-}
-.v-btn-toggle--selected {
-  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0), 0 2px 2px 0 rgba(0, 0, 0, 0),
-    0 1px 5px 0 rgba(0, 0, 0, 0) !important;
-}
-.v-btn-toggle .v-btn {
-  opacity: 1 !important;
-}
-.v-btn--active {
-  background-color: #e0ff80 !important;
-}
-.v-messages__message {
-  color: red !important;
 }
 </style>

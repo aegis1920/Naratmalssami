@@ -36,7 +36,6 @@ const messaging = firebase.messaging();
 
 firestore.enablePersistence()
   .then(function () {
-    console.log("성공");
 
   })
   .catch(function (err) {
@@ -51,14 +50,11 @@ firestore.enablePersistence()
 messaging
   .requestPermission()
   .then(function () {
-    console.log("Notification permission granted.");
     return messaging.getToken()
   })
   .then(function (token) {
-    console.log("token is : " + token);
   })
   .catch(function (err) {
-    console.log("Unable to get permission to notify.", err);
   });
 
 
@@ -71,7 +67,6 @@ messaging.onMessage(function (payload) {
   };
 
   if (!("Notification" in window)) {
-    console.log("This browser does not support system notifications");
   } else if (Notification.permission === "granted") {
     var notification = new Notification(notificationTitle, notificationOptions);
 
@@ -244,10 +239,8 @@ export default{
       imgurl: imgurl
     })
       .then(function () {
-        console.log("Document successfully written!");
       })
       .catch(function (error) {
-        console.error("Error writing document: ", error);
       });
   },
   loginWithGoogle() {
@@ -257,7 +250,6 @@ export default{
       let user = result.user
       return result
     }).catch(function (error) {
-      console.error('[Google Login Error]', error)
     })
   },
   requestToFCM(to, userId, title) {
@@ -390,7 +382,6 @@ export default{
       .then((docSnapshots) => {
         return docSnapshots.docs.map((doc) => {
           let data = doc.data();
-          console.log(data);
 
           return data;
         })
@@ -413,7 +404,6 @@ export default{
       .then((docSnapshots) => {
         return docSnapshots.docs.map((doc) => {
           let data = doc.data();
-          console.log(data);
 
           return data;
         })
@@ -441,7 +431,6 @@ export default{
       .then((docSnapshots) => {
         return docSnapshots.docs.map((doc) => {
           let data = doc.data();
-          console.log(data);
           return data;
         })
       })

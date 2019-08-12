@@ -6,10 +6,11 @@
             <table class="content-table">
                 <thead>
                     <tr>
-                        <th>작성자</th>
-                        <th>제목</th>
-                        <th>조회수</th>
-                        <th></th>
+                        <th style="width:20%">작성자</th>
+                        <th style="width:50%">제목</th>
+                        <th style="width:20%">조회수</th>
+                        <th style="width:10%"></th>
+                        <th style="width:10%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,7 +26,7 @@
                           @reload="getget"
                     ></Board>
                     <tr v-if="loading">
-                        <td colspan="4" >
+                        <td colspan="5" >
                             <v-img :src="loadingSrc" style="width:50px; margin: auto" />
                         </td>
                     </tr>
@@ -73,7 +74,6 @@ export default {
           this.busy = true;
           let arr = [];
           arr = await FirebaseService.getNumBoard(this.start, this.num, this.cur);
-          console.log(arr);
 
           if(arr === null) {
               this.busy = true;
@@ -115,6 +115,7 @@ export default {
         border-radius: 5px 5px 0 0;
         overflow: hidden;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        table-layout: fixed;
     }
 
     .content-table thead tr {
@@ -144,7 +145,7 @@ export default {
 
     @media screen and (min-width: 600px) and (max-width: 960px){
         .content-table {
-            min-width: 580px;
+            min-width: 400px;
         }
     }
 

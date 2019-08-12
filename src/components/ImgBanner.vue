@@ -57,15 +57,11 @@ export default {
     ImageUpload
   },
   mounted() {
-    this.bannerSetting(this.pagename)
-
-    // 잠깐 바꿈
-
+      this.bannerSetting(this.pagename)
   },
   methods: {
     async bannerSetting(page) {
       var data = await FirebaseService.getImgUrl(page);
-      console.log(data);
       var imgurl = String(data.imgurl);
       this.imgSrc = imgurl
     },
