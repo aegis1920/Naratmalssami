@@ -3,7 +3,7 @@
         <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
             <template v-slot:activator="{ on }">
                 <v-fab-transition>
-                    <v-icon v-on="on">fas fa-pencil-alt</v-icon>
+                    <v-icon v-on="on" small>fas fa-pencil-alt</v-icon>
                 </v-fab-transition>
             </template>
 

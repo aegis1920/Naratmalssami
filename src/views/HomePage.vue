@@ -51,15 +51,19 @@
         <!-- About Me -->
         <About></About>
 
-        <!-- Board -->
-        <v-layout my-5>
-            <v-flex xs12>
-                <router-link to="/Board" style="text-decoration:none;">
-                    <h2 class="my-5 text-xs-center page_title">게시판</h2>
-                </router-link>
-                <BoardList></BoardList>
-            </v-flex>
-        </v-layout>
+
+    <!-- Board -->
+    <v-layout my-5>
+      <v-flex xs12>
+        <router-link to="/Board" style="text-decoration:none;">
+          <h2 class="my-5 text-xs-center page_title">게시판</h2>
+        </router-link>
+        <BoardList
+          :limit="limit_true"
+        ></BoardList>
+      </v-flex>
+    </v-layout>
+
 
         <!-- Github -->
         <v-layout my-5>
@@ -88,7 +92,6 @@
                 </v-card>
             </v-flex>
         </v-layout>
-        </v-container>
     </div>
 </template>
 <script>
@@ -107,6 +110,7 @@
         name: "HomePage",
         data() {
             return {
+                limit_true: true,
                 HanGImg: require('@/assets/HanG.jpg'),
                 danchungImg: require('@/assets/danchung3.jpg'),
                 items: [
