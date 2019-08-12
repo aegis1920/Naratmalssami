@@ -100,8 +100,10 @@
                 let key = localStorage.getItem('doc_id');
                 let tmp = FirebaseService.getBoard(key);
                 tmp.then(res => {
-                    console.log(res);
+                    let sec = res.created_at.seconds;
+                    let tmp = new Date(sec * 1000);
                     this.board = res;
+                    this.board.created_at = `${tmp.getFullYear()}년 ${tmp.getMonth()+1}월 ${tmp.getDate()}일 ${tmp.getHours()}시 ${tmp.getMinutes()}분`;
                 })
             },
             changeColRowButton() {
