@@ -20,15 +20,17 @@
                     </div>
                 </v-flex>
             </v-layout>
+        </v-container>
+
 
         <div id="overflowDiv" v-bind:style="{ 'background-image': 'url(' + HanGImg + ')'}" class="backgroundImg px-5 py-4" style="display: inline-block; overflow-x: scroll; width: 100%">
-            <button v-if="horizonScroll > 0" id="left-button" v-on:click="scroll_left" style="position: absolute; margin-top: 15%; margin-left: 0; color: white;"> 왼쪽으로 </button>
-            <button id="right-button" v-on:click="scroll_right" style="position: absolute; margin-top: 15%; margin-left: 90%; color: white"> 오른쪽으로 </button>
+            <button v-if="horizonScroll > 0" id="left-button" v-on:click="scroll_left" style="position: absolute; margin-top: 15%; margin-left: 0; color: white;"><i class="fas fa-arrow-alt-circle-left" style="font-size: 3em; color: floralwhite"></i></button>
+            <button id="right-button" v-on:click="scroll_right" style="position: absolute; margin-top: 15%; margin-left: 90%; color: white"><i class="fas fa-arrow-alt-circle-right" style="font-size: 3em; color: floralwhite"></i></button>
             <ul style="list-style: none; width: 900%" class="">
                 <li v-for="gridBoard in gridBoards1" style="float: left; width: 5%">
                     <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}">
-                        <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 30%">
-                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong style="font-size: 5em; color: white; font-weight: lighter">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
+                        <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 28%">
+                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="boardTitle">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
                         </div>
                     </div>
                 </li>
@@ -55,21 +57,19 @@
                 </li>
             </ul>
         </div>
+        <!-- <About></About> -->
 
-        <About></About>
-
-
-        <!-- Board -->
-        <v-layout my-5>
-            <v-flex xs12>
-                <router-link to="/Board" style="text-decoration:none;">
-                    <h2 class="my-5 text-xs-center page_title">게시판</h2>
-                </router-link>
-                <BoardList
-                        :limit="limit_true"
-                ></BoardList>
-            </v-flex>
-        </v-layout>
+    <!-- Board -->
+    <v-layout my-5>
+      <v-flex xs12>
+        <router-link to="/Board" style="text-decoration:none;">
+          <h2 class="my-5 text-xs-center page_title">알림판</h2>
+        </router-link>
+        <BoardList
+          :limit="limit_true"
+        ></BoardList>
+      </v-flex>
+    </v-layout>
 
 
         <!-- Github -->
@@ -99,20 +99,16 @@
                 </v-card>
             </v-flex>
         </v-layout>
-      </v-container>
     </div>
 </template>
 <script>
     import ImgBanner from "../components/ImgBanner";
     import BoardList from "../components/BoardList";
     import RepositoryList from "../components/RepositoryList";
-    import Footer from "../components/Footer";
     import FirebaseService from "@/services/FirebaseService";
+    import welcome from "../components/welcome.vue";
     import Person from "../components/Person";
     import About from "../components/About";
-
-
-
 
 
     export default {
@@ -127,20 +123,6 @@
                 limit_true: true,
                 HanGImg: require('@/assets/HanG.jpg'),
                 danchungImg: require('@/assets/danchung3.jpg'),
-                items: [
-                    {
-                        src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
-                    },
-                    {
-                        src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
-                    },
-                    {
-                        src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-                    },
-                    {
-                        src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
-                    },
-                ],
                 teams: [
                     {
                         name: "이민경",
@@ -198,18 +180,19 @@
             BoardList,
             RepositoryList,
             Person,
-            About
+            About,
+            welcome,
         },
         methods: {
             scroll_left() {
                 let content = document.querySelector("#overflowDiv");
-                content.scrollLeft -= 200;
-                this.$data.horizonScroll -= 200;
+                content.scrollLeft -= 1300;
+                this.$data.horizonScroll -= 1300;
             },
             scroll_right() {
                 let content = document.querySelector("#overflowDiv");
-                content.scrollLeft += 200;
-                this.$data.horizonScroll += 200;
+                content.scrollLeft += 1300;
+                this.$data.horizonScroll += 1300;
             },
             getImgUrl(img) {
                 return require("../assets/" + img);
@@ -232,17 +215,6 @@
             FirebaseService.getNumBoard(12, 4, 11).then(function (result) {
                 data.gridBoards4 = result;
             });
-
-            console.log(this.gridBoards, "@@@@@@@@@@@@@@", this.limit_true);
-            if (!this.$store.state.intro) {
-                this.$store.state.intro = true;
-                this.preLoader();
-            } else {
-                var intro = document.getElementById("intro");
-                intro.style.display = "none";
-            }
-        },
-        created() {
         }
     };
 </script>
@@ -253,7 +225,6 @@
         background-size: cover;
         background-position: center center;
     }
-
     .imgLine {
         background-size: cover;
         background-position: center center;
@@ -266,5 +237,12 @@
     /* Optional: show position indicator in red */
     ::-webkit-scrollbar-thumb {
         background: transparent;
+    }
+    #overflowDiv {
+        scroll-behavior: smooth;
+    }
+    .boardTitle {
+        font-size: 3em;
+        color: white;
     }
 </style>
