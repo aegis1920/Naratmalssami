@@ -163,7 +163,7 @@ export default{
       var userTokenList = FirebaseService.userTokenListFunc();
       userTokenList.then(function (result) {
         result.forEach(function (element) {
-          FirebaseService.requestToFCM(element, userId, title);
+          FirebaseService.requestToFCMFromBoard(element, userId, title);
         });
       });
 
@@ -252,7 +252,7 @@ export default{
     }).catch(function (error) {
     })
   },
-  requestToFCM(to, userId, title) {
+  requestToFCMFromBoard(to, userId, title) {
     var request = require("request");
 
     request.post({
@@ -272,14 +272,34 @@ export default{
     }, function (error, response, body) {
     });
   },
+  requestToFCMFromComment(to, userId, comment) {
+    var request = require("request");
+
+    request.post({
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'key=AAAAqQLQkdw:APA91bHRMyXjEVtUOTgF-Xyha_JRXQq2TGIcQQzbALVPRRjxfVy7k4juxdWFAT2C3NufkD1wEj7uxgqgW3Fgt2SdrU132ORqg09L9JDZRaXA5d0zBYWbub7kphBxyc5WLo7cCmdZZUHy'
+      },
+      uri: "https://fcm.googleapis.com/fcm/send",
+      body: JSON.stringify({
+        "to": to,
+        "notification": {
+          "title": userId + "님이 댓글을 쓰셨습니다",
+          "body": "내용 : " + comment,
+          "icon": "/south-korea.png",
+        }
+      })
+    }, function (error, response, body) {
+    });
+  },
   // user_class가 admin인 얘들의 id를 리스트에 넣어서 token_id를 가져와야 한다.
-  pushToAdmin() {
+  pushToAdmin(comment) {
     firestore.collection('userTokenList')
       .where('userClass', '==', 'administrator')
       .get()
       .then( function (querySnapshot) {
         querySnapshot.forEach(function (doc) {  
-          FirebaseService.requestToFCM(doc.data().tokenId, doc.data().userId);
+          FirebaseService.requestToFCMFromComment(doc.data().tokenId, doc.data().userId, comment);
         })
     });
   },
@@ -310,7 +330,7 @@ export default{
         com_id: firestore.collection(COMMENTS).doc().id,
       })
         .then(function () {
-          FirebaseService.pushToAdmin();
+          FirebaseService.pushToAdmin(comment);
         })
     } else {
       alert("로그인을 하지 않으셨습니다. 로그인해주세요.")
