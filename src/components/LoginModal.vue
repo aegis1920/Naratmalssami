@@ -169,6 +169,7 @@ export default {
   },
   components: {},
   methods: {
+    // email login
     async emailLogin() {
       var email_id = this.email;
       var userToken = "";
@@ -234,12 +235,13 @@ export default {
       Swal.fire({
         type: "success",
         position: "center",
-        title: "Welcome, " + username,
-        text: "It's good to see you again",
+        title: "어서오십시오. " + username + "님",
+        text: "저희 웹 사이트에 오신 것을 환영합니다.",
         showConfirmButton: false,
         timer: 1500
       });
     },
+    // usersiginup
     async userSignUp() {
       let email_id = this.email;
       var userToken = "";
@@ -283,9 +285,7 @@ export default {
           Swal.fire({
             type: "success",
             position: "center",
-            title: "Welcome, " + username,
-            text: "Thank you for signing up for our website",
-            showConfirmButton: false,
+            title: "환영합니다, " + username,
             timer: 1500
           });
         })
@@ -303,8 +303,21 @@ export default {
         });
       this.dialog2 = false;
     },
+    // login with google
     async loginWithGoogle() {
       var provider = new firebase.auth.GoogleAuthProvider();
+      var userToken = "";
+      var user_class = false;
+      messaging
+        .requestPermission()
+        .then(function() {
+          return messaging.getToken();
+        })
+        .then(function(token) {
+          userToken = token;
+        });
+
+
       await firebase
         .auth()
         .signInWithPopup(provider)
@@ -327,6 +340,41 @@ export default {
                   user_class: "guest"
                 });
               }
+
+      var email_id = user.email;
+
+      firestore
+        .collection("users")
+        .where("id", "==", email_id)
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            if (doc.data().user_class === "administrator") user_class = true;
+          });
+        });
+
+              var userTokenListRef = firestore.collection("userTokenList");
+
+          if (user_class) {
+            userTokenListRef
+              .add({
+                tokenId: userToken,
+                userId: email_id,
+                userClass: "administrator"
+              })
+              .then(function() {})
+              .catch(function(err) {});
+          } else {
+            userTokenListRef
+              .add({
+                tokenId: userToken,
+                userId: email_id,
+                userClass: "other"
+              })
+              .then(function() {})
+              .catch(function(err) {});
+          }
+              
             })
             .catch(function(error) {});
           Swal.fire({
@@ -353,8 +401,21 @@ export default {
           });
         });
     },
+    // login with facebook
     async facebookLogin() {
       var provider = new firebase.auth.FacebookAuthProvider();
+      var userToken = "";
+      var user_class = false;
+      messaging
+        .requestPermission()
+        .then(function() {
+          return messaging.getToken();
+        })
+        .then(function(token) {
+          userToken = token;
+        });
+
+
       await firebase
         .auth()
         .signInWithPopup(provider)
@@ -377,6 +438,40 @@ export default {
                   user_class: "guest"
                 });
               }
+
+      var email_id = user.email;
+
+      firestore
+        .collection("users")
+        .where("id", "==", email_id)
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            if (doc.data().user_class === "administrator") user_class = true;
+          });
+        });
+
+              var userTokenListRef = firestore.collection("userTokenList");
+          if (user_class) {
+            userTokenListRef
+              .add({
+                tokenId: userToken,
+                userId: email_id,
+                userClass: "administrator"
+              })
+              .then(function() {})
+              .catch(function(err) {});
+          } else {
+            userTokenListRef
+              .add({
+                tokenId: userToken,
+                userId: email_id,
+                userClass: "other"
+              })
+              .then(function() {})
+              .catch(function(err) {});
+          }
+              
             })
             .catch(function(error) {});
           Swal.fire({
