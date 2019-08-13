@@ -30,7 +30,7 @@
                 <li v-for="gridBoard in gridBoards1" style="float: left; width: 5%">
                     <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}">
                         <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 28%">
-                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong style="font-size: 4em; color: white; font-weight: lighter">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
+                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="boardTitle">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
                         </div>
                     </div>
                 </li>
@@ -241,5 +241,9 @@
     }
     #overflowDiv {
         scroll-behavior: smooth;
+    }
+    .boardTitle {
+        font-size: 3em;
+        color: white;
     }
 </style>
