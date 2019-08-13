@@ -57,7 +57,7 @@
                 </li>
             </ul>
         </div>
-        <About></About>
+        <!-- <About></About> -->
 
     <!-- Board -->
     <v-layout my-5>
