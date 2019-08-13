@@ -28,7 +28,7 @@
             <button id="right-button" v-on:click="scroll_right" style="position: absolute; margin-top: 15%; margin-left: 90%; color: white; z-index: 1001;"><i class="fas fa-chevron-right slideButton"></i></button>
             <ul style="list-style: none; width: 900%;" class="">
                 <li class="grow" v-for="gridBoard in gridBoards1" style="float: left; width: 5%; cursor:pointer">
-                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px', 'background-size':'cover', 'background-repeat':'non e'}"
+                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px', 'background-size':'cover', 'background-repeat':'none'}"
                     @click="goDetail(gridBoard.doc_id)">
                         <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 28%">
                             <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="boardTitle">{{gridBoard.title}}</strong> <br> <br> 글쓴이 {{ gridBoard.author }}</p>
@@ -71,7 +71,7 @@
                 <v-card flat style="background-color:#fff0">
                     <v-container fluid grid-list-lg style="background-color:#fff0;">
                         <v-layout row wrap>
-                            <v-flex xs12 sm6 v-for="team in teams" :key="team.name">
+                            <v-flex xs12 sm3 v-for="team in teams" :key="team.name">
                                 <v-card
                                         class="black--text"
                                         style="min-width: 200px; min-height: 300px; background-color: #fff0; box-shadow: none!important;"

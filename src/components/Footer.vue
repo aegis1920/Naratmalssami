@@ -7,7 +7,7 @@
             flat
             flex
     >
-      <v-card-title class="py-1">
+      <v-card-title class="py-1" style="background: rgba(245,245,245,0.7)">
         <v-spacer></v-spacer>
         <Weather></Weather>
         <v-spacer></v-spacer>
@@ -17,9 +17,9 @@
         <v-spacer></v-spacer>
       </v-card-title>
 
-      <v-card-actions class="grey darken-3 justify-space-between px-5">
+      <v-card-actions class="darken-3 justify-space-between px-5 py-0" :style="{'background-image': 'url( ' + footerImg + ')', 'background-size':'cover', 'background-repeat':'none', 'background-position':'center center',}">
         <v-spacer></v-spacer>
-        <v-card-text style="width: auto; color: white;" class="pa-0 ml-3">&copy; 2019 — <strong> 321pancake</strong>
+        <v-card-text style="width: auto; color: white;" class="pa-0 ml-3">&copy; 2019 — <strong style="color: white"> 321pancake</strong>
         </v-card-text>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
@@ -62,6 +62,7 @@
       Translate
     },
     data: () => ({
+      footerImg: require('@/assets/footer_pattern.jpg'),
       icons: [
         {
           icon: 'fab fa-github',
