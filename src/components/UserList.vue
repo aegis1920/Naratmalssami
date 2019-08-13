@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import FirebaseService from '../services/FirebaseService';
+import FirebaseService from "../services/FirebaseService";
 
 export default {
   name: "UserList",
@@ -41,19 +41,18 @@ export default {
     this.getUserList();
   },
   methods: {
-    updateUserInfo(USER) {
-      var userRef = firestore.collection("users").doc(USER.userEmail);
-      return userRef
-        .update({
-          user_class: USER.userClass
-        })
-        .then(function() {
-        })
-        .catch(function(error) {
-        });
+    async updateUserInfo(USER) {
+      console.log(USER);
+
+      await FirebaseService.updateUserInfo(USER).then(
+        function(result) {
+          this.getUserList();
+        }.bind(this)
+      );
     },
-    async getUserList(){
-        this.userList = await FirebaseService.getUserList();
+    async getUserList() {
+      this.userList = await FirebaseService.getUserList();
+      console.log(this.userList);
     }
   }
 };
