@@ -27,29 +27,33 @@
             <button v-if="horizonScroll > 0" id="left-button" v-on:click="scroll_left" style="position: absolute; margin-top: 15%; margin-left: 0; color: white;"><i class="fas fa-arrow-alt-circle-left" style="font-size: 3em; color: floralwhite"></i></button>
             <button id="right-button" v-on:click="scroll_right" style="position: absolute; margin-top: 15%; margin-left: 90%; color: white"><i class="fas fa-arrow-alt-circle-right" style="font-size: 3em; color: floralwhite"></i></button>
             <ul style="list-style: none; width: 900%" class="">
-                <li v-for="gridBoard in gridBoards1" style="float: left; width: 5%">
-                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px', 'background-size':'cover', 'background-repeat':'none'}">
+                <li class="grow" v-for="gridBoard in gridBoards1" style="float: left; width: 5%; cursor:pointer">
+                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px', 'background-size':'cover', 'background-repeat':'none'}"
+                    @click="goDetail(gridBoard.doc_id)">
                         <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 28%">
                             <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="boardTitle">{{gridBoard.title}}</strong> <br> <br> 글쓴이 {{ gridBoard.author }}</p>
                         </div>
                     </div>
                 </li>
-                <li v-for="gridBoard in gridBoards2" style="float: left; width: 5%">
-                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}">
+                <li class="grow" v-for="gridBoard in gridBoards2" style="float: left; width: 5%; cursor:pointer">
+                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}"
+                         @click="goDetail(gridBoard.doc_id)">
                         <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 30%">
                             <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong style="font-size: 5em; color: white; font-weight: lighter">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
                         </div>
                     </div>
                 </li>
-                <li v-for="gridBoard in gridBoards3" style="float: left; width: 5%">
-                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}">
+                <li class="grow" v-for="gridBoard in gridBoards3" style="float: left; width: 5%; cursor:pointer">
+                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}"
+                         @click="goDetail(gridBoard.doc_id)">
                         <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 30%">
                             <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong style="font-size: 5em; color: white; font-weight: lighter">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
                         </div>
                     </div>
                 </li>
-                <li v-for="gridBoard in gridBoards4" style="float: left; width: 5%">
-                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}">
+                <li class="grow" v-for="gridBoard in gridBoards4" style="float: left; width: 5%; cursor:pointer">
+                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}"
+                         @click="goDetail(gridBoard.doc_id)">
                         <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 30%">
                             <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong style="font-size: 5em; color: white; font-weight: lighter">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
                         </div>
@@ -57,20 +61,6 @@
                 </li>
             </ul>
         </div>
-        <!-- <About></About> -->
-
-    <!-- Board -->
-    <v-layout my-5>
-      <v-flex xs12>
-        <router-link to="/Board" style="text-decoration:none;">
-          <h2 class="my-5 text-xs-center page_title">알림판</h2>
-        </router-link>
-        <BoardList
-          :limit="limit_true"
-        ></BoardList>
-      </v-flex>
-    </v-layout>
-
 
         <!-- Github -->
         <v-layout my-5>
@@ -200,6 +190,16 @@
             routeName() {
                 return this.$route.name;
             },
+            updateBoardViewCountMethod(doc_id){
+                FirebaseService.updateBoardViewCount(doc_id);
+            },
+            goDetail(doc_id) {
+                // localStorage에 doc_id 넣어놓기
+                this.updateBoardViewCountMethod(doc_id); // 조회수 증가.
+                localStorage.setItem('doc_id', doc_id);
+                // router 이동
+                this.$router.push({name:'boarddetail'});
+            },
         },
         mounted() {
             const data = this.$data;
@@ -245,4 +245,6 @@
         font-size: 3em;
         color: white;
     }
+    .grow { transition: all .2s ease-in-out; }
+    .grow:hover { transform: scale(1.1); }
 </style>
