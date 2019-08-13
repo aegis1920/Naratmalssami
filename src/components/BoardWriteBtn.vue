@@ -3,8 +3,8 @@
   <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
     <template v-slot:activator="{ on }">
       <v-fab-transition>
-        <v-btn id="write" v-show="show()" floating fixed absolute dark fab bottom right color="#FF7043" v-scroll="onScroll" v-on="on">
-          <v-icon>add</v-icon>
+        <v-btn id="write" v-show="show()" floating fixed absolute dark fab bottom right :style="{'background-image':'url('+ ButtonImg1 + ')', 'background-position':'center center'}" v-scroll="onScroll" v-on="on">
+          <v-icon style="font-weight: bold; font-size: 3em">add</v-icon>
         </v-btn>
       </v-fab-transition>
     </template>
@@ -70,6 +70,7 @@ Vue.use(Editor);
 
 export default {
   data: () => ({
+    ButtonImg1: require('@/assets/buttonPattern1.jpg'),
     offsetTop: 0,
     dialog: false,
     options: {
