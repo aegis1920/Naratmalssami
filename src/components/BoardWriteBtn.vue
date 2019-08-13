@@ -14,10 +14,10 @@
         <v-btn icon dark @click="close">
           <v-icon>close</v-icon>
         </v-btn>
-        <v-toolbar-title>Board Write</v-toolbar-title>
+        <v-toolbar-title class="white--text">알림판 글쓰기</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn dark flat @click="postBoard()">SAVE</v-btn>
+          <v-btn dark flat @click="postBoard()">저장</v-btn>
         </v-toolbar-items>
       </v-toolbar>
 
@@ -31,7 +31,7 @@
               {{errorMsg}}
             </v-snackbar>
         <v-flex xs12>
-          <v-text-field label="Title" box required v-model="title"></v-text-field>
+          <v-text-field label="제목" box required v-model="title"></v-text-field>
         </v-flex>
         <div>
           <ImageUpload />
@@ -42,7 +42,7 @@
           id="textarea"
           outlined
           name="input-7-10"
-          label="Outline textarea"
+          label="내용 작성"
           auto-grow
           v-model="body"
         ></v-textarea>
