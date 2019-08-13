@@ -114,24 +114,7 @@
             this.searchBoard();
         },
         mounted() {
-            //this.board = this.getNowBoard();
-            // 새로고침되면 localStorage에 있는 값으로 vuex갱신
-            /*let key = '';
-            // console.log(localStorage.getItem('doc_id'));
-            if(localStorage.getItem('doc_id') === undefined) {
-                this.$router.push({name:'board'})
-            }else if(localStorage.getItem('doc_id') !== undefined) {
-                key = localStorage.getItem('doc_id');
-                this.getBoards();
-                setTimeout(()=> {
-                    this.boards.forEach((b)=>{
-                        if(b.doc_id === key) {
-                            this.addBoard(b);
-                        }
-                    });
-                    this.board = this.getNowBoard();
-                }, 1000);
-            }*/
+
         },
     }
 </script>

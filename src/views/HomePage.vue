@@ -1,10 +1,7 @@
 <template>
     <!-- div -->
     <div>
-        <welcome id="intro"/>
         <v-container class="pt-1" style="margin-top: 9em; margin-bottom: 5em; background-color: white;">
-            <!--      <v-img src="http://asaninst.org/wp-content/uploads/2014/07/140731_js_00011.jpg" class="mt-3" style="max-height: 50px" alt="">-->
-            <!--      </v-img>-->
             <v-layout wrap>
                 <v-flex xs1>
                     <v-img class="" :src="danchungImg" style="height: 100%; width: 25px"/>
@@ -23,7 +20,6 @@
                     </div>
                 </v-flex>
             </v-layout>
-        </v-container>
 
         <div id="overflowDiv" v-bind:style="{ 'background-image': 'url(' + HanGImg + ')'}" class="backgroundImg px-5 py-4" style="display: inline-block; overflow-x: scroll; width: 100%">
             <button v-if="horizonScroll > 0" id="left-button" v-on:click="scroll_left" style="position: absolute; margin-top: 15%; margin-left: 0; color: white;"> 왼쪽으로 </button>
@@ -106,7 +102,6 @@
     </div>
 </template>
 <script>
-    import Header from "../components/Header";
     import ImgBanner from "../components/ImgBanner";
     import BoardList from "../components/BoardList";
     import RepositoryList from "../components/RepositoryList";
@@ -114,7 +109,7 @@
     import FirebaseService from "@/services/FirebaseService";
     import Person from "../components/Person";
     import About from "../components/About";
-    import welcome from "../components/welcome.vue";
+
 
 
 
@@ -202,7 +197,6 @@
             BoardList,
             RepositoryList,
             Person,
-            welcome,
             About
         },
         methods: {
@@ -221,12 +215,6 @@
             },
             routeName() {
                 return this.$route.name;
-            },
-            preLoader() {
-                setTimeout(function () {
-                    var intro = document.getElementById("intro");
-                    intro.style.display = "none";
-                }, 2900);
             },
         },
         mounted() {

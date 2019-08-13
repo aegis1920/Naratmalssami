@@ -13,7 +13,7 @@
 <script>
 import { log } from "util";
 import { setTimeout } from "timers";
-import $ from 'jquery'
+import $ from "jquery";
 export default {
   name: "chat",
   data() {
@@ -28,12 +28,21 @@ export default {
   watch: {
     isLoad: function() {
       console.log("chat load !!!!");
-      const icon = $('#chat-icon');
-      console.log(icon);
-      console.log(icon.offsetLeft);
-      console.log(icon.left);
-      console.log(icon.clientLeft);
-      
+      const icon = document.getElementById("chat-icon").getBoundingClientRect();
+      const danbee =  $("#frogue-container");
+      console.log(document.getElementById("chat-icon"));
+
+      console.log(icon.bottom);
+      console.log(danbee);
+      danbee.css('bottom', icon.bottom);
+      danbee.css('height', icon.height);
+      danbee.css('left', icon.left);
+      danbee.css('right', icon.right);
+      danbee.css('top', icon.top);
+      danbee.css('width', icon.width);
+      danbee.css('x', icon.x);
+      danbee.css('y', icon.y);
+      console.log(danbee);
     }
   },
   mounted() {
@@ -43,8 +52,6 @@ export default {
       setTimeout(() => {
         this.isLoad = true;
       }, 600);
-
-
     });
   },
   methods: {
@@ -58,8 +65,9 @@ export default {
       var js = document.createElement("script");
       js.id = "frogue-embed";
       js.src = "https://danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
-
       await fjs.parentNode.insertBefore(js, fjs);
+      this.isLoad = true;
+
     }
   }
 };
@@ -89,13 +97,9 @@ export default {
   /* left: calc(100% - 350px) !important; */
   width: 30px !important;
   height: 30px !important;
-  opacity: 1;
+  opacity: 0.1;
 }
-#frogue-container {
-  top: 15px !important;
-  bottom: 0px !important;
-  right: 434.234px !important;
-}
+
 </style>
 
 

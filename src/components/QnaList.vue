@@ -96,7 +96,6 @@ export default {
       this.qnaList = await FirebaseService.getQuestions();
     },
     questionDetail(q) {
-      console.log(q);
       this.docId = q.doc_id;
       this.title = q.title;
       this.author = q.author;
@@ -105,7 +104,6 @@ export default {
       this.dialog = true;
     },
     sendEmail() {
-      console.log("send이메일");
       const form = $("#gform");
       const formData = form.serialize();
       const method = "POST";
@@ -118,7 +116,6 @@ export default {
         url: url,
         data: formData,
         success: function(response){
-          console.log("성공",this.docId);
           FirebaseService.postAnswer(docId);
           this.docId = '';
           this.title = '';
@@ -132,22 +129,6 @@ export default {
           alert(err)
         }
       })
-      // var xhr = new XMLHttpRequest();
-      // xhr.onreadystatechange = function() {
-      //   console.log(xhr.readyState);
-
-      //   if (xhr.readyState === 4) {
-      //     console.log(xhr.response);
-
-      //     if (xhr.status === 200) {
-      //       console.log("성공");
-      //     } else {
-      //       console.log("실패");
-      //     }
-      //   }
-      // };
-      // xhr.open("POST", url, true);
-      // xhr.send(data);
     }
   }
 };
@@ -157,11 +138,6 @@ export default {
 tbody tr:hover {
   cursor: pointer;
   opacity: 0.7;
-}
-.v-dialog {
-  background-color: #eeeeee !important;
-  border-radius: 10px !important;
-  box-shadow: 0px 0px 10px 3px #c1c1c1 !important;
 }
 .headline {
   margin: auto;
@@ -238,17 +214,14 @@ textarea {
 }
 .floating-placeholder input,
 textarea {
-  /* font-size:20pt; */
   border: none;
   outline: none;
-  /* position:absolute; */
   top: 0;
   left: 0;
   display: block;
   background: transparent;
   z-index: 2;
   border-bottom: 1px solid #ccc;
-  /* text-indent:$padding-horizontal; */
 }
 
 .floating-placeholder:last-child input {
@@ -258,12 +231,7 @@ textarea {
   display: block;
   position: absolute;
   top: 0;
-  /* left:$padding-horizontal; */
-  /* font-size:20pt; */
   z-index: 1;
-  /* @include transform-origin(0,0.0em);
-  @include transition(transform 160ms, color 200ms);
-  @include transform(scale(1,1) rotateY(0)); */
   color: #999;
 }
 .floating-placeholder-float input {

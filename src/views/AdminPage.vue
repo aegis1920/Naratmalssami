@@ -57,7 +57,6 @@ import firebase from "firebase";
 import UserList from "@/components/UserList.vue";
 import QnaList from "@/components/QnaList.vue"
 const firestore = firebase.firestore();
-// console.log(this,user)
 
 export default {
   name: "AdminPage",
@@ -115,7 +114,6 @@ export default {
             }
           })
           .catch(function(error) {
-            console.log("Error getting document:", error);
           });
       } else {
         setInterval(

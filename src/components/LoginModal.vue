@@ -192,7 +192,6 @@
                 messaging
                 .requestPermission()
                 .then(function () {
-                    console.log("Notification permission granted.");
                     return messaging.getToken()
                 })
                 .then(function (token) {
@@ -212,7 +211,6 @@
                 await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 .then(()=>{
                     var userTokenListRef = firestore.collection('userTokenList');
-                    console.log(userToken);
                     if(user_class){
                         userTokenListRef.add({
                             tokenId: userToken,
@@ -220,10 +218,8 @@
                             userClass: "administrator"
                         })
                         .then(function() {
-                            console.log("it is work!!"); 
                         })
                         .catch(function(err) {
-                            console.log("error : ", err); 
                         });
                     }else{
                         userTokenListRef.add({
@@ -232,10 +228,8 @@
                             userClass: "other"
                         })
                         .then(function() {
-                            console.log("it is work!!"); 
                         })
                         .catch(function(err) {
-                            console.log("error : ", err); 
                         });
                     }
                 })
@@ -268,7 +262,6 @@
                 messaging
                 .requestPermission()
                 .then(function () {
-                    console.log("Notification permission granted.");
                     return messaging.getToken()
                 })
                 .then(function (token) {
@@ -295,16 +288,13 @@
                         });
 
                         var userTokenListRef = firestore.collection('userTokenList');
-                        console.log(userToken);
                         userTokenListRef.add({
                             token_id: userToken,
                             user_id: email_id
                         })
                         .then(function() {
-                            console.log("it is work!!");
                         })
                         .catch(function(err) {
-                            console.log("error : ", err);
                         });
 
                         var user = firebase.auth().currentUser;
@@ -312,7 +302,6 @@
                         user.updateProfile({
                           displayName: username
                         })
-                        console.log(user);
                         Swal.fire({
                             type: 'success',
                             position: 'center',
@@ -334,7 +323,6 @@
                             timer: 3000,
                         })
                     });
-                // console.log("signup!");
                 this.dialog2 = false;
             },
             async loginWithGoogle() {
@@ -351,7 +339,6 @@
                             });
                         }
                     }).catch(function(error) {
-                        console.log("Error getting document:", error);
                     });
                     Swal.fire({
                         type: 'success',
@@ -390,7 +377,6 @@
                             });
                         }
                     }).catch(function(error) {
-                        console.log("Error getting document:", error);
                     });
                     Swal.fire({
                         type: 'success',
