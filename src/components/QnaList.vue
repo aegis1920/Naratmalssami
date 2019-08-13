@@ -68,6 +68,15 @@
         </div>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="answeredAlert" width="70vw">
+      <v-card color="#C0CA33" dark >
+        <v-card-text class="white--text" style="color:white; text-align:center">
+          <div class="headline white--text" >이미 답변을 완료한 문의사항입니다.</div><br>
+          관리자 계정 메일에 들어가서 답변을 확인하실 수 있습니다. <br>
+          mkl0819@gmail.com
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -85,7 +94,8 @@ export default {
       body: "",
       author: "",
       email: "",
-      dialog: false
+      dialog: false,
+      answeredAlert: false
     };
   },
   mounted() {
@@ -96,6 +106,10 @@ export default {
       this.qnaList = await FirebaseService.getQuestions();
     },
     questionDetail(q) {
+      if (q.isAnswered) {
+        this.answeredAlert = true;
+        return;
+      }
       this.docId = q.doc_id;
       this.title = q.title;
       this.author = q.author;
@@ -115,20 +129,20 @@ export default {
         type: method,
         url: url,
         data: formData,
-        success: function(response){
+        success: function(response) {
           FirebaseService.postAnswer(docId);
-          this.docId = '';
-          this.title = '';
-          this.author = '';
-          this.body = '';
-          this.email = '';
+          this.docId = "";
+          this.title = "";
+          this.author = "";
+          this.body = "";
+          this.email = "";
           this.dialog = false;
           this.getQuestions();
         }.bind(this),
-        error: function(err){
-          alert(err)
+        error: function(err) {
+          alert(err);
         }
-      })
+      });
     }
   }
 };
