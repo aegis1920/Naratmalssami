@@ -22,13 +22,13 @@
         <v-layout row wrap justify-center>
           <v-flex mr-3>
             <v-btn round color="#df4a31" v-on:click="loginWithGoogle" style="width:100%;">
-              <v-icon size="25" class="mr-2">fab fa-google</v-icon>Google 로그인
+              <v-icon size="25" class="mr-2">fab fa-google</v-icon>구글 들어가기
             </v-btn>
             <v-btn v-on:click="facebookLogin" round color="#3C5A99" style="width: 100%">
-              <v-icon size="25" class="mr-2">fab fa-facebook</v-icon>FACEBOOK 로그인
+              <v-icon size="25" class="mr-2">fab fa-facebook</v-icon>페이스북 들어가기
             </v-btn>
             <v-btn round color="#fdd835" style="width: 100%" @click="dialog = true">
-              <v-icon size="25" class="mr-2">far fa-envelope</v-icon>EMAIL 로그인
+              <v-icon size="25" class="mr-2">far fa-envelope</v-icon>전자우편 들어가기
             </v-btn>
             <v-btn round color="#A9B0A8" style="width: 100%" @click="dialog2 = true">
               <v-icon size="25" class="mr-2">fas fa-user-plus</v-icon>회원가입
@@ -39,7 +39,7 @@
                   <v-btn icon @click="dialog = false">
                     <v-icon>close</v-icon>
                   </v-btn>
-                  <v-toolbar-title>EMAIL 로그인</v-toolbar-title>
+                  <v-toolbar-title>전자우편 들어가기</v-toolbar-title>
                   <v-spacer></v-spacer>
                 </v-toolbar>
                 <v-card-text>
@@ -70,7 +70,7 @@
                           ></v-text-field>
                         </v-flex>
                         <v-flex xs12 text-xs-center>
-                          <v-btn v-on:click="emailLogin" color="#fdd835">로그인</v-btn>
+                          <v-btn v-on:click="emailLogin" color="#fdd835">들어가기</v-btn>
                         </v-flex>
                       </v-layout>
                     </v-container>
@@ -169,6 +169,7 @@ export default {
   },
   components: {},
   methods: {
+    // email login
     async emailLogin() {
       var email_id = this.email;
       var userToken = "";
@@ -234,12 +235,13 @@ export default {
       Swal.fire({
         type: "success",
         position: "center",
-        title: "Welcome, " + username,
-        text: "It's good to see you again",
+        title: "어서오십시오. " + username + "님",
+        text: "저희 웹 사이트에 오신 것을 환영합니다.",
         showConfirmButton: false,
         timer: 1500
       });
     },
+    // usersiginup
     async userSignUp() {
       let email_id = this.email;
       var userToken = "";
@@ -283,8 +285,7 @@ export default {
           Swal.fire({
             type: "success",
             position: "center",
-            title: "Welcome, " + username,
-            text: "Thank you for signing up for our website",
+            title: "환영합니다, " + username,
             showConfirmButton: false,
             timer: 1500
           });
@@ -303,8 +304,21 @@ export default {
         });
       this.dialog2 = false;
     },
+    // login with google
     async loginWithGoogle() {
       var provider = new firebase.auth.GoogleAuthProvider();
+      var userToken = "";
+      var user_class = false;
+      messaging
+        .requestPermission()
+        .then(function() {
+          return messaging.getToken();
+        })
+        .then(function(token) {
+          userToken = token;
+        });
+
+
       await firebase
         .auth()
         .signInWithPopup(provider)
@@ -327,13 +341,48 @@ export default {
                   user_class: "guest"
                 });
               }
+
+      var email_id = user.email;
+
+      firestore
+        .collection("users")
+        .where("id", "==", email_id)
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            if (doc.data().user_class === "administrator") user_class = true;
+          });
+        });
+
+              var userTokenListRef = firestore.collection("userTokenList");
+
+          if (user_class) {
+            userTokenListRef
+              .add({
+                tokenId: userToken,
+                userId: email_id,
+                userClass: "administrator"
+              })
+              .then(function() {})
+              .catch(function(err) {});
+          } else {
+            userTokenListRef
+              .add({
+                tokenId: userToken,
+                userId: email_id,
+                userClass: "other"
+              })
+              .then(function() {})
+              .catch(function(err) {});
+          }
+
             })
             .catch(function(error) {});
           Swal.fire({
             type: "success",
             position: "center",
-            title: "Welcome, " + user.displayName,
-            text: "It's good to see you again",
+            title: "어서오십시오. " + username + "님",
+            text: "다시 뵙게 되어 반갑습니다.",
             showConfirmButton: false,
             timer: 1500
           });
@@ -353,8 +402,21 @@ export default {
           });
         });
     },
+    // login with facebook
     async facebookLogin() {
       var provider = new firebase.auth.FacebookAuthProvider();
+      var userToken = "";
+      var user_class = false;
+      messaging
+        .requestPermission()
+        .then(function() {
+          return messaging.getToken();
+        })
+        .then(function(token) {
+          userToken = token;
+        });
+
+
       await firebase
         .auth()
         .signInWithPopup(provider)
@@ -377,13 +439,47 @@ export default {
                   user_class: "guest"
                 });
               }
+
+      var email_id = user.email;
+
+      firestore
+        .collection("users")
+        .where("id", "==", email_id)
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            if (doc.data().user_class === "administrator") user_class = true;
+          });
+        });
+
+              var userTokenListRef = firestore.collection("userTokenList");
+          if (user_class) {
+            userTokenListRef
+              .add({
+                tokenId: userToken,
+                userId: email_id,
+                userClass: "administrator"
+              })
+              .then(function() {})
+              .catch(function(err) {});
+          } else {
+            userTokenListRef
+              .add({
+                tokenId: userToken,
+                userId: email_id,
+                userClass: "other"
+              })
+              .then(function() {})
+              .catch(function(err) {});
+          }
+
             })
             .catch(function(error) {});
           Swal.fire({
             type: "success",
             position: "center",
-            title: "Welcome, " + user.displayName,
-            text: "It's good to see you again",
+            title: "어서오십시오. " + username + "님",
+            text: "다시 뵙게 되어 반갑습니다.",
             showConfirmButton: false,
             timer: 1500
           });

@@ -23,43 +23,105 @@
         </v-container>
 
 
-        <div id="overflowDiv" v-bind:style="{ 'background-image': 'url(' + HanGImg + ')'}" class="backgroundImg px-5 py-4" style="display: inline-block; overflow-x: scroll; width: 100%">
+        <div id="overflowDiv" v-bind:style="{ 'background-image': 'url(' + HanGImg + ')'}" class="backgroundImg px-5 py-4 hidden-xs-only" style="display: inline-block; overflow-x: scroll; width: 100%">
             <button v-if="horizonScroll > 0" id="left-button" v-on:click="scroll_left" style="position: absolute; margin-top: 15%; margin-left: 0; color: white; z-index: 1001;"><i class="fas fa-chevron-left slideButton"></i></button>
             <button id="right-button" v-on:click="scroll_right" style="position: absolute; margin-top: 15%; margin-left: 90%; color: white; z-index: 1001;"><i class="fas fa-chevron-right slideButton"></i></button>
             <ul style="list-style: none; width: 900%;" class="">
                 <li class="grow" v-for="gridBoard in gridBoards1" style="float: left; width: 5%; cursor:pointer">
-                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px', 'background-size':'cover', 'background-repeat':'non e'}"
+                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px', 'background-size':'cover', 'background-repeat':'none', 'background-position':'center center'}"
                     @click="goDetail(gridBoard.doc_id)">
-                        <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 28%">
-                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="boardTitle">{{gridBoard.title}}</strong> <br> <br> 글쓴이 {{ gridBoard.author }}</p>
+                        <div class="text-xs-center greyBackground">
+                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="pfont">{{gridBoard.title}}</strong> <br> <br> 글쓴이 {{ gridBoard.author }}</p>
                         </div>
                     </div>
                 </li>
                 <li class="grow" v-for="gridBoard in gridBoards2" style="float: left; width: 5%; cursor:pointer">
-                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}"
+                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px', 'background-size':'cover', 'background-repeat':'none', 'background-position':'center center'}"
                          @click="goDetail(gridBoard.doc_id)">
-                        <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 30%">
-                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong style="font-size: 5em; color: white; font-weight: lighter">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
+                        <div class="text-xs-center greyBackground">
+                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="pfont">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
                         </div>
                     </div>
                 </li>
                 <li class="grow" v-for="gridBoard in gridBoards3" style="float: left; width: 5%; cursor:pointer">
-                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}"
+                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px', 'background-size':'cover', 'background-repeat':'none', 'background-position':'center center'}"
                          @click="goDetail(gridBoard.doc_id)">
-                        <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 30%">
-                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong style="font-size: 5em; color: white; font-weight: lighter">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
+                        <div class="text-xs-center greyBackground">
+                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="pfont">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
                         </div>
                     </div>
                 </li>
                 <li class="grow" v-for="gridBoard in gridBoards4" style="float: left; width: 5%; cursor:pointer">
-                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}"
+                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px', 'background-size':'cover', 'background-repeat':'none', 'background-position':'center center'}"
                          @click="goDetail(gridBoard.doc_id)">
-                        <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 30%">
-                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong style="font-size: 5em; color: white; font-weight: lighter">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
+                        <div class="text-xs-center greyBackground">
+                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="pfont">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
                         </div>
                     </div>
                 </li>
             </ul>
+        </div>
+
+        <div v-bind:style="{ 'background-image': 'url(' + HanGImg + ')'}" class="hidden-sm-and-up backgroundImg px-5 py-4">
+            <v-carousel hide-delimiters>
+                <v-carousel-item
+                    v-for="gridBoard in gridBoards1"
+            >
+                <v-sheet
+                        :style="{'background-image':'url('+ gridBoard.img+ ')', 'background-size':'cover', 'background-repeat':'none', 'background-position':'center center'}"
+                        height="100%"
+                        tile
+                        @click="goDetail(gridBoard.doc_id)"
+                >
+                    <div class="text-xs-center greyBackground2">
+                        <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="pfont2">{{gridBoard.title}}</strong><br> <br> 글쓴이 {{ gridBoard.author }}</p>
+                    </div>
+                </v-sheet>
+            </v-carousel-item>
+                <v-carousel-item
+                        v-for="gridBoard in gridBoards2"
+                >
+                    <v-sheet
+                            :style="{'background-image':'url('+ gridBoard.img+ ')', 'background-size':'cover', 'background-repeat':'none', 'background-position':'center center'}"
+                            height="100%"
+                            tile
+                            @click="goDetail(gridBoard.doc_id)"
+                    >
+                        <div class="text-xs-center greyBackground2">
+                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="pfont2">{{gridBoard.title}}</strong> <br><br> 글쓴이 {{ gridBoard.author }}</p>
+                        </div>
+                    </v-sheet>
+                </v-carousel-item>
+                <v-carousel-item
+                        v-for="gridBoard in gridBoards3"
+                >
+                    <v-sheet
+                            :style="{'background-image':'url('+ gridBoard.img+ ')', 'background-size':'cover', 'background-repeat':'none', 'background-position':'center center'}"
+                            height="100%"
+                            tile
+                            @click="goDetail(gridBoard.doc_id)"
+                    >
+                        <div class="text-xs-center greyBackground2">
+                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="pfont2">{{gridBoard.title}}</strong><br> <br> 글쓴이 {{ gridBoard.author }}</p>
+
+                        </div>
+                    </v-sheet>
+                </v-carousel-item>
+                <v-carousel-item
+                        v-for="gridBoard in gridBoards4"
+                >
+                    <v-sheet
+                            :style="{'background-image':'url('+ gridBoard.img+ ')', 'background-size':'cover', 'background-repeat':'none', 'background-position':'center center'}"
+                            height="100%"
+                            tile
+                            @click="goDetail(gridBoard.doc_id)"
+                    >
+                        <div class="text-xs-center greyBackground2">
+                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="pfont2">{{gridBoard.title}}</strong> <br><br> 글쓴이 {{ gridBoard.author }}</p>
+                        </div>
+                    </v-sheet>
+                </v-carousel-item>
+            </v-carousel>
         </div>
 
         <!-- Github -->
@@ -71,7 +133,7 @@
                 <v-card flat style="background-color:#fff0">
                     <v-container fluid grid-list-lg style="background-color:#fff0;">
                         <v-layout row wrap>
-                            <v-flex xs12 sm6 v-for="team in teams" :key="team.name">
+                            <v-flex xs12 sm3 v-for="team in teams" :key="team.name">
                                 <v-card
                                         class="black--text"
                                         style="min-width: 200px; min-height: 300px; background-color: #fff0; box-shadow: none!important;"
@@ -241,18 +303,35 @@
     #overflowDiv {
         scroll-behavior: smooth;
     }
-    .boardTitle {
-        font-size: 3em;
-        color: white;
-    }
     .grow { transition: all .2s ease-in-out;}
     .grow:hover { transform: scale(1.02); }
     .slideButton {
         font-size: 3em;
-        color: rgba(50, 50, 50, 0.2);
+        color: rgba(50, 50, 50, 0.6);
     }
     .slideButton:hover {
-        color: rgba(255,250,240, 0.8)
+        color: rgba(255,250,240, 0.6)
+    }
+
+    .greyBackground {
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: white;
+        padding-top: 28%
+    }
+
+    .greyBackground2 {
+        height: 100%;
+        background-color: rgba(0,0,0,0.3);
+        color: white;
+        padding-top: 60%;
+    }
+
+    .pfont {
+        font-size: 3em;; color: white; font-weight: lighter
+    }
+    .pfont2 {
+        font-size: 2em; color: white; font-weight: lighter
     }
 
 </style>

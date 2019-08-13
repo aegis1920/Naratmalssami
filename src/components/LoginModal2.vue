@@ -13,7 +13,7 @@
   <v-layout row justify-center align-center>
     <v-dialog v-model="dialog3" max-width="50%">
       <template v-slot:activator="{ on }">
-        <v-list-tile-title v-on="on">Login</v-list-tile-title>
+        <v-list-tile-title v-on="on">들어가기</v-list-tile-title>
       </template>
       <v-container
         fluid
@@ -22,13 +22,13 @@
         <v-layout row wrap justify-center>
           <v-flex mr-3>
             <v-btn round color="#df4a31" v-on:click="loginWithGoogle" style="width:100%;">
-              <v-icon size="25" class="mr-2">fab fa-google</v-icon>Google 로그인
+              <v-icon size="25" class="mr-2">fab fa-google</v-icon>구글 들어가기
             </v-btn>
             <v-btn v-on:click="facebookLogin" round color="#3C5A99" style="width: 100%">
-              <v-icon size="25" class="mr-2">fab fa-facebook</v-icon>FACEBOOK 로그인
+              <v-icon size="25" class="mr-2">fab fa-facebook</v-icon>페이스북 들어가기
             </v-btn>
             <v-btn round color="#fdd835" style="width: 100%" @click="dialog = true">
-              <v-icon size="25" class="mr-2">far fa-envelope</v-icon>EMAIL 로그인
+              <v-icon size="25" class="mr-2">far fa-envelope</v-icon>전자우편 들어가기
             </v-btn>
             <v-btn round color="#A9B0A8" style="width: 100%" @click="dialog2 = true">
               <v-icon size="25" class="mr-2">fas fa-user-plus</v-icon>회원가입
@@ -39,7 +39,7 @@
                   <v-btn icon @click="dialog = false">
                     <v-icon>close</v-icon>
                   </v-btn>
-                  <v-toolbar-title>EMAIL 로그인</v-toolbar-title>
+                  <v-toolbar-title>전자우편 들어가기</v-toolbar-title>
                   <v-spacer></v-spacer>
                 </v-toolbar>
                 <v-card-text>
@@ -70,7 +70,7 @@
                           ></v-text-field>
                         </v-flex>
                         <v-flex xs12 text-xs-center>
-                          <v-btn v-on:click="emailLogin" color="#fdd835">로그인</v-btn>
+                          <v-btn v-on:click="emailLogin" color="#fdd835">들어가기</v-btn>
                         </v-flex>
                       </v-layout>
                     </v-container>
@@ -246,8 +246,8 @@ export default {
         type: "success",
         toast: true,
         position: "top-start",
-        title: "Welcome, " + username,
-        text: "It's good to see you again",
+        title: "어서오십시오. " + username + "님",
+        text: "저희 웹 사이트에 오신 것을 환영합니다.",
         showConfirmButton: false,
         timer: 1500
       });
@@ -303,8 +303,8 @@ export default {
             type: "success",
             toast: true,
             position: "top-start",
-            title: "Welcome, " + username,
-            text: "Thank you for signing up for our website",
+            title: "환영합니다. " + username + "님",
+            text: "저희 웹 사이트에 오신 것을 환영합니다.",
             showConfirmButton: false,
             timer: 1500
           });
@@ -356,8 +356,8 @@ export default {
             type: "success",
             toast: true,
             position: "top-start",
-            title: "Welcome, " + user.displayName,
-            text: "It's good to see you again",
+            title: "어서오십시오. " + username + "님",
+            text: "다시 뵙게 되어 반갑습니다.",
             showConfirmButton: false,
             timer: 1500
           });
@@ -410,8 +410,8 @@ export default {
             type: "success",
             toast: true,
             position: "top-start",
-            title: "Welcome, " + user.displayName,
-            text: "It's good to see you again",
+            title: "어서오십시오. " + username + "님",
+            text: "다시 뵙게 되어 반갑습니다.",
             showConfirmButton: false,
             timer: 1500
           });

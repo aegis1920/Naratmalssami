@@ -177,13 +177,14 @@ export default {
     async userSignOut() {
       let user_id = firebase.auth().currentUser.email;
       await Swal.fire({
-        title: "Are you sure you want to LOG OUT?",
-        text: "You won't be able to revert this!",
+        title: "정말로 나가시겠습니까?",
+        text: "이 작업은 취소하실 수 없습니다!",
         type: "warning",
         showCancelButton: true,
         cancelButtonColor: "#d33",
         confirmButtonColor: "#3085d6",
-        confirmButtonText: "Confirm"
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
       }).then(result => {
         if (result.value) {
           firebase
@@ -193,8 +194,8 @@ export default {
               Swal.fire({
                 type: "success",
                 position: "center",
-                title: "LOG Out!",
-                text: "Please visit our website again",
+                title: "안녕히 가세요",
+                text: "나랏말싸미를 다시 찾아주세요",
                 showConfirmButton: false,
                 timer: 1500
               });
