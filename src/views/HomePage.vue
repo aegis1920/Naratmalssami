@@ -24,8 +24,8 @@
 
 
         <div id="overflowDiv" v-bind:style="{ 'background-image': 'url(' + HanGImg + ')'}" class="backgroundImg px-5 py-4" style="display: inline-block; overflow-x: scroll; width: 100%">
-            <button v-if="horizonScroll > 0" id="left-button" v-on:click="scroll_left" style="position: absolute; margin-top: 15%; margin-left: 0; color: white;"><i class="fas fa-arrow-alt-circle-left" style="font-size: 3em; color: floralwhite"></i></button>
-            <button id="right-button" v-on:click="scroll_right" style="position: absolute; margin-top: 15%; margin-left: 90%; color: white"><i class="fas fa-arrow-alt-circle-right" style="font-size: 3em; color: floralwhite"></i></button>
+            <button v-if="horizonScroll > 0" id="left-button" v-on:click="scroll_left" style="position: absolute; margin-top: 15%; margin-left: 0; color: white;"><i class="fas fa-chevron-left slideButton"></i></button>
+            <button id="right-button" v-on:click="scroll_right" style="position: absolute; margin-top: 15%; margin-left: 90%; color: white"><i class="fas fa-chevron-right slideButton"></i></button>
             <ul style="list-style: none; width: 900%" class="">
                 <li class="grow" v-for="gridBoard in gridBoards1" style="float: left; width: 5%; cursor:pointer">
                     <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px', 'background-size':'cover', 'background-repeat':'none'}"
@@ -245,6 +245,16 @@
         font-size: 3em;
         color: white;
     }
+
     .grow { transition: all .2s ease-in-out; }
     .grow:hover { transform: scale(1.1); }
+
+    .slideButton {
+        font-size: 3em;
+        color: rgba(50, 50, 50, 0.8)
+    }
+    .slideButton:hover {
+        color: rgba(255,250,240, 0.8)
+    }
+
 </style>
