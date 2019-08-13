@@ -22,27 +22,13 @@ export default {
         top: "30px!important",
         right: "0px!important"
       },
+      winWidth: 0,
       isLoad: false
     };
   },
   watch: {
     isLoad: function() {
-      console.log("chat load !!!!");
-      const icon = document.getElementById("chat-icon").getBoundingClientRect();
-      const danbee =  $("#frogue-container");
-      console.log(document.getElementById("chat-icon"));
-
-      console.log(icon.bottom);
-      console.log(danbee);
-      danbee.css('bottom', icon.bottom);
-      danbee.css('height', icon.height);
-      danbee.css('left', icon.left);
-      danbee.css('right', icon.right);
-      danbee.css('top', icon.top);
-      danbee.css('width', icon.width);
-      danbee.css('x', icon.x);
-      danbee.css('y', icon.y);
-      console.log(danbee);
+      this.chatposition();
     }
   },
   mounted() {
@@ -53,6 +39,11 @@ export default {
         this.isLoad = true;
       }, 600);
     });
+    $(window).resize(
+      function() {
+        this.chatposition();
+      }.bind(this)
+    );
   },
   methods: {
     async chatbotLoad() {
@@ -67,7 +58,18 @@ export default {
       js.src = "https://danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
       await fjs.parentNode.insertBefore(js, fjs);
       this.isLoad = true;
-
+    },
+    chatposition() {
+      const icon = document.getElementById("chat-icon").getBoundingClientRect();
+      const danbee = $("#frogue-container");
+      danbee.css("bottom", icon.bottom);
+      danbee.css("height", icon.height);
+      danbee.css("left", icon.left);
+      danbee.css("right", icon.right);
+      danbee.css("top", icon.top);
+      danbee.css("width", icon.width);
+      danbee.css("x", icon.x);
+      danbee.css("y", icon.y);
     }
   }
 };
@@ -97,9 +99,8 @@ export default {
   /* left: calc(100% - 350px) !important; */
   width: 30px !important;
   height: 30px !important;
-  opacity: 0.1;
+  opacity: 0.0001;
 }
-
 </style>
 
 
