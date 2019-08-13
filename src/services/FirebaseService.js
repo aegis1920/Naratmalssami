@@ -455,4 +455,14 @@ export default{
         })
       })
   },
+  updateUserInfo(user){
+    const UserCollection = firestore.collection(USERS);
+    return UserCollection.doc(user.id)
+      .update({
+        user_class: user.user_class
+      })
+      .then(function() {
+        return true;
+      })
+  }
 }
