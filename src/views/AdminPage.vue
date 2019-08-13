@@ -40,7 +40,7 @@
     </v-layout>
   </v-container>
 
-  <v-container v-else>
+  <v-container v-else-if="UserClass === 'guest' || UserClass === 'member'">
     <div class="mt-5" sytle="margin: auto;">
       <h1 class="text-xs-center">잘못된 접근입니다</h1>
       <br />
@@ -48,6 +48,11 @@
       <p class="text-xs-center">
         <strong>{{redirectTime}}</strong>초 뒤에 메인페이지로 이동합니다.
       </p>
+    </div>
+  </v-container>
+  <v-container v-else>
+    <div class="mt-5" sytle="margin: auto; height:300px">
+      <v-img :src="loadingSrc" style="width:100px; margin: auto" />
     </div>
   </v-container>
 </template>
@@ -66,7 +71,8 @@ export default {
       redirectTime: 3,
       select: "",
       boardSize: 0,
-      commentSize: 0
+      commentSize: 0,
+      loadingSrc: require('@/assets/Infinity-7.6s-200px.gif'),
     };
   },
   components: {
