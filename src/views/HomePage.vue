@@ -24,13 +24,13 @@
 
 
         <div id="overflowDiv" v-bind:style="{ 'background-image': 'url(' + HanGImg + ')'}" class="backgroundImg px-5 py-4" style="display: inline-block; overflow-x: scroll; width: 100%">
-            <button v-if="horizonScroll > 0" id="left-button" v-on:click="scroll_left" style="position: absolute; margin-top: 15%; margin-left: 0; color: white;"> 왼쪽으로 </button>
-            <button id="right-button" v-on:click="scroll_right" style="position: absolute; margin-top: 15%; margin-left: 90%; color: white"> 오른쪽으로 </button>
+            <button v-if="horizonScroll > 0" id="left-button" v-on:click="scroll_left" style="position: absolute; margin-top: 15%; margin-left: 0; color: white;"><i class="fas fa-arrow-alt-circle-left" style="font-size: 3em; color: floralwhite"></i></button>
+            <button id="right-button" v-on:click="scroll_right" style="position: absolute; margin-top: 15%; margin-left: 90%; color: white"><i class="fas fa-arrow-alt-circle-right" style="font-size: 3em; color: floralwhite"></i></button>
             <ul style="list-style: none; width: 900%" class="">
                 <li v-for="gridBoard in gridBoards1" style="float: left; width: 5%">
                     <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}">
-                        <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 30%">
-                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong style="font-size: 5em; color: white; font-weight: lighter">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
+                        <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 28%">
+                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong style="font-size: 4em; color: white; font-weight: lighter">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
                         </div>
                     </div>
                 </li>
@@ -187,13 +187,13 @@
         methods: {
             scroll_left() {
                 let content = document.querySelector("#overflowDiv");
-                content.scrollLeft -= 200;
-                this.$data.horizonScroll -= 200;
+                content.scrollLeft -= 1300;
+                this.$data.horizonScroll -= 1300;
             },
             scroll_right() {
                 let content = document.querySelector("#overflowDiv");
-                content.scrollLeft += 200;
-                this.$data.horizonScroll += 200;
+                content.scrollLeft += 1300;
+                this.$data.horizonScroll += 1300;
             },
             getImgUrl(img) {
                 return require("../assets/" + img);
@@ -238,5 +238,8 @@
     /* Optional: show position indicator in red */
     ::-webkit-scrollbar-thumb {
         background: transparent;
+    }
+    #overflowDiv {
+        scroll-behavior: smooth;
     }
 </style>
