@@ -307,10 +307,10 @@
     .grow:hover { transform: scale(1.02); }
     .slideButton {
         font-size: 3em;
-        color: rgba(50, 50, 50, 0.2);
+        color: rgba(50, 50, 50, 0.6);
     }
     .slideButton:hover {
-        color: rgba(255,250,240, 0.8)
+        color: rgba(255,250,240, 0.6)
     }
 
     .greyBackground {
