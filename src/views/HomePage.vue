@@ -28,9 +28,9 @@
             <button id="right-button" v-on:click="scroll_right" style="position: absolute; margin-top: 15%; margin-left: 90%; color: white"><i class="fas fa-arrow-alt-circle-right" style="font-size: 3em; color: floralwhite"></i></button>
             <ul style="list-style: none; width: 900%" class="">
                 <li v-for="gridBoard in gridBoards1" style="float: left; width: 5%">
-                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px'}">
+                    <div :style="{'background-image':'url('+ gridBoard.img+ ')', 'width': '100%', 'height':'500px', 'background-size':'cover', 'background-repeat':'none'}">
                         <div class="text-xs-center" style="height: 100%; background-color: rgba(0,0,0,0.3); color: white; padding-top: 28%">
-                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="boardTitle">{{gridBoard.title}}</strong> <br> 글쓴이 {{ gridBoard.author }}</p>
+                            <p style="color: floralwhite; vertical-align: middle; margin: 0"><strong class="boardTitle">{{gridBoard.title}}</strong> <br> <br> 글쓴이 {{ gridBoard.author }}</p>
                         </div>
                     </div>
                 </li>
