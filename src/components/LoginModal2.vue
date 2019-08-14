@@ -403,7 +403,7 @@ export default {
             type: "success",
             toast: true,
             position: "top-start",
-            title: "어서오십시오. " + username + "님",
+            title: "어서오십시오. " + user.displayName + "님",
             text: "다시 뵙게 되어 반갑습니다.",
             showConfirmButton: false,
             timer: 1500
@@ -503,7 +503,7 @@ export default {
             type: "success",
             toast: true,
             position: "top-start",
-            title: "어서오십시오. " + username + "님",
+            title: "어서오십시오. " + user.displayName + "님",
             text: "다시 뵙게 되어 반갑습니다.",
             showConfirmButton: false,
             timer: 1500

@@ -383,7 +383,7 @@ export default{
         tag: selectedTag,
         title,
         body,
-        author: userId,
+        author: user.email,
         email,
         created_at: firebase.firestore.FieldValue.serverTimestamp(),
         isAnswered : false
