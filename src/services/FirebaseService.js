@@ -122,8 +122,12 @@ export default{
           data = change.doc.data()
           // data.created_at = new Date(data.created_at.toDate())
           data.created_at = data.created_at.toString();
+          console.log('from',data.metadata.fromCache);
+          
           arr.push(data);
         });
+        console.log('ok');
+        
         return arr;
       })
   },

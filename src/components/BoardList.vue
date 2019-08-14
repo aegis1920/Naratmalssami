@@ -87,6 +87,8 @@ export default {
          this.loading = false;
      },
      async getBoards() {
+         console.log('getboard');
+         
          this.boards = await FirebaseService.getBoards();
          this.showBoards = this.boards.splice(this.start, this.end);
      },
