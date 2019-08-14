@@ -326,6 +326,18 @@ export default {
     },
     async loginWithGoogle() {
       var provider = new firebase.auth.GoogleAuthProvider();
+      var userToken = "";
+      var user_class = false;
+      messaging
+        .requestPermission()
+        .then(function() {
+          return messaging.getToken();
+        })
+        .then(function(token) {
+          userToken = token;
+        });
+
+
       await firebase
         .auth()
         .signInWithPopup(provider)
@@ -348,6 +360,41 @@ export default {
                   user_class: "guest"
                 });
               }
+
+      var email_id = user.email;
+
+      firestore
+        .collection("users")
+        .where("id", "==", email_id)
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            if (doc.data().user_class === "administrator") user_class = true;
+          });
+        });
+
+              var userTokenListRef = firestore.collection("userTokenList");
+
+          if (user_class) {
+            userTokenListRef
+              .add({
+                tokenId: userToken,
+                userId: email_id,
+                userClass: "administrator"
+              })
+              .then(function() {})
+              .catch(function(err) {});
+          } else {
+            userTokenListRef
+              .add({
+                tokenId: userToken,
+                userId: email_id,
+                userClass: "other"
+              })
+              .then(function() {})
+              .catch(function(err) {});
+          }
+
             })
             .catch(function(error) {
               console.log("Error getting document:", error);
@@ -380,6 +427,18 @@ export default {
     },
     async facebookLogin() {
       var provider = new firebase.auth.FacebookAuthProvider();
+      var userToken = "";
+      var user_class = false;
+      messaging
+        .requestPermission()
+        .then(function() {
+          return messaging.getToken();
+        })
+        .then(function(token) {
+          userToken = token;
+        });
+
+
       await firebase
         .auth()
         .signInWithPopup(provider)
@@ -402,6 +461,40 @@ export default {
                   user_class: "guest"
                 });
               }
+
+      var email_id = user.email;
+
+      firestore
+        .collection("users")
+        .where("id", "==", email_id)
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            if (doc.data().user_class === "administrator") user_class = true;
+          });
+        });
+
+              var userTokenListRef = firestore.collection("userTokenList");
+          if (user_class) {
+            userTokenListRef
+              .add({
+                tokenId: userToken,
+                userId: email_id,
+                userClass: "administrator"
+              })
+              .then(function() {})
+              .catch(function(err) {});
+          } else {
+            userTokenListRef
+              .add({
+                tokenId: userToken,
+                userId: email_id,
+                userClass: "other"
+              })
+              .then(function() {})
+              .catch(function(err) {});
+          }
+
             })
             .catch(function(error) {
               console.log("Error getting document:", error);
