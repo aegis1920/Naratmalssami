@@ -4,11 +4,11 @@
 한글보다 외국어, 외래어가 익숙한 사람들에게 한글의 아름다움을 느낄 수 있도록 한국 전통을 테마로 한 게시판 서비스
 
 ## 프로젝트 아키텍처
-UI : Vuetify
-Front-end : Vue.js
-Back-end : Firebase
-Push 알림 : FCM
-IDE : VScode
+- UI : Vuetify
+- Front-end : Vue.js
+- Back-end : Firebase
+- Push 알림 : FCM
+- IDE : VScode
 
 ## 프로젝트 실행
 ```
